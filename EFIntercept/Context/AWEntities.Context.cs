@@ -9,11 +9,12 @@
 
 namespace EFIntercept.Context
 {
+    using SharDev.EFInterceptor.DbContext;
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
 
-    public partial class AdventureWorksDW2008R2Entities : DbContextExtended
+    public partial class AdventureWorksDW2008R2Entities : DbContextInterceptor
     {
         public AdventureWorksDW2008R2Entities()
             : base("name=AdventureWorksDW2008R2Entities")
@@ -26,29 +27,5 @@ namespace EFIntercept.Context
         }
     
         public virtual DbSet<DimReseller> DimReseller { get; set; }
-    }
-
-    [DbConfigurationType(typeof(DbConfig))]
-    public partial class AdventureWorksDW2008R2EntitiesCustomized : AdventureWorksDW2008R2Entities
-    {
-        //public Func<AdventureWorksDW2008R2EntitiesCustomized, string, string> Method { get; set; }
-
-        //public AdventureWorksDW2008R2EntitiesCustomized WithCustomQuery(Func<AdventureWorksDW2008R2EntitiesCustomized, string, string> method)
-        //{
-        //    Method = method;
-
-        //    return this;
-        //}
-    }
-
-
-    [DbConfigurationType(typeof(DbConfig))]
-    public partial class DbContextExtended : DbContext
-    {
-        public DbContextExtended(string nameOrConnectionString) : base(nameOrConnectionString)
-        {
-        }
-
-        public Func<DbContextExtended, string, string> Method { get; set; }
     }
 }

@@ -1,28 +1,15 @@
 ﻿using EFIntercept.Context;
+using SharDev.EFInterceptor.DbContext;
+using SharDev.EFInterceptor.Extensions.SharkDev.Extensions;
+using SharDev.EFInterceptor.SqlUtility;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Web.Mvc;
 
-namespace SharkDev.Extensions
-{
-    //generic code
-    public static class DbContextExtensions
-    {
-        public static T WithCustomQuery<T>(this DbContextExtended dbContextExtended, Func<DbContextExtended, string, string> method) where T : class
-        {
-            dbContextExtended.Method = method;
-
-            return dbContextExtended as T;
-        }
-    }
-}
-
 namespace EFIntercept.Controllers
 {
-    using SharkDev.Extensions;
-
     public class HomeController : Controller
     {
         public class TempTable
@@ -34,10 +21,10 @@ namespace EFIntercept.Controllers
         public ActionResult Index()
         {
             int a = 1;
-            using (var adventureWorksDW2008R2Entities = new AdventureWorksDW2008R2EntitiesCustomized())
+            using (var adventureWorksDW2008R2Entities = new AdventureWorksDW2008R2Entities())
             {
                 var listReseller = adventureWorksDW2008R2Entities
-                    .WithCustomQuery<AdventureWorksDW2008R2EntitiesCustomized>(ModifiyCommandText)
+                    .WithCustomQuery<AdventureWorksDW2008R2Entities>(ModifiyCommandText)
                     .DimReseller.Where(t => t.FirstOrderYear == a).ToList();
             }
 
@@ -45,35 +32,22 @@ namespace EFIntercept.Controllers
         }
 
         //custom code - user can change it
-        public string ModifiyCommandText(DbContextExtended context, string commandText)
+        public string ModifiyCommandText(DbContextInterceptor context, string commandText)
         {
-            var myContext = context as AdventureWorksDW2008R2EntitiesCustomized;
+            var myContext = context as AdventureWorksDW2008R2Entities;
             var resselersQuery = myContext.DimReseller.Where(t => t.FirstOrderYear == 4).Select(x => new TempTable { FirstOrderYear = x.FirstOrderYear, YearOpened = x.YearOpened });
             var sql = (resselersQuery as System.Data.Entity.Infrastructure.DbQuery<TempTable>).Sql.Replace("1 AS [C1],", "");
 
-            var commandTextWithTempTable = InsertIntoTempTable(new List<Func<string>>
+            var tempTableCreator = new TempTableCreator();
+            var tempTableWithQuery = tempTableCreator.CreateTempTable(new List<Func<string>>
                 {
                     () => { return "FirstOrderYear int"; },
                     () => { return "YearOpened int"; },
-                }, "tempTest", sql);
+                }, "tempTest").Insert(sql);
 
-            commandText = commandTextWithTempTable + sql;
+            commandText = tempTableWithQuery + commandText;
 
             return commandText;
-        }
-
-        //generic code
-        private string InsertIntoTempTable(List<Func<string>> map, string tempTableName, string query)
-        {
-            var tempTableCreate = "CREATE TABLE #" + tempTableName + " (";
-            var fieldsDeclaration = "";
-            map.ForEach(m =>
-            {
-                fieldsDeclaration = fieldsDeclaration + m() + ",";
-            });
-            tempTableCreate = tempTableCreate + fieldsDeclaration.Remove(fieldsDeclaration.Length - 1, 1) + ")";
-
-            return tempTableCreate + ";\n\n" + "INSERT INTO #" + tempTableName + "\n" + query + ";\n\n";
         }
 
         public ActionResult About()

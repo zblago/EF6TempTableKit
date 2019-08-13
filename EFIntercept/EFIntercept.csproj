@@ -170,11 +170,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>AWEntities.edmx</DependentUpon>
     </Compile>
-    <Compile Include="Context\DbConfig.cs" />
     <Compile Include="Context\DimReseller.cs">
       <DependentUpon>AWEntities.tt</DependentUpon>
     </Compile>
-    <Compile Include="Context\QueryInterceptor.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -257,6 +255,12 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SharDev.EFInterceptor\SharDev.EFInterceptor.csproj">
+      <Project>{5b9b5bae-0377-4719-bf60-f6649221ca1c}</Project>
+      <Name>SharDev.EFInterceptor</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
