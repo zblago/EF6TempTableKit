@@ -14,18 +14,33 @@ namespace EFIntercept.Controllers
     {
         public class TempTable
         {
-            public int? FirstOrderYear { get; set; }
-            public int? YearOpened { get; set; }
+            public int Id { get; set; }
+            public string Name { get; set; }
         }
 
         public ActionResult Index()
         {
-            int a = 1;
             using (var adventureWorksDW2008R2Entities = new AdventureWorksDW2008R2Entities())
             {
+                Database.SetInitializer<AdventureWorksDW2008R2Entities>(null);
+
+                var listResseler = adventureWorksDW2008R2Entities
+                    .WithCustomQuery<AdventureWorksDW2008R2Entities>(ModifiyCommandText)
+                    .DimReseller.Join(adventureWorksDW2008R2Entities.TemporaryStudents,
+                    c => c.ResellerKey,
+                    c => c.Id,
+                    (reseller, student) => 
+                    new
+                    {
+                        reseller.ResellerKey,
+                        reseller.ResellerName,
+                        student.Name
+                    }).ToList();
+                /*
                 var listReseller = adventureWorksDW2008R2Entities
                     .WithCustomQuery<AdventureWorksDW2008R2Entities>(ModifiyCommandText)
                     .DimReseller.Where(t => t.FirstOrderYear == a).ToList();
+                    */
             }
 
             return View();
@@ -35,15 +50,17 @@ namespace EFIntercept.Controllers
         public string ModifiyCommandText(DbContextInterceptor context, string commandText)
         {
             var myContext = context as AdventureWorksDW2008R2Entities;
-            var resselersQuery = myContext.DimReseller.Where(t => t.FirstOrderYear == 4).Select(x => new TempTable { FirstOrderYear = x.FirstOrderYear, YearOpened = x.YearOpened });
+            var resselersQuery = myContext.DimReseller.Where(t => t.FirstOrderYear == 4).Select(x => new TempTable {
+                Id = (int) x.FirstOrderYear,
+                Name = x.YearOpened.ToString() });
             var sql = (resselersQuery as System.Data.Entity.Infrastructure.DbQuery<TempTable>).Sql.Replace("1 AS [C1],", "");
 
             var tempTableCreator = new TempTableCreator();
             var tempTableWithQuery = tempTableCreator.CreateTempTable(new List<Func<string>>
                 {
-                    () => { return "FirstOrderYear int"; },
-                    () => { return "YearOpened int"; },
-                }, "tempTest").Insert(sql);
+                    () => { return "Id int"; },
+                    () => { return "Name varchar(100)"; },
+                }, "tempStudent").Insert(sql);
 
             commandText = tempTableWithQuery + commandText;
 
