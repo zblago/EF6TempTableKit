@@ -1,11 +1,14 @@
 ﻿using EFIntercept.Context;
 using SharDev.EFInterceptor.DbContext;
+using SharDev.EFInterceptor.Extensions;
 using SharDev.EFInterceptor.Extensions.SharkDev.Extensions;
 using SharDev.EFInterceptor.SqlUtility;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Core.Objects;
 using System.Linq;
+using System.Reflection;
 using System.Web.Mvc;
 
 namespace EFIntercept.Controllers
@@ -24,35 +27,60 @@ namespace EFIntercept.Controllers
             {
                 Database.SetInitializer<AdventureWorksDW2008R2Entities>(null);
 
+                var a = 1;
+                var b = 2;
+                string c1 = "3";
+
+                var q = FirstExpression(adventureWorksDW2008R2Entities, a, b, c1);
+                var q1 = ModifiyCommandText(adventureWorksDW2008R2Entities, "");
                 var listResseler = adventureWorksDW2008R2Entities
-                    .WithCustomQuery<AdventureWorksDW2008R2Entities>(ModifiyCommandText)
+                    .WithTempExpression<AdventureWorksDW2008R2Entities>(q)
+                    //.WithCustomQuery<AdventureWorksDW2008R2Entities>(ModifiyCommandText)
                     .DimReseller.Join(adventureWorksDW2008R2Entities.TemporaryStudents,
                     c => c.ResellerKey,
                     c => c.Id,
-                    (reseller, student) => 
+                    (reseller, student) =>
                     new
                     {
-                        reseller.ResellerKey,
-                        reseller.ResellerName,
-                        student.Name
+                        Id = reseller.ResellerKey,
+                        Name = reseller.ResellerName,
                     }).ToList();
-                /*
-                var listReseller = adventureWorksDW2008R2Entities
-                    .WithCustomQuery<AdventureWorksDW2008R2Entities>(ModifiyCommandText)
-                    .DimReseller.Where(t => t.FirstOrderYear == a).ToList();
-                    */
+                
             }
 
             return View();
+        }
+
+        public IQueryable FirstExpression(DbContextInterceptor context, int a, int b, string c)
+        {
+            var myContext = context as AdventureWorksDW2008R2Entities;
+            var resselersQuery = myContext.DimReseller.Where(t => t.FirstOrderYear == 4).Select(x => new 
+            {
+                Name = x.YearOpened.ToString(),
+                Id = (int)x.FirstOrderYear,
+            });
+
+            /*
+            var resselersQuery1 = myContext.DimReseller.Where(t => t.FirstOrderYear == 4).Select(x => new TempTable
+            {
+                Name = x.YearOpened.ToString(),
+                Id = (int)x.FirstOrderYear,
+            });
+            var test = resselersQuery1.ToTraceQuery<TempTable>();
+            */
+            return resselersQuery;
         }
 
         //custom code - user can change it
         public string ModifiyCommandText(DbContextInterceptor context, string commandText)
         {
             var myContext = context as AdventureWorksDW2008R2Entities;
-            var resselersQuery = myContext.DimReseller.Where(t => t.FirstOrderYear == 4).Select(x => new TempTable {
-                Id = (int) x.FirstOrderYear,
-                Name = x.YearOpened.ToString() });
+            var a = 5;
+            var resselersQuery = myContext.DimReseller.Where(t => t.FirstOrderYear == a).Select(x => new TempTable
+            {
+                Name = x.YearOpened.ToString(),
+                Id = (int)x.FirstOrderYear,
+            });
             var sql = (resselersQuery as System.Data.Entity.Infrastructure.DbQuery<TempTable>).Sql.Replace("1 AS [C1],", "");
 
             var tempTableCreator = new TempTableCreator();
@@ -60,7 +88,7 @@ namespace EFIntercept.Controllers
                 {
                     () => { return "Id int"; },
                     () => { return "Name varchar(100)"; },
-                }, "tempStudent").Insert(sql);
+                }, "#tempStudent").Insert(sql);
 
             commandText = tempTableWithQuery + commandText;
 

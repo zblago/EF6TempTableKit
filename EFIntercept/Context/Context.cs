@@ -1,8 +1,10 @@
 ﻿namespace EFIntercept.Context
 {
     using SharDev.EFInterceptor.DbContext;
+    using SharDev.EFInterceptor.Model;
     using System;
     using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity;
 
 
@@ -15,14 +17,14 @@
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            //throw new UnintentionalCodeFirstException();
+            //modelBuilder.Ignore<TemporaryStudentIdentity>();
         }
 
         public virtual DbSet<DimReseller> DimReseller { get; set; }
         public virtual DbSet<TemporaryStudentIdentity> TemporaryStudents { get; set; }
     }
 
-    [System.ComponentModel.DataAnnotations.Schema.Table("DimReseller")]
+    [Table("DimReseller")]
     public partial class DimReseller
     {
         [Key]
@@ -48,13 +50,13 @@
         public Nullable<int> YearOpened { get; set; }
     }
 
-    [System.ComponentModel.DataAnnotations.Schema.Table("#tempStudent", Schema = "tempDb")]
-    public class TemporaryStudentIdentity
+    [Table("#tempStudent", Schema = "tempDb")]
+    //[NotMapped]
+    public class TemporaryStudentIdentity : ITempTable
     {
         public TemporaryStudentIdentity()
         { }
 
-        [Key]
         public virtual int Id { get; set; }
         public virtual string Name { get; set; }
     }

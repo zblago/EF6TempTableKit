@@ -9,7 +9,8 @@ namespace SharDev.EFInterceptor.SqlUtility
 
         public TempTableCreator CreateTempTable(List<Func<string>> fieldsMap, string tempTableName)
         {
-            var tempTableCreate = "CREATE TABLE #" + tempTableName + " (";
+            var dropTableCommand = DropTempTable(tempTableName);
+            var tempTableCreate = $"{dropTableCommand}{Environment.NewLine}CREATE TABLE {tempTableName}(";
             var fieldsDeclaration = "";
             fieldsMap.ForEach(m =>
             {
@@ -17,7 +18,7 @@ namespace SharDev.EFInterceptor.SqlUtility
             });
 
             tempTableCreate = $"{tempTableCreate}{fieldsDeclaration.Remove(fieldsDeclaration.Length - 1, 1)})";
-            _tempTableDefinition = $"{tempTableCreate};\n\nINSERT INTO #{tempTableName}";
+            _tempTableDefinition = $"{tempTableCreate};\n\nINSERT INTO {tempTableName}";
 
             return this;
         }
@@ -25,6 +26,11 @@ namespace SharDev.EFInterceptor.SqlUtility
         public string Insert(string query)
         {
             return _tempTableDefinition + "\n" + query + ";\n\n";
+        }
+
+        private string DropTempTable(string tempTableName)
+        {
+            return $"IF OBJECT_ID('tempdb..{tempTableName}') IS NOT NULL BEGIN DROP TABLE {tempTableName} END {Environment.NewLine}";
         }
     }
 }

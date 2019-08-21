@@ -52,8 +52,11 @@
     <Compile Include="DbContext\DbConfig.cs" />
     <Compile Include="DbContext\DbContextInterceptor.cs" />
     <Compile Include="DbContext\QueryInterceptor.cs" />
+    <Compile Include="Extensions\IQueryableExtesions.cs" />
+    <Compile Include="Extensions\QueryExtension.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SqlUtility\TempTableCreator.cs" />
+    <Compile Include="Model\ITempTable.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
