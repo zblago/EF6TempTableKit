@@ -51,10 +51,10 @@ namespace EFIntercept.Controllers
             return View();
         }
 
-        public IQueryable FirstExpression(DbContextInterceptor context, int a, int b, string c)
+        public IQueryable<TemporaryStudentIdentity> FirstExpression(DbContextInterceptor context, int a, int b, string c)
         {
             var myContext = context as AdventureWorksDW2008R2Entities;
-            var resselersQuery = myContext.DimReseller.Where(t => t.FirstOrderYear == 4).Select(x => new 
+            var resselersQuery = myContext.DimReseller.Where(t => t.FirstOrderYear == 4).Select(x => new TemporaryStudentIdentity
             {
                 Name = x.YearOpened.ToString(),
                 Id = (int)x.FirstOrderYear,
