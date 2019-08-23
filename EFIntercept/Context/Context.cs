@@ -1,5 +1,6 @@
 ﻿namespace EFIntercept.Context
 {
+    using SharDev.EFInterceptor.Attributes;
     using SharDev.EFInterceptor.DbContext;
     using SharDev.EFInterceptor.Model;
     using System;
@@ -21,6 +22,7 @@
         }
 
         public virtual DbSet<DimReseller> DimReseller { get; set; }
+        public virtual DbSet<DimTest> DimTest { get; set; }
         public virtual DbSet<TemporaryStudentIdentity> TemporaryStudents { get; set; }
     }
 
@@ -50,6 +52,13 @@
         public Nullable<int> YearOpened { get; set; }
     }
 
+    [Table("DimTest")]
+    public partial class DimTest
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+    }
+
     [Table("#tempStudent", Schema = "tempDb")]
     //[NotMapped]
     public class TemporaryStudentIdentity : ITempTable
@@ -57,8 +66,15 @@
         public TemporaryStudentIdentity()
         { }
 
+        [TempFieldTypeAttribute("int")]
         public virtual int Id { get; set; }
+
+        [TempFieldTypeAttribute("varchar(20)")]
         public virtual string Name { get; set; }
     }
 
+    [NotMapped]
+    public class TemporaryStudentIdentityDto : TemporaryStudentIdentity
+    {
+    }
 }

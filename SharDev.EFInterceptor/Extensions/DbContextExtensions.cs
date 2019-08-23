@@ -1,6 +1,7 @@
 ﻿using SharDev.EFInterceptor.DbContext;
 using SharDev.EFInterceptor.Model;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace SharDev.EFInterceptor.Extensions
@@ -20,10 +21,20 @@ namespace SharDev.EFInterceptor.Extensions
             public static T WithTempExpression<T>(this DbContextInterceptor dbContextExtended, IQueryable<ITempTable> expression)
                 where T : class
             {
-                //Add validation logic: 1. does expression per item already exist, 2. does method is typeof IQueryable
+                var sql = expression.ToTraceQuery();
 
-                dbContextExtended.InsertTempExpressions(expression);
+                var objectQuery = expression.GetObjectQuery();
 
+                var positions = objectQuery.GetQueryPropertyPositions();
+
+                var tempTableType = expression.ElementType.FullName;
+                if (dbContextExtended.TempSqlQueriesList.ContainsKey(tempTableType))
+                {
+                    throw new Exception("temp table key alred there");
+                }
+
+                dbContextExtended.InsertTempExpressions(tempTableType, sql);
+                 
                 return dbContextExtended as T;
             }
         }

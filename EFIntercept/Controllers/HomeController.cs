@@ -51,23 +51,25 @@ namespace EFIntercept.Controllers
             return View();
         }
 
-        public IQueryable<TemporaryStudentIdentity> FirstExpression(DbContextInterceptor context, int a, int b, string c)
+        public IQueryable<TemporaryStudentIdentityDto> FirstExpression(DbContextInterceptor context, int a, int b, string c)
         {
             var myContext = context as AdventureWorksDW2008R2Entities;
-            var resselersQuery = myContext.DimReseller.Where(t => t.FirstOrderYear == 4).Select(x => new TemporaryStudentIdentity
+            var resselersQuery = myContext.DimReseller.Where(t => t.FirstOrderYear == 4).Select(x => new TemporaryStudentIdentityDto
             {
                 Name = x.YearOpened.ToString(),
                 Id = (int)x.FirstOrderYear,
             });
+            var test = resselersQuery.ToTraceQuery<TemporaryStudentIdentityDto>();
 
-            /*
             var resselersQuery1 = myContext.DimReseller.Where(t => t.FirstOrderYear == 4).Select(x => new TempTable
             {
                 Name = x.YearOpened.ToString(),
                 Id = (int)x.FirstOrderYear,
             });
-            var test = resselersQuery1.ToTraceQuery<TempTable>();
-            */
+            var test1 = resselersQuery1.ToTraceQuery<TempTable>();
+            
+           // return myContext.DimTest.Select(x => new TemporaryStudentIdentityDto { Id = x.Id, Name = x.Name });
+
             return resselersQuery;
         }
 
