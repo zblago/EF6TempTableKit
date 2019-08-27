@@ -44,7 +44,6 @@ namespace SharDev.EFInterceptor.Extensions
                     Type = f.CustomAttributes.Single(ca => ca.AttributeType == typeof(Attributes.TempFieldTypeAttribute)).ConstructorArguments.Single().Value.ToString()
                 }).ToDictionary(ft => ft.Name, ft => ft.Type);
 
-
                 var tempTableCreator = new TempTableCreator();
                 var ddlDmlDqlQuery = tempTableCreator.DropIfExists(tempTableName).Create(tempTableName, fieldsAndTypes).AdInsertQuery(tempTableName, positions, tempTableExpressionsql);
 

@@ -16,7 +16,8 @@ namespace SharDev.EFInterceptor.SqlUtility
 
         public TempTableCreator Create(string tempTableName, IDictionary<string, string> fieldsWithTypes)
         {
-             _tempTableDdl.AppendLine($"CREATE TABLE {tempTableName}");
+            _tempTableDdl.AppendLine();
+            _tempTableDdl.AppendLine($"CREATE TABLE {tempTableName}");
             _tempTableDdl.AppendLine("(");
             ushort i = 0;
             int count = fieldsWithTypes.Count;
@@ -28,7 +29,7 @@ namespace SharDev.EFInterceptor.SqlUtility
                 var fieldValue = fieldWithType.Value;
                 _tempTableDdl.AppendLine($"\t{fieldName} {fieldValue}{(isLastItem ? "" : ",")}");
             }
-            _tempTableDdl.Append(")");
+            _tempTableDdl.AppendLine(")");
 
             return this;
         }
@@ -49,7 +50,7 @@ namespace SharDev.EFInterceptor.SqlUtility
             tempSelectBuilder.AppendLine($"SELECT { selectedColumnsInTopSelectClause } FROM");
             tempSelectBuilder.AppendLine($"({query}) AS aliasTemp ({ selectedColumnsInSubSelectClause })");
 
-            var finallQuery =  tempSelectBuilder;
+            var finallQuery = tempSelectBuilder.AppendLine();
 
             return _tempTableDdl.Append(finallQuery).ToString();
         }

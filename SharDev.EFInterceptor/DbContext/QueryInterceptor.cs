@@ -20,9 +20,7 @@ namespace SharDev.EFInterceptor.DbContext
                 var currentCommandText = command.CommandText;
                 foreach (var sqlTempQuery in ((DbContextInterceptor)dbContextInterceptor).TempSqlQueriesList)
                 {
-                    //apply sql utitliy here
-                    //take field types from custom attribute
-                    currentCommandText = sqlTempQuery + currentCommandText;
+                    currentCommandText = sqlTempQuery.Value + currentCommandText;
                 }
                 command.CommandText = currentCommandText;
             }
