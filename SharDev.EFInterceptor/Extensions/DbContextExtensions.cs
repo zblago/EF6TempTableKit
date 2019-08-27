@@ -4,6 +4,7 @@ using SharDev.EFInterceptor.SqlUtility;
 using System;
 using System.Linq;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Collections.Generic;
 
 namespace SharDev.EFInterceptor.Extensions
 {
@@ -34,20 +35,20 @@ namespace SharDev.EFInterceptor.Extensions
 
                 var tempTableNameFromConstructor = expression.ElementType.BaseType.CustomAttributes.Single(cs => cs.AttributeType == typeof(TableAttribute)).ConstructorArguments[0].Value;
                 var tempTableNameFromArguments = expression.ElementType.BaseType.CustomAttributes.Single(cs => cs.AttributeType == typeof(TableAttribute)).NamedArguments.Where(n => n.MemberName == nameof(TableAttribute.Name));
+                var tempTableName = tempTableNameFromConstructor != null ? tempTableNameFromConstructor.ToString() : tempTableNameFromArguments.ToString();
 
                 var fields = expression.ElementType.BaseType.GetProperties().Where(p => p.CustomAttributes.Any(ca => ca.AttributeType == typeof (Attributes.TempFieldTypeAttribute)));
-                var fieldName = fields.Select(f => new
-                    {
-                        Name = f.Name,
-                        FieldType = f.CustomAttributes.Single(ca => ca.AttributeType == typeof(Attributes.TempFieldTypeAttribute))
-                            .ConstructorArguments.Single().Value
-                });
+                var fieldsAndTypes = fields.Select(f => new
+                {
+                    f.Name,
+                    Type = f.CustomAttributes.Single(ca => ca.AttributeType == typeof(Attributes.TempFieldTypeAttribute)).ConstructorArguments.Single().Value.ToString()
+                }).ToDictionary(ft => ft.Name, ft => ft.Type);
 
 
                 var tempTableCreator = new TempTableCreator();
-                //tempTableCreator.CreateTempTable("").AddInsertQuery();
+                var ddlDmlDqlQuery = tempTableCreator.DropIfExists(tempTableName).Create(tempTableName, fieldsAndTypes).AdInsertQuery(tempTableName, positions, tempTableExpressionsql);
 
-                dbContextExtended.InsertTempExpressions(tempTableType, tempTableExpressionsql);
+                dbContextExtended.InsertTempExpressions(tempTableType, ddlDmlDqlQuery);
                  
                 return dbContextExtended as T;
             }

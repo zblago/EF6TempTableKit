@@ -76,23 +76,23 @@ namespace EFIntercept.Controllers
         //custom code - user can change it
         public string ModifiyCommandText(DbContextInterceptor context, string commandText)
         {
-            var myContext = context as AdventureWorksDW2008R2Entities;
-            var a = 5;
-            var resselersQuery = myContext.DimReseller.Where(t => t.FirstOrderYear == a).Select(x => new TempTable
-            {
-                Name = x.YearOpened.ToString(),
-                Id = (int)x.FirstOrderYear,
-            });
-            var sql = (resselersQuery as System.Data.Entity.Infrastructure.DbQuery<TempTable>).Sql.Replace("1 AS [C1],", "");
+            //var myContext = context as AdventureWorksDW2008R2Entities;
+            //var a = 5;
+            //var resselersQuery = myContext.DimReseller.Where(t => t.FirstOrderYear == a).Select(x => new TempTable
+            //{
+            //    Name = x.YearOpened.ToString(),
+            //    Id = (int)x.FirstOrderYear,
+            //});
+            //var sql = (resselersQuery as System.Data.Entity.Infrastructure.DbQuery<TempTable>).Sql.Replace("1 AS [C1],", "");
 
-            var tempTableCreator = new TempTableCreator();
-            var tempTableWithQuery = tempTableCreator.CreateTempTable(new List<Func<string>>
-                {
-                    () => { return "Id int"; },
-                    () => { return "Name varchar(100)"; },
-                }, "#tempStudent").Insert(sql);
+            //var tempTableCreator = new TempTableCreator();
+            //var tempTableWithQuery = tempTableCreator.CreateTempTable(new List<Func<string>>
+            //    {
+            //        () => { return "Id int"; },
+            //        () => { return "Name varchar(100)"; },
+            //    }, "#tempStudent").Insert(sql);
 
-            commandText = tempTableWithQuery + commandText;
+            //commandText = tempTableWithQuery + commandText;
 
             return commandText;
         }
