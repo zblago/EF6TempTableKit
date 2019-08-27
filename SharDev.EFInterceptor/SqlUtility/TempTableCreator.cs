@@ -34,7 +34,7 @@ namespace SharDev.EFInterceptor.SqlUtility
             return this;
         }
 
-        public string AdInsertQuery(string tempTableName, IReadOnlyDictionary<string, int> fieldsWithPositions, string query)
+        public string AddInsertQuery(string tempTableName, IReadOnlyDictionary<string, int> fieldsWithPositions, string query)
         {
             var fieldsWithPositionsSorted = fieldsWithPositions.OrderBy(f => f.Value);
             var isFirstColumnGreaterThanZero = fieldsWithPositionsSorted.First().Value > 0;

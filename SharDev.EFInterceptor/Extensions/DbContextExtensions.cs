@@ -45,7 +45,7 @@ namespace SharDev.EFInterceptor.Extensions
                 }).ToDictionary(ft => ft.Name, ft => ft.Type);
 
                 var tempTableCreator = new TempTableCreator();
-                var ddlDmlDqlQuery = tempTableCreator.DropIfExists(tempTableName).Create(tempTableName, fieldsAndTypes).AdInsertQuery(tempTableName, positions, tempTableExpressionsql);
+                var ddlDmlDqlQuery = tempTableCreator.DropIfExists(tempTableName).Create(tempTableName, fieldsAndTypes).AddInsertQuery(tempTableName, positions, tempTableExpressionsql);
 
                 dbContextExtended.InsertTempExpressions(tempTableType, ddlDmlDqlQuery);
                  
