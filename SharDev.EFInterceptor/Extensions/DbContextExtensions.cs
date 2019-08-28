@@ -4,7 +4,6 @@ using SharDev.EFInterceptor.SqlUtility;
 using System;
 using System.Linq;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Collections.Generic;
 
 namespace SharDev.EFInterceptor.Extensions
 {
@@ -44,10 +43,15 @@ namespace SharDev.EFInterceptor.Extensions
                     Type = f.CustomAttributes.Single(ca => ca.AttributeType == typeof(Attributes.TempFieldTypeAttribute)).ConstructorArguments.Single().Value.ToString()
                 }).ToDictionary(ft => ft.Name, ft => ft.Type);
 
-                var tempTableCreator = new TempTableCreator();
-                var ddlDmlDqlQuery = tempTableCreator.DropIfExists(tempTableName).Create(tempTableName, fieldsAndTypes).AddInsertQuery(tempTableName, positions, tempTableExpressionsql);
+                var tempTableCreator = new TempTableCreator(tempTableName);
+                var ddlQuery = tempTableCreator.DropIfExists().Create(fieldsAndTypes).GetQuery();
 
-                dbContextExtended.InsertTempExpressions(tempTableType, ddlDmlDqlQuery);
+                var insertQueryCreator = new InsertQueryCreator(tempTableName);
+                var dmlQuery = insertQueryCreator.AddInsertQuery(positions, tempTableExpressionsql).GetQuery();
+
+                var ddlWithDmlQuery = ddlQuery + dmlQuery;
+
+                dbContextExtended.InsertTempExpressions(tempTableType, ddlWithDmlQuery);
                  
                 return dbContextExtended as T;
             }

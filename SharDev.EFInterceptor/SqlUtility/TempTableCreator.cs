@@ -1,63 +1,48 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
 namespace SharDev.EFInterceptor.SqlUtility
 {
-    public class TempTableCreator
+    public sealed class TempTableCreator : BaseCreator
     {
-        private StringBuilder _tempTableDdl;
+        private readonly string _tempTableName;
 
-        public TempTableCreator()
+        public TempTableCreator(string tempTableName)
         {
-            _tempTableDdl = new StringBuilder();
+            _tempTableName = tempTableName;
         }
 
-        public TempTableCreator Create(string tempTableName, IDictionary<string, string> fieldsWithTypes)
+        public TempTableCreator Create(IDictionary<string, string> fieldsWithTypes)
         {
-            _tempTableDdl.AppendLine();
-            _tempTableDdl.AppendLine($"CREATE TABLE {tempTableName}");
-            _tempTableDdl.AppendLine("(");
+            _baseQueryBuilder.AppendLine($"CREATE TABLE {_tempTableName}");
+            _baseQueryBuilder.AppendLine("(");
+
             ushort i = 0;
             int count = fieldsWithTypes.Count;
             bool isLastItem = false;
+
             foreach (var fieldWithType in fieldsWithTypes)
             {
                 isLastItem = ++i == count ? true : false;
+
                 var fieldName = fieldWithType.Key;
                 var fieldValue = fieldWithType.Value;
-                _tempTableDdl.AppendLine($"\t{fieldName} {fieldValue}{(isLastItem ? "" : ",")}");
+
+                _baseQueryBuilder.AppendLine($"\t{fieldName} {fieldValue}{(isLastItem ? "" : ",")}");
             }
-            _tempTableDdl.AppendLine(")");
+            _baseQueryBuilder.AppendLine(")");
 
             return this;
         }
 
-        public string AddInsertQuery(string tempTableName, IReadOnlyDictionary<string, int> fieldsWithPositions, string query)
+        public TempTableCreator DropIfExists()
         {
-            var fieldsWithPositionsSorted = fieldsWithPositions.OrderBy(f => f.Value);
-            var isFirstColumnGreaterThanZero = fieldsWithPositionsSorted.First().Value > 0;
-
-            var selectedColumns = string.Join(", ", fieldsWithPositionsSorted.Select(f => f.Key).ToArray());
-            _tempTableDdl.AppendLine();
-            _tempTableDdl.AppendLine($"INSERT INTO {tempTableName}({ selectedColumns }) ");
-
-            var tempSelectBuilder = new StringBuilder();
-            var selectedColumnsInTopSelectClause = $"{ selectedColumns }";
-            var selectedColumnsInSubSelectClause = $"{ (isFirstColumnGreaterThanZero ? "TempColumn, " : " ") } { selectedColumns }";
-
-            tempSelectBuilder.AppendLine($"SELECT { selectedColumnsInTopSelectClause } FROM");
-            tempSelectBuilder.AppendLine($"({query}) AS aliasTemp ({ selectedColumnsInSubSelectClause })");
-
-            var finallQuery = tempSelectBuilder.AppendLine();
-
-            return _tempTableDdl.Append(finallQuery).ToString();
-        }
-
-        public TempTableCreator DropIfExists(string tempTableName)
-        {
-            _tempTableDdl.AppendLine($"IF OBJECT_ID('tempdb..{tempTableName}') IS NOT NULL{Environment.NewLine}BEGIN{Environment.NewLine}\tDROP TABLE {tempTableName}{Environment.NewLine}END {Environment.NewLine}");
+            _baseQueryBuilder.AppendLine($"IF OBJECT_ID('tempdb..{_tempTableName}') IS NOT NULL");
+            _baseQueryBuilder.AppendLine("BEGIN");
+            _baseQueryBuilder.AppendLine($"\tDROP TABLE {_tempTableName}");
+            _baseQueryBuilder.AppendLine("END");
+            _baseQueryBuilder.AppendLine();
 
             return this;
         }
