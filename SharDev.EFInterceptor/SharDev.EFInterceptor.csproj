@@ -60,6 +60,7 @@
     <Compile Include="SqlUtility\InsertQueryCreator.cs" />
     <Compile Include="SqlUtility\TempTableCreator.cs" />
     <Compile Include="Model\ITempTable.cs" />
+    <Compile Include="TableMetadataProvider.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

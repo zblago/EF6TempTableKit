@@ -13,7 +13,7 @@ namespace SharDev.EFInterceptor.SqlUtility
             _tempTableName = tempTableName;
         }
 
-        public TempTableCreator Create(IDictionary<string, string> fieldsWithTypes)
+        public TempTableCreator Create(IReadOnlyDictionary<string, string> fieldsWithTypes)
         {
             _baseQueryBuilder.AppendLine($"CREATE TABLE {_tempTableName}");
             _baseQueryBuilder.AppendLine("(");
