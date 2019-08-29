@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Text;
 
-namespace SharDev.EFInterceptor.SqlUtility
+namespace SharDev.EFInterceptor.SqlUtility.SqlCommands
 {
     public sealed class TempTableCreator : BaseCreator
     {

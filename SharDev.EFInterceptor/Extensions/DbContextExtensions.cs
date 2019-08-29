@@ -1,9 +1,8 @@
 ﻿using SharDev.EFInterceptor.DbContext;
 using SharDev.EFInterceptor.Model;
-using SharDev.EFInterceptor.SqlUtility;
 using System;
 using System.Linq;
-using System.ComponentModel.DataAnnotations.Schema;
+using SharDev.EFInterceptor.SqlCommands;
 
 namespace SharDev.EFInterceptor.Extensions
 {
@@ -29,21 +28,21 @@ namespace SharDev.EFInterceptor.Extensions
                 }
 
                 var tableMetadataProvider = new TableMetadataProvider();
-
                 var tempTableName = tableMetadataProvider.GetTableNameFromBaseType(expression.ElementType.BaseType);
-                var tempTableCreator = new TempTableCreator(tempTableName);
-                var fieldsAndTypes = tableMetadataProvider.GetFieldWithPositionsFromBaseType(expression.ElementType.BaseType);
-                var ddlQuery = tempTableCreator.DropIfExists().Create(fieldsAndTypes).GetQuery();
+                var fieldsWithTypes = tableMetadataProvider.GetFieldWithPositionsFromBaseType(expression.ElementType.BaseType);
 
-                var tempTableExpressionsql = expression.ToTraceQuery();
-                var insertQueryCreator = new InsertQueryCreator(tempTableName);
+                var sqlSelectQuery = expression.ToTraceQuery();
                 var objectQuery = expression.GetObjectQuery();
-                var positions = objectQuery.GetQueryPropertyPositions();
-                var dmlQuery = insertQueryCreator.AddInsertQuery(positions, tempTableExpressionsql).GetQuery();
+                var fieldsWithPositions = objectQuery.GetQueryPropertyPositions();
 
-                var ddlWithDmlQuery = ddlQuery + dmlQuery;
+                var sqlAllCommandsQuery = SqlInsertCommandBuilder
+                    .Begin(tempTableName)
+                    .DropIfExists()
+                    .Create(fieldsWithTypes)
+                    .AddInsertQuery(fieldsWithPositions, sqlSelectQuery)
+                    .Execute();
 
-                dbContextExtended.InsertTempExpressions(tempTableType, ddlWithDmlQuery);
+                dbContextExtended.InsertTempExpressions(tempTableType, sqlAllCommandsQuery);
                  
                 return dbContextExtended as T;
             }

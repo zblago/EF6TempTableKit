@@ -56,9 +56,14 @@
     <Compile Include="Extensions\IQueryableExtesions.cs" />
     <Compile Include="Extensions\ObjectQueryExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SqlCommands\Interfaces\IExecute.cs" />
+    <Compile Include="SqlCommands\Interfaces\ICreate.cs" />
+    <Compile Include="SqlCommands\Interfaces\IDrop.cs" />
+    <Compile Include="SqlCommands\Interfaces\IInsertQuery.cs" />
+    <Compile Include="SqlCommands\SqlInsertCommandBuilder.cs" />
     <Compile Include="SqlUtility\BaseCreator.cs" />
-    <Compile Include="SqlUtility\InsertQueryCreator.cs" />
-    <Compile Include="SqlUtility\TempTableCreator.cs" />
+    <Compile Include="SqlCommands\InsertQueryCreator.cs" />
+    <Compile Include="SqlCommands\TempTableCreator.cs" />
     <Compile Include="Model\ITempTable.cs" />
     <Compile Include="TableMetadataProvider.cs" />
   </ItemGroup>
