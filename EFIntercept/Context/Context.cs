@@ -9,8 +9,18 @@
     using System.Data.Entity;
 
 
+    public class DbConfig1 : DbConfiguration
+    {
+        public DbConfig1()
+        {
+        
+        }
+    }
+
+    //[DbConfigurationType(typeof(DbConfig1))]
     public partial class AdventureWorksDW2008R2Entities : DbContextInterceptor
     {
+
 
         public AdventureWorksDW2008R2Entities() : base("name=AdventureWorksDW2008R2Entities")
         {

@@ -3,13 +3,43 @@ using SharDev.EFInterceptor.Model;
 using System;
 using System.Linq;
 using SharDev.EFInterceptor.SqlCommands;
+using System.Collections.Generic;
 
 namespace SharDev.EFInterceptor.Extensions
 {
+    interface IWithCustomQuery
+    {
+        T WithCustomQuery<T>() where T : class;
+    } 
+
+    public class TempTableHolder : IWithCustomQuery
+    {
+        private IDictionary<string, string> TempSqlQueriesList { set; get; }
+
+        public static TempTableHolder Create(System.Data.Entity.DbContext dbContext) => new TempTableHolder(dbContext);
+
+        public System.Data.Entity.DbContext _dbContext;
+
+        public TempTableHolder(System.Data.Entity.DbContext dbContext)
+        {
+            _dbContext = dbContext;
+        }
+
+        public T WithCustomQuery<T>() where T : class
+        {
+            return _dbContext as T;
+        }
+    }
+
     namespace SharkDev.Extensions
     {
         public static class DbContextExtensions
         {
+            public static TempTableHolder UseTempTablesOnContext(this System.Data.Entity.DbContext dbContext, string test)
+            {
+                return TempTableHolder.Create(dbContext);
+            }
+
             public static T WithCustomQuery<T>(this DbContextInterceptor dbContextExtended, Func<DbContextInterceptor, string, string> method) 
                 where T : class
             {

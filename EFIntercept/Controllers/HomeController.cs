@@ -34,8 +34,8 @@ namespace EFIntercept.Controllers
                 var q = FirstExpression(adventureWorksDW2008R2Entities, a, b, c1);
                 var q1 = ModifiyCommandText(adventureWorksDW2008R2Entities, "");
                 var listResseler = adventureWorksDW2008R2Entities
-                    .WithTempExpression<AdventureWorksDW2008R2Entities>(q)
-                    //.WithCustomQuery<AdventureWorksDW2008R2Entities>(ModifiyCommandText)
+                    .UseTempTablesOnContext("nameOfTempTable")
+                    .WithCustomQuery<AdventureWorksDW2008R2Entities>()
                     .DimReseller.Join(adventureWorksDW2008R2Entities.TemporaryStudents,
                     c => c.ResellerKey,
                     c => c.Id,
