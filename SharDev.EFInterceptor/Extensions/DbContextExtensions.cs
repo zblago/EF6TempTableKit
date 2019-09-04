@@ -5,47 +5,44 @@ using System.Linq;
 using SharDev.EFInterceptor.SqlCommands;
 
 namespace SharDev.EFInterceptor.Extensions
-{
-    namespace SharkDev.Extensions
+{ 
+    public static class DbContextExtensions
     {
-        public static class DbContextExtensions
+        public static T WithCustomQuery<T>(this DbContextInterceptor dbContextExtended, Func<DbContextInterceptor, string, string> method) 
+            where T : class
         {
-            public static T WithCustomQuery<T>(this DbContextInterceptor dbContextExtended, Func<DbContextInterceptor, string, string> method) 
-                where T : class
-            {
-                dbContextExtended.Method = method;
+            dbContextExtended.Method = method;
 
-                return dbContextExtended as T;
+            return dbContextExtended as T;
+        }
+
+        public static T WithTempExpression<T>(this DbContextInterceptor dbContextExtended, IQueryable<ITempTable> expression)
+            where T : class
+        {
+            var tempTableType = expression.ElementType.FullName;
+            if (dbContextExtended.TempSqlQueriesList.ContainsKey(tempTableType))
+            {
+                throw new Exception("temp table key already there");
             }
 
-            public static T WithTempExpression<T>(this DbContextInterceptor dbContextExtended, IQueryable<ITempTable> expression)
-                where T : class
-            {
-                var tempTableType = expression.ElementType.FullName;
-                if (dbContextExtended.TempSqlQueriesList.ContainsKey(tempTableType))
-                {
-                    throw new Exception("temp table key already there");
-                }
+            var tableMetadataProvider = new TableMetadataProvider();
+            var tempTableName = tableMetadataProvider.GetTableNameFromBaseType(expression.ElementType.BaseType);
+            var fieldsWithTypes = tableMetadataProvider.GetFieldWithPositionsFromBaseType(expression.ElementType.BaseType);
 
-                var tableMetadataProvider = new TableMetadataProvider();
-                var tempTableName = tableMetadataProvider.GetTableNameFromBaseType(expression.ElementType.BaseType);
-                var fieldsWithTypes = tableMetadataProvider.GetFieldWithPositionsFromBaseType(expression.ElementType.BaseType);
+            var sqlSelectQuery = expression.ToTraceQuery();
+            var objectQuery = expression.GetObjectQuery();
+            var fieldsWithPositions = objectQuery.GetQueryPropertyPositions();
 
-                var sqlSelectQuery = expression.ToTraceQuery();
-                var objectQuery = expression.GetObjectQuery();
-                var fieldsWithPositions = objectQuery.GetQueryPropertyPositions();
+            var sqlAllCommandsQuery = SqlInsertCommandBuilder
+                .Begin(tempTableName)
+                .DropIfExists()
+                .Create(fieldsWithTypes)
+                .AddInsertQuery(fieldsWithPositions, sqlSelectQuery)
+                .Execute();
 
-                var sqlAllCommandsQuery = SqlInsertCommandBuilder
-                    .Begin(tempTableName)
-                    .DropIfExists()
-                    .Create(fieldsWithTypes)
-                    .AddInsertQuery(fieldsWithPositions, sqlSelectQuery)
-                    .Execute();
-
-                dbContextExtended.InsertTempExpressions(tempTableType, sqlAllCommandsQuery);
+            dbContextExtended.InsertTempExpressions(tempTableType, sqlAllCommandsQuery);
                  
-                return dbContextExtended as T;
-            }
+            return dbContextExtended as T;
         }
     }
 }
