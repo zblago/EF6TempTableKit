@@ -27,7 +27,7 @@ namespace SharDev.EFInterceptor.Extensions
 
             var tableMetadataProvider = new TableMetadataProvider();
             var tempTableName = tableMetadataProvider.GetTableNameFromBaseType(expression.ElementType.BaseType);
-            var fieldsWithTypes = tableMetadataProvider.GetFieldWithPositionsFromBaseType(expression.ElementType.BaseType);
+            var fieldsWithTypes = tableMetadataProvider.GetFieldsWithTypes(expression.ElementType.BaseType);
 
             var sqlSelectQuery = expression.ToTraceQuery();
             var objectQuery = expression.GetObjectQuery();

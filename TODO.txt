@@ -1,0 +1,5 @@
+1. Clear temp query after attaching it to context
+2. Avoid inheritance
+3. Try to write Database Initializer in order to avoid checking temp tables in DB Database.SetInitializer<QueryContext>(null);
+4. Replace ITempTable with a custom attribute
+5. Take care about number of fields in Temp class and number of fields in mapping, otherwise exception is being thrown.
