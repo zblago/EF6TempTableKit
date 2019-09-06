@@ -41,7 +41,7 @@ namespace SharDev.EFInterceptor.Extensions
                 .Execute();
 
             dbContextExtended.InsertTempExpressions(tempTableType, sqlAllCommandsQuery);
-                 
+
             return dbContextExtended as T;
         }
     }
