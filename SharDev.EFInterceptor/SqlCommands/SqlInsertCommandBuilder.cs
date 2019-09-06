@@ -68,7 +68,7 @@ namespace SharDev.EFInterceptor.SqlCommands
             _dmlQueryBuilder.AppendLine($"INSERT INTO {_tempTableName}({ selectedColumns }) ");
 
             var selectedColumnsInTopSelectClause = $"{ selectedColumns }";
-            var selectedColumnsInSubSelectClause = $"{ (isFirstColumnGreaterThanZero ? "TempColumn, " : " ") } { selectedColumns }";
+            var selectedColumnsInSubSelectClause = $"{ (isFirstColumnGreaterThanZero ? "TempColumn, " : "") }{ selectedColumns }";
 
             _dqlQueryBuilder.AppendLine($"SELECT { selectedColumnsInTopSelectClause } FROM");
             _dqlQueryBuilder.AppendLine($"({sqlSelectQuery}) AS alias{_tempTableName.Replace("#", "")} ({ selectedColumnsInSubSelectClause })");
