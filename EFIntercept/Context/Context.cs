@@ -71,6 +71,9 @@
 
         [TempFieldTypeAttribute("varchar(20)")]
         public virtual string Name { get; set; }
+
+        [TempFieldTypeAttribute("varchar(20)")]
+        public virtual string Name1 { get; set; }
     }
 
     [NotMapped]
