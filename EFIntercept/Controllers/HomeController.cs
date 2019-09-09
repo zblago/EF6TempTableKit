@@ -47,7 +47,7 @@ namespace EFIntercept.Controllers
             return View();
         }
 
-        public IQueryable<TemporaryStudentIdentityDto> FirstExpression(DbContextWithTempTable context, int a, int b, string c)
+        public IQueryable<TemporaryStudentIdentityDto> FirstExpression(DbContext context, int a, int b, string c)
         {
             var myContext = context as AdventureWorksDW2008R2Entities;
             var resselersQuery = myContext.DimReseller.Where(t => t.FirstOrderYear == 4).Select(x => new TemporaryStudentIdentityDto
@@ -70,7 +70,7 @@ namespace EFIntercept.Controllers
         }
 
         //custom code - user can change it
-        public string ModifiyCommandText(DbContextWithTempTable context, string commandText)
+        public string ModifiyCommandText(DbContext context, string commandText)
         {
             //var myContext = context as AdventureWorksDW2008R2Entities;
             //var a = 5;

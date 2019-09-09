@@ -8,19 +8,21 @@ namespace EF6TempTableKit.Extensions
 {
     public static class DbContextExtensions
     {
-        public static T WithCustomQuery<T>(this DbContextWithTempTable dbContexWithTempTable, Func<DbContextWithTempTable, string, string> method) 
+        public static T WithCustomQuery<T>(this System.Data.Entity.DbContext dbContexWithTempTable, 
+            Func<System.Data.Entity.DbContext, string, string> method) 
             where T : class
         {
-            dbContexWithTempTable.Method = method;
+            ((IDbContextWithTempTable)dbContexWithTempTable).TempTableContainer.Method = method;
 
             return dbContexWithTempTable as T;
         }
 
-        public static T WithTempTableExpression<T>(this DbContextWithTempTable dbContexWithTempTable, IQueryable<ITempTable> expression)
+        public static T WithTempTableExpression<T>(this System.Data.Entity.DbContext dbContexWithTempTable, IQueryable<ITempTable> expression)
             where T : class
         {
             var tempTableType = expression.ElementType.FullName;
-            if (dbContexWithTempTable.TempSqlQueriesList.ContainsKey(tempTableType))
+            var contextWithTempTable = (IDbContextWithTempTable)dbContexWithTempTable;
+            if (contextWithTempTable.TempTableContainer.TempSqlQueriesList.ContainsKey(tempTableType))
             {
                 throw new Exception($"Can't override query for temp table {tempTableType} as it is already attached to the context.");
             }
@@ -40,7 +42,7 @@ namespace EF6TempTableKit.Extensions
                 .AddInsertQuery(fieldsWithPositions, sqlSelectQuery)
                 .Execute();
 
-            dbContexWithTempTable.InsertTempExpressions(tempTableType, sqlAllCommandsQuery);
+            contextWithTempTable.TempTableContainer.TempSqlQueriesList.Add(tempTableType, sqlAllCommandsQuery);
                  
             return dbContexWithTempTable as T;
         }

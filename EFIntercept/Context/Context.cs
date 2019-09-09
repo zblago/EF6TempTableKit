@@ -4,16 +4,27 @@
     using EF6TempTableKit.DbContext;
     using EF6TempTableKit.Model;
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity;
 
 
-    public partial class AdventureWorksDW2008R2Entities : DbContextWithTempTable
+    public class DbConfig : DbConfiguration
+    {
+        public DbConfig()
+        {
+            AddInterceptor(new QueryInterceptor());
+        }
+    }
+
+    [DbConfigurationType(typeof(DbConfig))]
+    public partial class AdventureWorksDW2008R2Entities : DbContext, IDbContextWithTempTable
     {
 
         public AdventureWorksDW2008R2Entities() : base("name=AdventureWorksDW2008R2Entities")
         {
+            this.TempTableContainer = new TempTableContainer();
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -24,6 +35,8 @@
         public virtual DbSet<DimReseller> DimReseller { get; set; }
         public virtual DbSet<DimTest> DimTest { get; set; }
         public virtual DbSet<TemporaryStudentIdentity> TemporaryStudents { get; set; }
+
+        public TempTableContainer TempTableContainer { get; set; }
     }
 
     [Table("DimReseller")]
