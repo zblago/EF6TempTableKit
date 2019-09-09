@@ -39,6 +39,8 @@ namespace EFIntercept.Controllers
                         Id = reseller.ResellerKey,
                         Name = reseller.ResellerName,
                     }).ToList();
+
+                var t = adventureWorksDW2008R2Entities.DimReseller.First();
                 
             }
 

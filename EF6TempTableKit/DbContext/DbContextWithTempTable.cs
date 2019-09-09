@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Data.Entity;
+using System.Data.Entity.Core.Objects;
+using System.Data.Entity.Infrastructure;
 
 namespace EF6TempTableKit.DbContext
 {
@@ -11,24 +14,30 @@ namespace EF6TempTableKit.DbContext
 
         public Func<DbContextWithTempTable, string, string> Method { get; set; }
 
-        public DbContextWithTempTable(string connectionString, System.Data.Entity.Infrastructure.DbCompiledModel model)
-            : base(connectionString, model)
+        public DbContextWithTempTable(string nameOrConnectionString) 
+            : base(nameOrConnectionString)
+        {
+            TempSqlQueriesList = new Dictionary<string, string>();
+        }
+
+        public DbContextWithTempTable(string nameOrConnectionString, DbCompiledModel model)
+            : base(nameOrConnectionString, model)
         {
         }
 
-        public DbContextWithTempTable(System.Data.Common.DbConnection existingConnection, bool contextOwnsConnection)
+        public DbContextWithTempTable(DbConnection existingConnection, bool contextOwnsConnection)
             : base(existingConnection, contextOwnsConnection)
         {
         }
 
-        public DbContextWithTempTable(System.Data.Common.DbConnection existingConnection, System.Data.Entity.Infrastructure.DbCompiledModel model, bool contextOwnsConnection)
-            : base(existingConnection, model, contextOwnsConnection)
+        public DbContextWithTempTable(ObjectContext objectContext, bool dbContextOwnsObjectContext)
+            : base(objectContext, dbContextOwnsObjectContext)
         {
         }
 
-        public DbContextWithTempTable(string nameOrConnectionString) : base(nameOrConnectionString)
+        public DbContextWithTempTable(DbConnection existingConnection, DbCompiledModel model, bool contextOwnsConnection)
+            : base (existingConnection, model, contextOwnsConnection)
         {
-            TempSqlQueriesList = new Dictionary<string, string>();
         }
 
         public void InsertTempExpressions(string type, string expression)

@@ -15,14 +15,16 @@ namespace EF6TempTableKit.DbContext
         private void AddModifyMethod<T>(DbCommand command, DbCommandInterceptionContext<T> interceptionContext)
         {
             var dbContextWithTempTable = FindDbContextWithTempTable(interceptionContext.DbContexts);
-            if (dbContextWithTempTable != null && (dbContextWithTempTable).TempSqlQueriesList.Count > 0)
+            if (dbContextWithTempTable != null && dbContextWithTempTable.TempSqlQueriesList.Count > 0)
             {
                 var currentCommandText = command.CommandText;
-                foreach (var sqlTempQuery in (dbContextWithTempTable).TempSqlQueriesList)
+                foreach (var sqlTempQuery in dbContextWithTempTable.TempSqlQueriesList)
                 {
                     currentCommandText = sqlTempQuery.Value + currentCommandText;
                 }
                 command.CommandText = currentCommandText;
+
+                dbContextWithTempTable.TempSqlQueriesList.Clear();
             }
         }
 
