@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
-namespace SharDev.EFInterceptor
+namespace EF6TempTableKit
 {
     public sealed class TableMetadataProvider
     {
@@ -14,7 +14,7 @@ namespace SharDev.EFInterceptor
             return tempTableName;
         }
 
-        public IReadOnlyDictionary<string, string> GetFieldWithPositionsFromBaseType(Type baseType)
+        public IReadOnlyDictionary<string, string> GetFieldsWithTypes(Type baseType)
         {
             var fieldsWithTempFieldTypeAttribute = baseType
                 .GetProperties()

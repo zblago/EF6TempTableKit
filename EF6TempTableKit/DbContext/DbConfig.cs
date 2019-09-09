@@ -1,6 +1,6 @@
 ﻿using System.Data.Entity;
 
-namespace SharDev.EFInterceptor.DbContext
+namespace EF6TempTableKit.DbContext
 {
     public class DbConfig : DbConfiguration
     {

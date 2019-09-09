@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SharDev.EFInterceptor.Attributes
+namespace EF6TempTableKit.Attributes
 {
     [AttributeUsage(AttributeTargets.Property)]
     public class TempFieldTypeAttribute : Attribute

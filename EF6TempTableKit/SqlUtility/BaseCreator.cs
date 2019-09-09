@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace SharDev.EFInterceptor.SqlUtility
+namespace EF6TempTableKit.SqlUtility
 {
     public abstract class BaseCreator
     {

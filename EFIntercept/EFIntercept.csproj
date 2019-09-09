@@ -224,9 +224,9 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SharDev.EFInterceptor\SharDev.EFInterceptor.csproj">
-      <Project>{5b9b5bae-0377-4719-bf60-f6649221ca1c}</Project>
-      <Name>SharDev.EFInterceptor</Name>
+    <ProjectReference Include="..\EF6TempTableKit\EF6TempTableKit.csproj">
+      <Project>{aeb41811-d5c7-4dc5-8eac-d1f73a112e11}</Project>
+      <Name>EF6TempTableKit</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.28010.2003
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EFIntercept", "EFIntercept\EFIntercept.csproj", "{E21F8441-78FA-4EC2-BA4A-FC3CF7380424}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharDev.EFInterceptor", "SharDev.EFInterceptor\SharDev.EFInterceptor.csproj", "{5B9B5BAE-0377-4719-BF60-F6649221CA1C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EF6TempTableKit", "EF6TempTableKit\EF6TempTableKit.csproj", "{AEB41811-D5C7-4DC5-8EAC-D1F73A112E11}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{E21F8441-78FA-4EC2-BA4A-FC3CF7380424}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E21F8441-78FA-4EC2-BA4A-FC3CF7380424}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E21F8441-78FA-4EC2-BA4A-FC3CF7380424}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5B9B5BAE-0377-4719-BF60-F6649221CA1C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5B9B5BAE-0377-4719-BF60-F6649221CA1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5B9B5BAE-0377-4719-BF60-F6649221CA1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5B9B5BAE-0377-4719-BF60-F6649221CA1C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AEB41811-D5C7-4DC5-8EAC-D1F73A112E11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AEB41811-D5C7-4DC5-8EAC-D1F73A112E11}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AEB41811-D5C7-4DC5-8EAC-D1F73A112E11}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AEB41811-D5C7-4DC5-8EAC-D1F73A112E11}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,9 +1,9 @@
-﻿using SharDev.EFInterceptor.SqlCommands.Interfaces;
+﻿using EF6TempTableKit.SqlCommands.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace SharDev.EFInterceptor.SqlCommands
+namespace EF6TempTableKit.SqlCommands
 {
     public sealed class SqlInsertCommandBuilder : IDrop, ICreate, IInsertQuery, IExecute
     {
@@ -20,7 +20,7 @@ namespace SharDev.EFInterceptor.SqlCommands
             _ddlQueryBuilder = new StringBuilder();
             _dqlQueryBuilder = new StringBuilder();
             _dmlQueryBuilder = new StringBuilder();
-    }
+        }
 
         public static IDrop Begin(string tableName) => new SqlInsertCommandBuilder(tableName);
 
@@ -68,7 +68,7 @@ namespace SharDev.EFInterceptor.SqlCommands
             _dmlQueryBuilder.AppendLine($"INSERT INTO {_tempTableName}({ selectedColumns }) ");
 
             var selectedColumnsInTopSelectClause = $"{ selectedColumns }";
-            var selectedColumnsInSubSelectClause = $"{ (isFirstColumnGreaterThanZero ? "TempColumn, " : " ") } { selectedColumns }";
+            var selectedColumnsInSubSelectClause = $"{ (isFirstColumnGreaterThanZero ? "TempColumn, " : "") }{ selectedColumns }";
 
             _dqlQueryBuilder.AppendLine($"SELECT { selectedColumnsInTopSelectClause } FROM");
             _dqlQueryBuilder.AppendLine($"({sqlSelectQuery}) AS alias{_tempTableName.Replace("#", "")} ({ selectedColumnsInSubSelectClause })");
