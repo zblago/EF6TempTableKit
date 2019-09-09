@@ -22,10 +22,8 @@ namespace EF6TempTableKit.Extensions
         {
             var tempTableType = expression.ElementType.FullName;
             var contextWithTempTable = (IDbContextWithTempTable)dbContexWithTempTable;
-            if (contextWithTempTable.TempTableContainer.TempSqlQueriesList.ContainsKey(tempTableType))
-            {
-                throw new Exception($"Can't override query for temp table {tempTableType} as it is already attached to the context.");
-            }
+
+            Validate(contextWithTempTable, tempTableType);
 
             var tableMetadataProvider = new TableMetadataProvider();
             var tempTableName = tableMetadataProvider.GetTableNameFromBaseType(expression.ElementType.BaseType);
@@ -45,6 +43,19 @@ namespace EF6TempTableKit.Extensions
             contextWithTempTable.TempTableContainer.TempSqlQueriesList.Add(tempTableType, sqlAllCommandsQuery);
                  
             return dbContexWithTempTable as T;
+        }
+
+        private static void Validate(IDbContextWithTempTable contextWithTempTable, string tempTableType)
+        {
+            if (contextWithTempTable.TempTableContainer == null)
+            {
+                throw new Exception($"TempTableContainer is not instantiated. Please, make an instance in your DbContext.");
+            }
+
+            if (contextWithTempTable.TempTableContainer.TempSqlQueriesList.ContainsKey(tempTableType))
+            {
+                throw new Exception($"Can't override query for temp table {tempTableType} as it is already attached to the context.");
+            }
         }
     }
 }
