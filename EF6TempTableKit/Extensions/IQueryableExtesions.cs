@@ -1,7 +1,7 @@
 ﻿using System.Data.Entity.Core.Objects;
 using System.Linq;
 
-namespace SharDev.EFInterceptor.Extensions
+namespace EF6TempTableKit.Extensions
 {
     public static class IQueryableExtensions
     {

@@ -1,8 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using EF6TempTableKit.SqlUtility;
+using System.Collections.Generic;
 
-namespace SharDev.EFInterceptor.SqlUtility.SqlCommands
+namespace EF6TempTableKit.SqlCommands
 {
     public sealed class TempTableCreator : BaseCreator
     {

@@ -1,15 +1,15 @@
 ﻿namespace EFIntercept.Context
 {
-    using SharDev.EFInterceptor.Attributes;
-    using SharDev.EFInterceptor.DbContext;
-    using SharDev.EFInterceptor.Model;
+    using EF6TempTableKit.Attributes;
+    using EF6TempTableKit.DbContext;
+    using EF6TempTableKit.Model;
     using System;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity;
 
 
-    public partial class AdventureWorksDW2008R2Entities : DbContextInterceptor
+    public partial class AdventureWorksDW2008R2Entities : DbContextWithTempTable
     {
 
         public AdventureWorksDW2008R2Entities() : base("name=AdventureWorksDW2008R2Entities")

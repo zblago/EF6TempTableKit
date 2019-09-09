@@ -1,4 +1,4 @@
-﻿namespace SharDev.EFInterceptor.SqlCommands.Interfaces
+﻿namespace EF6TempTableKit.SqlCommands.Interfaces
 {
     public interface IExecute
     {

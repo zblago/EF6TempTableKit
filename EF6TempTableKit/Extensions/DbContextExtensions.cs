@@ -1,26 +1,26 @@
-﻿using SharDev.EFInterceptor.DbContext;
-using SharDev.EFInterceptor.Model;
-using System;
+﻿using System;
 using System.Linq;
-using SharDev.EFInterceptor.SqlCommands;
+using EF6TempTableKit.Model;
+using EF6TempTableKit.DbContext;
+using EF6TempTableKit.SqlCommands;
 
-namespace SharDev.EFInterceptor.Extensions
-{ 
+namespace EF6TempTableKit.Extensions
+{
     public static class DbContextExtensions
     {
-        public static T WithCustomQuery<T>(this DbContextInterceptor dbContextExtended, Func<DbContextInterceptor, string, string> method) 
+        public static T WithCustomQuery<T>(this DbContextWithTempTable dbContexWithTempTable, Func<DbContextWithTempTable, string, string> method) 
             where T : class
         {
-            dbContextExtended.Method = method;
+            dbContexWithTempTable.Method = method;
 
-            return dbContextExtended as T;
+            return dbContexWithTempTable as T;
         }
 
-        public static T WithTempExpression<T>(this DbContextInterceptor dbContextExtended, IQueryable<ITempTable> expression)
+        public static T WithTempExpression<T>(this DbContextWithTempTable dbContexWithTempTable, IQueryable<ITempTable> expression)
             where T : class
         {
             var tempTableType = expression.ElementType.FullName;
-            if (dbContextExtended.TempSqlQueriesList.ContainsKey(tempTableType))
+            if (dbContexWithTempTable.TempSqlQueriesList.ContainsKey(tempTableType))
             {
                 throw new Exception("temp table key already there");
             }
@@ -40,9 +40,9 @@ namespace SharDev.EFInterceptor.Extensions
                 .AddInsertQuery(fieldsWithPositions, sqlSelectQuery)
                 .Execute();
 
-            dbContextExtended.InsertTempExpressions(tempTableType, sqlAllCommandsQuery);
-
-            return dbContextExtended as T;
+            dbContexWithTempTable.InsertTempExpressions(tempTableType, sqlAllCommandsQuery);
+                 
+            return dbContexWithTempTable as T;
         }
     }
 }

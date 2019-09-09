@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
-namespace SharDev.EFInterceptor
+namespace EF6TempTableKit
 {
     public sealed class TableMetadataProvider
     {
