@@ -16,13 +16,13 @@ namespace EF6TempTableKit.Extensions
             return dbContexWithTempTable as T;
         }
 
-        public static T WithTempExpression<T>(this DbContextWithTempTable dbContexWithTempTable, IQueryable<ITempTable> expression)
+        public static T WithTempTableExpression<T>(this DbContextWithTempTable dbContexWithTempTable, IQueryable<ITempTable> expression)
             where T : class
         {
             var tempTableType = expression.ElementType.FullName;
             if (dbContexWithTempTable.TempSqlQueriesList.ContainsKey(tempTableType))
             {
-                throw new Exception("temp table key already there");
+                throw new Exception($"Can't override query for temp table {tempTableType} as it is already attached to the context.");
             }
 
             var tableMetadataProvider = new TableMetadataProvider();
