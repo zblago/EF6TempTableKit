@@ -4,16 +4,15 @@
     using EF6TempTableKit.DbContext;
     using EF6TempTableKit.Model;
     using System;
-    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity;
-
 
     public class DbConfig : DbConfiguration
     {
         public DbConfig()
         {
+            AddInterceptor(new AdventureWorkQueryInterceptor());
             AddInterceptor(new QueryInterceptor());
         }
     }
@@ -73,7 +72,6 @@
     }
 
     [Table("#tempStudent", Schema = "tempDb")]
-    //[NotMapped]
     public class TemporaryStudentIdentity : ITempTable
     {
         public TemporaryStudentIdentity()
