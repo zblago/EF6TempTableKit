@@ -21,11 +21,12 @@ namespace EF6TempTableKit.DbContext
                 var contextWithTempTable = (IDbContextWithTempTable)dbContextWithTempTable;
                 foreach (var sqlTempQuery in contextWithTempTable.TempTableContainer.TempSqlQueriesList)
                 {
-                    selectCommandText = sqlTempQuery.Value + selectCommandText;
+                    if (command.CommandText.Contains(sqlTempQuery.Key))
+                    {
+                        selectCommandText = sqlTempQuery.Value + selectCommandText;
+                    }
                 }
                 command.CommandText = selectCommandText + currentCommandText;
-
-                contextWithTempTable.TempTableContainer.TempSqlQueriesList.Clear();
             }
         }
 
