@@ -8,15 +8,6 @@ namespace EF6TempTableKit.Extensions
 {
     public static class DbContextExtensions
     {
-        public static T WithCustomQuery<T>(this System.Data.Entity.DbContext dbContexWithTempTable, 
-            Func<System.Data.Entity.DbContext, string, string> method) 
-            where T : class
-        {
-            ((IDbContextWithTempTable)dbContexWithTempTable).TempTableContainer.Method = method;
-
-            return dbContexWithTempTable as T;
-        }
-
         public static T WithTempTableExpression<T>(this System.Data.Entity.DbContext dbContexWithTempTable, IQueryable<ITempTable> expression)
             where T : class
         {
@@ -40,7 +31,7 @@ namespace EF6TempTableKit.Extensions
                 .AddInsertQuery(fieldsWithPositions, sqlSelectQuery)
                 .Execute();
 
-            contextWithTempTable.TempTableContainer.TempSqlQueriesList.Add(tempTableType, sqlAllCommandsQuery);
+            contextWithTempTable.TempTableContainer.TempSqlQueriesList.Add(tempTableName, sqlAllCommandsQuery);
                  
             return dbContexWithTempTable as T;
         }
