@@ -3,5 +3,6 @@
     public interface IDrop
     {
         ICreate DropIfExists();
+        ICreate DontDropIfExists();
     }
 }

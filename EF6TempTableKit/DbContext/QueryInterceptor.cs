@@ -23,7 +23,7 @@ namespace EF6TempTableKit.DbContext
                 {
                     if (command.CommandText.Contains(sqlTempQuery.Key))
                     {
-                        selectCommandText = sqlTempQuery.Value + selectCommandText;
+                        selectCommandText = sqlTempQuery.Value.Query + selectCommandText;
                     }
                 }
                 command.CommandText = selectCommandText + currentCommandText;

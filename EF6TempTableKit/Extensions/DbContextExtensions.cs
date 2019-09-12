@@ -8,7 +8,7 @@ namespace EF6TempTableKit.Extensions
 {
     public static class DbContextExtensions
     {
-        public static T WithTempTableExpression<T>(this System.Data.Entity.DbContext dbContexWithTempTable, IQueryable<ITempTable> expression)
+        public static T WithTempTableExpression<T>(this System.Data.Entity.DbContext dbContexWithTempTable, IQueryable<ITempTable> expression, bool checkDoesExist = true)
             where T : class
         {
             var tempTableType = expression.ElementType.FullName;
@@ -24,14 +24,27 @@ namespace EF6TempTableKit.Extensions
             var objectQuery = expression.GetObjectQuery();
             var fieldsWithPositions = objectQuery.GetQueryPropertyPositions();
 
-            var sqlAllCommandsQuery = SqlInsertCommandBuilder
-                .Begin(tempTableName)
-                .DropIfExists()
-                .Create(fieldsWithTypes)
-                .AddInsertQuery(fieldsWithPositions, sqlSelectQuery)
-                .Execute();
+            var sqlAllCommandsQuery = ""; 
 
-            contextWithTempTable.TempTableContainer.TempSqlQueriesList.Add(tempTableName, sqlAllCommandsQuery);
+            if (checkDoesExist)
+            {
+                sqlAllCommandsQuery = SqlInsertCommandBuilder.Begin(tempTableName)
+                    .DropIfExists()
+                    .Create(fieldsWithTypes)
+                    .AddInsertQuery(fieldsWithPositions, sqlSelectQuery)
+                    .Execute();
+            }
+            else
+            {
+                sqlAllCommandsQuery = SqlInsertCommandBuilder.Begin(tempTableName)
+                    .DontDropIfExists()
+                    .CreateIfNotExists(fieldsWithTypes)
+                    .AddInsertQueryIfNotExists(fieldsWithPositions, sqlSelectQuery)
+                    .Execute();
+            }
+
+            contextWithTempTable.TempTableContainer.TempSqlQueriesList.Add(tempTableName, 
+                new QueryString { Query = sqlAllCommandsQuery, CheckDoesExist = checkDoesExist });
                  
             return dbContexWithTempTable as T;
         }
@@ -40,7 +53,7 @@ namespace EF6TempTableKit.Extensions
         {
             if (contextWithTempTable.TempTableContainer == null)
             {
-                throw new Exception($"TempTableContainer is not instantiated. Please, make an instance in your DbContext.");
+                throw new Exception($"Object of type TempTableContainer is not instantiated. Please, make an instance in your DbContext.");
             }
 
             if (contextWithTempTable.TempTableContainer.TempSqlQueriesList.ContainsKey(tempTableType))
