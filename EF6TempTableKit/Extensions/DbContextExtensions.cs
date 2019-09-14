@@ -8,7 +8,7 @@ namespace EF6TempTableKit.Extensions
 {
     public static class DbContextExtensions
     {
-        public static T WithTempTableExpression<T>(this System.Data.Entity.DbContext dbContexWithTempTable, IQueryable<ITempTable> expression, bool checkDoesExist = true)
+        public static T WithTempTableExpression<T>(this System.Data.Entity.DbContext dbContexWithTempTable, IQueryable<ITempTable> expression, bool reuseExisting = false)
             where T : class
         {
             var tempTableType = expression.ElementType.FullName;
@@ -26,7 +26,7 @@ namespace EF6TempTableKit.Extensions
 
             var sqlAllCommandsQuery = ""; 
 
-            if (checkDoesExist)
+            if (!reuseExisting)
             {
                 sqlAllCommandsQuery = SqlInsertCommandBuilder.Begin(tempTableName)
                     .DropIfExists()
@@ -37,14 +37,13 @@ namespace EF6TempTableKit.Extensions
             else
             {
                 sqlAllCommandsQuery = SqlInsertCommandBuilder.Begin(tempTableName)
-                    .DontDropIfExists()
                     .CreateIfNotExists(fieldsWithTypes)
-                    .AddInsertQueryIfNotExists(fieldsWithPositions, sqlSelectQuery)
+                    .AddInsertQueryIfCreated(fieldsWithPositions, sqlSelectQuery)
                     .Execute();
             }
 
             contextWithTempTable.TempTableContainer.TempSqlQueriesList.Add(tempTableName, 
-                new QueryString { Query = sqlAllCommandsQuery, CheckDoesExist = checkDoesExist });
+                new QueryString { Query = sqlAllCommandsQuery, ReuseExisting = reuseExisting });
                  
             return dbContexWithTempTable as T;
         }

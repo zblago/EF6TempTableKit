@@ -1,8 +1,10 @@
-﻿namespace EF6TempTableKit.SqlCommands.Interfaces
+﻿using System.Collections.Generic;
+
+namespace EF6TempTableKit.SqlCommands.Interfaces
 {
     public interface IDrop
     {
         ICreate DropIfExists();
-        ICreate DontDropIfExists();
+        IInsertQuery CreateIfNotExists(IReadOnlyDictionary<string, string> fieldsWithTypes);
     }
 }
