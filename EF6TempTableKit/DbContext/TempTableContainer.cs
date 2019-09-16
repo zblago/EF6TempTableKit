@@ -1,5 +1,4 @@
 ﻿using EF6TempTableKit.Model;
-using System;
 using System.Collections.Generic;
 
 namespace EF6TempTableKit.DbContext

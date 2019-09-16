@@ -5,7 +5,7 @@ using System.Text;
 
 namespace EF6TempTableKit.SqlCommands
 {
-    public sealed class SqlInsertCommandBuilder : IDrop, ICreate, IInsertQuery, IExecute
+    public sealed class SqlInsertCommandBuilder : IDrop, ICreate, IAddClusteredIndex, IAddNonClusteredIndexes, IInsertQuery, IExecute
     {
         private readonly string _tempTableName;
 
@@ -33,14 +33,14 @@ namespace EF6TempTableKit.SqlCommands
             return this;
         }
 
-        public IInsertQuery Create(IReadOnlyDictionary<string, string> fieldsWithTypes)
+        public IAddClusteredIndex Create(IReadOnlyDictionary<string, string> fieldsWithTypes)
         {
             CreateTable(fieldsWithTypes, 0);
 
             return this;
         }
 
-        public IInsertQuery CreateIfNotExists(IReadOnlyDictionary<string, string> fieldsWithTypes)
+        public IAddClusteredIndex CreateIfNotExists(IReadOnlyDictionary<string, string> fieldsWithTypes)
         {
             _queryBuilder.AppendLine($"DECLARE @tempTable{_tempTableName}Created bit = 0");
             _queryBuilder.AppendLine($"IF OBJECT_ID('tempdb..{_tempTableName}') IS NULL");
@@ -57,6 +57,38 @@ namespace EF6TempTableKit.SqlCommands
         public IExecute DropCreatedTable()
         {
             _queryBuilder.AppendLine($"\tDROP TABLE {_tempTableName}");
+
+            return this;
+        }
+
+        public IAddNonClusteredIndexes AddClusteredIndex(string[] fields)
+        {
+            if (fields.Length == 0) {
+                return this;
+            }
+
+            var indexName = string.Join("_", fields);
+            var columnsList = string.Join(",", fields);
+
+            var clusteredIndexString = $"CREATE CLUSTERED INDEX IX_{indexName} ON {_tempTableName} ({columnsList});";
+            _queryBuilder.AppendLine(clusteredIndexString);
+
+            return this;
+        }
+
+        public IInsertQuery AddNonClusteredIndexes(IReadOnlyDictionary<string, string[]> indexesWithFields)
+        {
+            foreach (var indexWithColumns in indexesWithFields)
+            {
+                var fields = indexWithColumns.Value;
+                var indexName = $"{indexWithColumns.Key}_{string.Join("_", fields)}";
+                var columnsList = string.Join(",", fields);
+
+                var clusteredIndexString = $"CREATE NONCLUSTERED INDEX IX_{indexName} ON {_tempTableName} ({columnsList});";
+                _queryBuilder.AppendLine(clusteredIndexString);
+            }
+
+            _queryBuilder.AppendLine();
 
             return this;
         }

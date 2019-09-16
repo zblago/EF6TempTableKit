@@ -30,5 +30,45 @@ namespace EF6TempTableKit
 
             return fieldsAndTypes;
         }
+
+        public string[] GetClusteredIndexColumns(Type baseType)
+        {
+            var fieldsWithClusteredIndexAttribute = baseType
+                .GetProperties()
+                .Where(p => p.CustomAttributes.Any(ca => ca.AttributeType == typeof(Attributes.ClusteredIndexAttribute)));
+
+            var fieldsForClusteredIndex = fieldsWithClusteredIndexAttribute.Select(f => f.Name).ToArray();
+
+            return fieldsForClusteredIndex;
+        }
+
+        public IReadOnlyDictionary<string, string[]> GetNonClusteredIndexesWithColumns(Type baseType)
+        {
+            var propsWithnonClusteredAttributes = baseType
+                .GetProperties()
+                .Where(p => p.CustomAttributes.Any(ca => ca.AttributeType == typeof(Attributes.NonClusteredIndexAttribute)));
+
+            var listOfIndexes = propsWithnonClusteredAttributes
+                .SelectMany(p => p.GetCustomAttributes(typeof(Attributes.NonClusteredIndexAttribute), true)
+                        .Select(a => (a as Attributes.NonClusteredIndexAttribute).Name))
+                .Distinct();
+
+            IDictionary<string, string[]> indexWithFields = new Dictionary<string, string[]>();
+
+            foreach (var indexName in listOfIndexes)
+            {
+                var properytNames = baseType.GetProperties()
+                    .Where(p =>
+                        (p.GetCustomAttributes(typeof(Attributes.NonClusteredIndexAttribute), true) 
+                            as IEnumerable<Attributes.NonClusteredIndexAttribute>)
+                        .Any(nona => nona.Name == indexName))
+                    .Select(p => p.Name)
+                    .ToArray();
+
+                indexWithFields.Add(indexName, properytNames);
+            }
+
+            return (IReadOnlyDictionary<string, string[]>) indexWithFields;
+        }
     }
 }

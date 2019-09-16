@@ -11,14 +11,17 @@ namespace EF6TempTableKit.Extensions
         public static T WithTempTableExpression<T>(this System.Data.Entity.DbContext dbContexWithTempTable, IQueryable<ITempTable> expression, bool reuseExisting = false)
             where T : class
         {
-            var tempTableType = expression.ElementType.FullName;
+            var tempTableTypeName = expression.ElementType.FullName;
             var contextWithTempTable = (IDbContextWithTempTable)dbContexWithTempTable;
 
-            Validate(contextWithTempTable, tempTableType);
+            Validate(contextWithTempTable, tempTableTypeName);
 
             var tableMetadataProvider = new TableMetadataProvider();
-            var tempTableName = tableMetadataProvider.GetTableNameFromBaseType(expression.ElementType.BaseType);
-            var fieldsWithTypes = tableMetadataProvider.GetFieldsWithTypes(expression.ElementType.BaseType);
+            var tempTableType = expression.ElementType.BaseType;
+            var tempTableName = tableMetadataProvider.GetTableNameFromBaseType(tempTableType);
+            var fieldsWithTypes = tableMetadataProvider.GetFieldsWithTypes(tempTableType);
+            var fieldsForClusteredIndex = tableMetadataProvider.GetClusteredIndexColumns(tempTableType);
+            var nonClusteredIndexesWithFields = tableMetadataProvider.GetNonClusteredIndexesWithColumns(tempTableType);
 
             var sqlSelectQuery = expression.ToTraceQuery();
             var objectQuery = expression.GetObjectQuery();
@@ -31,6 +34,8 @@ namespace EF6TempTableKit.Extensions
                 sqlAllCommandsQuery = SqlInsertCommandBuilder.Begin(tempTableName)
                     .DropIfExists()
                     .Create(fieldsWithTypes)
+                    .AddClusteredIndex(fieldsForClusteredIndex)
+                    .AddNonClusteredIndexes(nonClusteredIndexesWithFields)
                     .AddInsertQuery(fieldsWithPositions, sqlSelectQuery)
                     .Execute();
             }
@@ -38,6 +43,8 @@ namespace EF6TempTableKit.Extensions
             {
                 sqlAllCommandsQuery = SqlInsertCommandBuilder.Begin(tempTableName)
                     .CreateIfNotExists(fieldsWithTypes)
+                    .AddClusteredIndex(fieldsForClusteredIndex)
+                    .AddNonClusteredIndexes(nonClusteredIndexesWithFields)
                     .AddInsertQueryIfCreated(fieldsWithPositions, sqlSelectQuery)
                     .Execute();
             }

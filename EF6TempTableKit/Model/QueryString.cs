@@ -1,5 +1,4 @@
-﻿
-namespace EF6TempTableKit.Model
+﻿namespace EF6TempTableKit.Model
 {
     public sealed class QueryString
     {

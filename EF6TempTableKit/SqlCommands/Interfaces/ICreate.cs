@@ -4,6 +4,6 @@ namespace EF6TempTableKit.SqlCommands.Interfaces
 {
     public interface ICreate
     {
-        IInsertQuery Create(IReadOnlyDictionary<string, string> fieldsWithTypes);
+        IAddClusteredIndex Create(IReadOnlyDictionary<string, string> fieldsWithTypes);
     }
 }
