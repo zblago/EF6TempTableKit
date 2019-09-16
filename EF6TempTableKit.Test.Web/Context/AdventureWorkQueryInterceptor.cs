@@ -1,7 +1,7 @@
 ﻿using System.Data.Common;
 using System.Data.Entity.Infrastructure.Interception;
 
-namespace EFIntercept.Context
+namespace EF6TempTableKit.Test.Web.Context
 {
     public class AdventureWorkQueryInterceptor : DbCommandInterceptor
     {

@@ -1,10 +1,10 @@
 ﻿using EF6TempTableKit.Extensions;
-using EFIntercept.Context;
+using EF6TempTableKit.Test.Web.Context;
 using System.Data.Entity;
 using System.Linq;
 using System.Web.Mvc;
 
-namespace EFIntercept.Controllers
+namespace EF6TempTableKit.Test.Web.Controllers
 {
     public class HomeController : Controller
     {
@@ -38,7 +38,7 @@ namespace EFIntercept.Controllers
             return View();
         }
 
-        public IQueryable<TemporaryStudentIdentityDto> FirstExpression(DbContext context, int a, int b, string c)
+        public IQueryable<TemporaryStudentIdentityDto> FirstExpression(System.Data.Entity.DbContext context, int a, int b, string c)
         {
             var myContext = context as AdventureWorksDW2008R2Entities;
             var resselersQuery = myContext.DimReseller.Where(t => t.FirstOrderYear == 4).Select(x => new TemporaryStudentIdentityDto

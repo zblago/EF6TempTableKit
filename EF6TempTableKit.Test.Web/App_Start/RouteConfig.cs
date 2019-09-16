@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 
-namespace EFIntercept
+namespace EF6TempTableKit.Test.Web
 {
     public class RouteConfig
     {

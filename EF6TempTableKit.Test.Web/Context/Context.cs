@@ -1,4 +1,4 @@
-﻿namespace EFIntercept.Context
+﻿namespace EF6TempTableKit.Test.Web.Context
 {
     using EF6TempTableKit.Attributes;
     using EF6TempTableKit.DbContext;
@@ -8,26 +8,22 @@
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity;
 
-
-<<<<<<< HEAD
-    public class DbConfig1 : DbConfiguration
+    public class DbConfig : DbConfiguration
     {
-        public DbConfig1()
+        public DbConfig()
         {
-        
+            AddInterceptor(new AdventureWorkQueryInterceptor());
+            AddInterceptor(new QueryInterceptor());
         }
     }
 
-    //[DbConfigurationType(typeof(DbConfig1))]
-    public partial class AdventureWorksDW2008R2Entities : DbContextInterceptor
-=======
-    public partial class AdventureWorksDW2008R2Entities : DbContextWithTempTable
->>>>>>> origin/master
+    [DbConfigurationType(typeof(DbConfig))]
+    public partial class AdventureWorksDW2008R2Entities : DbContext, IDbContextWithTempTable
     {
-
 
         public AdventureWorksDW2008R2Entities() : base("name=AdventureWorksDW2008R2Entities")
         {
+            this.TempTableContainer = new TempTableContainer();
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -38,6 +34,8 @@
         public virtual DbSet<DimReseller> DimReseller { get; set; }
         public virtual DbSet<DimTest> DimTest { get; set; }
         public virtual DbSet<TemporaryStudentIdentity> TemporaryStudents { get; set; }
+
+        public TempTableContainer TempTableContainer { get; set; }
     }
 
     [Table("DimReseller")]
@@ -74,16 +72,20 @@
     }
 
     [Table("#tempStudent", Schema = "tempDb")]
-    //[NotMapped]
     public class TemporaryStudentIdentity : ITempTable
     {
         public TemporaryStudentIdentity()
         { }
 
         [TempFieldTypeAttribute("int")]
+        [ClusteredIndex]
+        [NonClusteredIndex("first")]
+        [NonClusteredIndex("second")]
         public virtual int Id { get; set; }
 
         [TempFieldTypeAttribute("varchar(20)")]
+        [NonClusteredIndex("third")]
+        [NonClusteredIndex("second")]
         public virtual string Name { get; set; }
     }
 
