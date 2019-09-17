@@ -69,14 +69,21 @@ namespace EF6TempTableKit.SqlCommands
 
             var columnsList = string.Join(",", fields);
 
+            _queryBuilder.AppendLine($"IF @tempTable{_tempTableName}Created = 1");
+            _queryBuilder.AppendLine($"BEGIN");
+
             var clusteredIndexString = $"CREATE CLUSTERED INDEX IX_{_tempTableName} ON {_tempTableName} ({columnsList});";
             _queryBuilder.AppendLine(clusteredIndexString);
+            _queryBuilder.AppendLine("END");
 
             return this;
         }
 
         public IInsertQuery AddNonClusteredIndexes(IReadOnlyDictionary<string, string[]> indexesWithFields)
         {
+            _queryBuilder.AppendLine($"IF @tempTable{_tempTableName}Created = 1");
+            _queryBuilder.AppendLine($"BEGIN");
+
             foreach (var indexWithColumns in indexesWithFields)
             {
                 var fields = indexWithColumns.Value;
@@ -87,6 +94,7 @@ namespace EF6TempTableKit.SqlCommands
                 _queryBuilder.AppendLine(clusteredIndexString);
             }
 
+            _queryBuilder.AppendLine("END");
             _queryBuilder.AppendLine();
 
             return this;
