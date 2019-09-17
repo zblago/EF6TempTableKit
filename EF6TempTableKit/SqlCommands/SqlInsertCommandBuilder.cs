@@ -67,10 +67,9 @@ namespace EF6TempTableKit.SqlCommands
                 return this;
             }
 
-            var indexName = string.Join("_", fields);
             var columnsList = string.Join(",", fields);
 
-            var clusteredIndexString = $"CREATE CLUSTERED INDEX IX_{indexName} ON {_tempTableName} ({columnsList});";
+            var clusteredIndexString = $"CREATE CLUSTERED INDEX IX_{_tempTableName} ON {_tempTableName} ({columnsList});";
             _queryBuilder.AppendLine(clusteredIndexString);
 
             return this;
@@ -81,7 +80,7 @@ namespace EF6TempTableKit.SqlCommands
             foreach (var indexWithColumns in indexesWithFields)
             {
                 var fields = indexWithColumns.Value;
-                var indexName = $"{indexWithColumns.Key}_{string.Join("_", fields)}";
+                var indexName = $"{indexWithColumns.Key}";
                 var columnsList = string.Join(",", fields);
 
                 var clusteredIndexString = $"CREATE NONCLUSTERED INDEX IX_{indexName} ON {_tempTableName} ({columnsList});";
