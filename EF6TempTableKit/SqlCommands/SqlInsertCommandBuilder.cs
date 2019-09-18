@@ -81,6 +81,11 @@ namespace EF6TempTableKit.SqlCommands
 
         public IInsertQuery AddNonClusteredIndexes(IReadOnlyDictionary<string, string[]> indexesWithFields)
         {
+            if (indexesWithFields.Count == 0)
+            {
+                return this;
+            }
+
             _queryBuilder.AppendLine($"IF @tempTable{_tempTableName}Created = 1");
             _queryBuilder.AppendLine($"BEGIN");
 
