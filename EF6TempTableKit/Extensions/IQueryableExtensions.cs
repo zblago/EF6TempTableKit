@@ -25,17 +25,10 @@ namespace EF6TempTableKit.Extensions
                 if (parameter.Value == null)
                     continue;
                 var name = "@" + parameter.Name;
-
-                if(parameter.ParameterType == typeof(bool))
-                {
-                    var value = parameter.Value.ToString().ToLower() == "false" ? 0 : 1;
-                    result = result.Replace(name, value.ToString());
-                }
-                else
-                {
-                    var value = "'" + parameter.Value.ToString() + "'";
-                    result = result.Replace(name, value);
-                }
+                var value = parameter.ParameterType == typeof(bool)
+                        ? "'" + parameter.Value.ToString().ToLower() + "'"
+                        : "'" + parameter.Value.ToString() + "'";
+                result = result.Replace(name, value);
             }
             return result;
 
