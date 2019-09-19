@@ -159,7 +159,7 @@ namespace EF6TempTableKit.SqlCommands
             var repeatedTabs = new string('\t', tabsCount);
 
             var fieldsWithPositionsSorted = fieldsWithPositions.OrderBy(f => f.Value);
-            var isFirstColumnGreaterThanZero = fieldsWithPositionsSorted.First().Value > 0;
+            var isFirstColumnGreaterThanZero = fieldsWithPositionsSorted.First().Value > 0; 
 
             var selectedColumns = string.Join(", ", fieldsWithPositionsSorted.Select(f => f.Key).ToArray());
             _queryBuilder.AppendLine($"{repeatedTabs}INSERT INTO {_tempTableName}({ selectedColumns }) ");
