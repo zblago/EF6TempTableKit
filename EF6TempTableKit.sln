@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EF6TempTableKit", "EF6TempT
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{A0789F1E-E3F1-4AB0-9C1B-99EC1EFA60E6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestEFVersions", "TestEFVersions\TestEFVersions.csproj", "{1D936203-CA29-4DA3-B724-39CA16D7E4BF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EF6TempTableKit.Test", "EF6TempTableKit.Test\EF6TempTableKit.Test.csproj", "{9711E082-F88B-40E8-B739-217CDF81890F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,16 +25,16 @@ Global
 		{4ECEE5EF-A20D-4D0E-9ABD-40E9EAA27459}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4ECEE5EF-A20D-4D0E-9ABD-40E9EAA27459}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4ECEE5EF-A20D-4D0E-9ABD-40E9EAA27459}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1D936203-CA29-4DA3-B724-39CA16D7E4BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1D936203-CA29-4DA3-B724-39CA16D7E4BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1D936203-CA29-4DA3-B724-39CA16D7E4BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1D936203-CA29-4DA3-B724-39CA16D7E4BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9711E082-F88B-40E8-B739-217CDF81890F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9711E082-F88B-40E8-B739-217CDF81890F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9711E082-F88B-40E8-B739-217CDF81890F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9711E082-F88B-40E8-B739-217CDF81890F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{1D936203-CA29-4DA3-B724-39CA16D7E4BF} = {A0789F1E-E3F1-4AB0-9C1B-99EC1EFA60E6}
+		{9711E082-F88B-40E8-B739-217CDF81890F} = {A0789F1E-E3F1-4AB0-9C1B-99EC1EFA60E6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {689812C5-CB7D-4252-B0AA-4AE98AAEBE14}
