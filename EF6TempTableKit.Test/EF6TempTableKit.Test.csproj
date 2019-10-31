@@ -159,14 +159,328 @@
     <Compile Include="CodeFirst\vVendorWithContact.cs" />
     <Compile Include="CodeFirst\WorkOrder.cs" />
     <Compile Include="CodeFirst\WorkOrderRouting.cs" />
+    <Compile Include="Edmx\Address.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\AddressType.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\AdventureWorksEdmx.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AdventureWorksEdmx.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\AdventureWorksEdmx.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\AdventureWorksEdmx.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AdventureWorksEdmx.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\AWBuildVersion.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\BillOfMaterial.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\BusinessEntity.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\BusinessEntityAddress.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\BusinessEntityContact.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\ContactType.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\CountryRegion.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\CountryRegionCurrency.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\CreditCard.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\Culture.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\Currency.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\CurrencyRate.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\Customer.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\DatabaseLog.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\Department.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\EmailAddress.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\Employee.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\EmployeeDepartmentHistory.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\EmployeePayHistory.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\ErrorLog.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\Illustration.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\JobCandidate.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\Location.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\Password.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\Person.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\PersonCreditCard.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\PersonPhone.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\PhoneNumberType.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\Product.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\ProductCategory.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\ProductCostHistory.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\ProductDescription.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\ProductDocument.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\ProductInventory.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\ProductListPriceHistory.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\ProductModel.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\ProductModelIllustration.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\ProductModelProductDescriptionCulture.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\ProductPhoto.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\ProductProductPhoto.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\ProductReview.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\ProductSubcategory.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\ProductVendor.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\PurchaseOrderDetail.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\PurchaseOrderHeader.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\SalesOrderDetail.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\SalesOrderHeader.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\SalesOrderHeaderSalesReason.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\SalesPerson.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\SalesPersonQuotaHistory.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\SalesReason.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\SalesTaxRate.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\SalesTerritory.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\SalesTerritoryHistory.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\ScrapReason.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\Shift.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\ShipMethod.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\ShoppingCartItem.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\SpecialOffer.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\SpecialOfferProduct.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\StateProvince.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\Store.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\TransactionHistory.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\TransactionHistoryArchive.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\UnitMeasure.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\vAdditionalContactInfo.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\vEmployee.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\vEmployeeDepartment.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\vEmployeeDepartmentHistory.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\Vendor.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\vIndividualCustomer.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\vJobCandidate.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\vJobCandidateEducation.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\vJobCandidateEmployment.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\vPersonDemographic.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\vProductAndDescription.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\vProductModelCatalogDescription.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\vProductModelInstruction.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\vSalesPerson.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\vSalesPersonSalesByFiscalYear.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\vStateProvinceCountryRegion.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\vStoreWithAddress.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\vStoreWithContact.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\vStoreWithDemographic.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\vVendorWithAddress.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\vVendorWithContact.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\WorkOrder.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Edmx\WorkOrderRouting.cs">
+      <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TempTables\Address.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <EntityDeploy Include="Edmx\AdventureWorksEdmx.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>AdventureWorksEdmx.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="Edmx\AdventureWorksEdmx.edmx.diagram">
+      <DependentUpon>AdventureWorksEdmx.edmx</DependentUpon>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="..\packages\xunit.analyzers.0.10.0\analyzers\dotnet\cs\xunit.analyzers.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Edmx\AdventureWorksEdmx.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>AdventureWorksEdmx.edmx</DependentUpon>
+      <LastGenOutput>AdventureWorksEdmx.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Edmx\AdventureWorksEdmx.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>AdventureWorksEdmx.edmx</DependentUpon>
+      <LastGenOutput>AdventureWorksEdmx.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\EF6TempTableKit\EF6TempTableKit.csproj">
+      <Project>{4ecee5ef-a20d-4d0e-9abd-40e9eaa27459}</Project>
+      <Name>EF6TempTableKit</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

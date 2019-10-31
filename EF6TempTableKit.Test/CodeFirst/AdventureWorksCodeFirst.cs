@@ -4,8 +4,9 @@ namespace EF6TempTableKit.Test.CodeFirst
     using System.Data.Entity;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Linq;
+    using EF6TempTableKit.DbContext;
 
-    public partial class AdventureWorksCodeFirst : DbContext
+    public partial class AdventureWorksCodeFirst : DbContext, IDbContextWithTempTable
     {
         public AdventureWorksCodeFirst()
             : base("name=AdventureWorksCodeFirst")
@@ -102,6 +103,8 @@ namespace EF6TempTableKit.Test.CodeFirst
         public virtual DbSet<vStoreWithAddress> vStoreWithAddresses { get; set; }
         public virtual DbSet<vStoreWithContact> vStoreWithContacts { get; set; }
         public virtual DbSet<vStoreWithDemographic> vStoreWithDemographics { get; set; }
+        public virtual DbSet<TempTables.AddressTempTable> AddressesTemp { get; set; }
+        public TempTableContainer TempTableContainer { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
