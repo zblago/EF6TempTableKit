@@ -1,9 +1,5 @@
-﻿using EF6TempTableKit.Edmx.Web.Controllers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MvcIntegrationTestFramework.Browsing;
+using MvcIntegrationTestFramework.Hosting;
 using Xunit;
 
 namespace EF6TempTableKit.UnitTest
@@ -13,9 +9,21 @@ namespace EF6TempTableKit.UnitTest
         [Fact]
         public void PassingTest()
         {
-            var homeController = new HomeController();
-            var view = homeController.Index();
-            Assert.NotNull(view);
+            var apphost = AppHost.Simulate("EF6TempTableKit.Edmx.Web");
+            apphost.Start(browsingSession =>
+            {
+                RequestResult result = browsingSession.Get("/Home/Index");
+                var responseText = result.ResponseText;
+
+                Assert.Contains("EF6TempTableKit.Passed.OK", responseText);
+            });
+            apphost.Dispose();
+        }
+
+        [Fact]
+        public void PassingTest1()
+        {
+            Assert.Equal("1", "1");
         }
     }
 }
