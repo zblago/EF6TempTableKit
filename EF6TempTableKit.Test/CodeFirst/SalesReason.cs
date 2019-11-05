@@ -1,4 +1,4 @@
-namespace EF6TempTableKit.Test.CodeFirst
+namespace EF6TempTableKit.UnitTest.CodeFirst
 {
     using System;
     using System.Collections.Generic;

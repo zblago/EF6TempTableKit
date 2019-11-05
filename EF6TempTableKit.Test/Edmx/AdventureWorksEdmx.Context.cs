@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace EF6TempTableKit.Test.Edmx
+namespace EF6TempTableKit.UnitTest.Edmx
 {
     using System;
     using System.Data.Entity;

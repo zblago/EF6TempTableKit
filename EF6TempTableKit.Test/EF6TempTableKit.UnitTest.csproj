@@ -10,8 +10,8 @@
     <ProjectGuid>{9711E082-F88B-40E8-B739-217CDF81890F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>EF6TempTableKit.Test</RootNamespace>
-    <AssemblyName>EF6TempTableKit.Test</AssemblyName>
+    <RootNamespace>EF6TempTableKit.UnitTest</RootNamespace>
+    <AssemblyName>EF6TempTableKit.UnitTest</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -47,6 +47,10 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
+    <Reference Include="System.Web.Mvc, Version=4.0.0.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.4\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -159,6 +163,7 @@
     <Compile Include="CodeFirst\vVendorWithContact.cs" />
     <Compile Include="CodeFirst\WorkOrder.cs" />
     <Compile Include="CodeFirst\WorkOrderRouting.cs" />
+    <Compile Include="EdmxIntegrationTest.cs" />
     <Compile Include="Edmx\Address.cs">
       <DependentUpon>AdventureWorksEdmx.tt</DependentUpon>
     </Compile>
@@ -477,6 +482,10 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\EF6TempTableKit.Edmx.Web\EF6TempTableKit.Edmx.Web.csproj">
+      <Project>{8abc25b4-c786-4621-97eb-4d4cca632e3d}</Project>
+      <Name>EF6TempTableKit.Edmx.Web</Name>
+    </ProjectReference>
     <ProjectReference Include="..\EF6TempTableKit\EF6TempTableKit.csproj">
       <Project>{4ecee5ef-a20d-4d0e-9abd-40e9eaa27459}</Project>
       <Name>EF6TempTableKit</Name>

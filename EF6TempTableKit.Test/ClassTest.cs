@@ -1,11 +1,11 @@
-﻿using EF6TempTableKit.Test.CodeFirst;
-using EF6TempTableKit.Test.Edmx;
-using EF6TempTableKit.Test.TempTables;
+﻿using EF6TempTableKit.UnitTest.CodeFirst;
+using EF6TempTableKit.UnitTest.Edmx;
+using EF6TempTableKit.UnitTest.TempTables;
 using System.Data.Entity;
 using System.Linq;
 using Xunit;
 
-namespace EF6TempTableKit.Test
+namespace EF6TempTableKit.UnitTest
 {
     public class ClassTest
     {
