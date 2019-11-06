@@ -45,9 +45,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EF6TempTableKit">
-      <HintPath>..\EF6TempTableKit\bin\Debug\net45\EF6TempTableKit.dll</HintPath>
-    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
@@ -225,6 +222,10 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\EF6TempTableKit\EF6TempTableKit.csproj">
+      <Project>{4ecee5ef-a20d-4d0e-9abd-40e9eaa27459}</Project>
+      <Name>EF6TempTableKit</Name>
+    </ProjectReference>
     <ProjectReference Include="..\EF6TempTableKit\EF6TempTableKit.csproj">
       <Project>{4ecee5ef-a20d-4d0e-9abd-40e9eaa27459}</Project>
       <Name>EF6TempTableKit</Name>
