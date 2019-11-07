@@ -8,12 +8,14 @@ namespace EF6TempTableKit.SqlCommands
     public sealed class SqlInsertCommandBuilder : IDrop, ICreate, IAddClusteredIndex, IAddNonClusteredIndexes, IInsertQuery, IExecute
     {
         private readonly string _tempTableName;
+        private readonly string _tempTableExist;
 
         public StringBuilder _queryBuilder;
 
         private SqlInsertCommandBuilder(string tempTableName)
         {
             _tempTableName = tempTableName;
+            _tempTableExist = $"tempTable{ _tempTableName}Created";
 
             _queryBuilder = new StringBuilder();
         }
@@ -22,10 +24,10 @@ namespace EF6TempTableKit.SqlCommands
 
         public ICreate DropIfExists()
         {
-            _queryBuilder.AppendLine($"DECLARE @tempTableExist bit = 0");
+            _queryBuilder.AppendLine($"DECLARE @{_tempTableExist} bit = 0");
             _queryBuilder.AppendLine($"IF OBJECT_ID('tempdb..{_tempTableName}') IS NOT NULL");
             _queryBuilder.AppendLine("BEGIN");
-            _queryBuilder.AppendLine("\tSET @tempTableExist = 1");
+            _queryBuilder.AppendLine($"\tSET @{_tempTableExist} = 1");
             _queryBuilder.AppendLine($"\tDROP TABLE {_tempTableName}");
             _queryBuilder.AppendLine("END");
             _queryBuilder.AppendLine();
@@ -42,10 +44,10 @@ namespace EF6TempTableKit.SqlCommands
 
         public IAddClusteredIndex CreateIfNotExists(IReadOnlyDictionary<string, string> fieldsWithTypes)
         {
-            _queryBuilder.AppendLine($"DECLARE @tempTable{_tempTableName}Created bit = 0");
+            _queryBuilder.AppendLine($"DECLARE @{_tempTableExist} bit = 0");
             _queryBuilder.AppendLine($"IF OBJECT_ID('tempdb..{_tempTableName}') IS NULL");
             _queryBuilder.AppendLine("BEGIN");
-            _queryBuilder.AppendLine($"\tSET @tempTable{_tempTableName}Created = 1");
+            _queryBuilder.AppendLine($"\tSET @{_tempTableExist} = 1");
 
             CreateTable(fieldsWithTypes, 1);
 
@@ -69,7 +71,7 @@ namespace EF6TempTableKit.SqlCommands
 
             var columnsList = string.Join(",", fields);
 
-            _queryBuilder.AppendLine($"IF @tempTable{_tempTableName}Created = 1");
+            _queryBuilder.AppendLine($"IF @{_tempTableExist} = 1");
             _queryBuilder.AppendLine($"BEGIN");
 
             var clusteredIndexString = $"\tCREATE CLUSTERED INDEX IX_{_tempTableName} ON {_tempTableName} ({columnsList});";
@@ -86,7 +88,7 @@ namespace EF6TempTableKit.SqlCommands
                 return this;
             }
 
-            _queryBuilder.AppendLine($"IF @tempTable{_tempTableName}Created = 1");
+            _queryBuilder.AppendLine($"IF @{_tempTableExist} = 1");
             _queryBuilder.AppendLine($"BEGIN");
 
             foreach (var indexWithColumns in indexesWithFields)
@@ -114,7 +116,7 @@ namespace EF6TempTableKit.SqlCommands
 
         public IExecute AddInsertQueryIfCreated(IReadOnlyDictionary<string, int> fieldsWithPositions, string sqlSelectQuery)
         {
-            _queryBuilder.AppendLine($"IF @tempTable{_tempTableName}Created = 1");
+            _queryBuilder.AppendLine($"IF @{_tempTableExist} = 1");
             _queryBuilder.AppendLine($"BEGIN");
 
             BuildInsertQuery(fieldsWithPositions, sqlSelectQuery, 2);
