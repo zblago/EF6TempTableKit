@@ -4,12 +4,12 @@ using Xunit;
 
 namespace EF6TempTableKit.Test
 {
-    public class EdmxIntegrationTest
+    public class IntegrationTest
     {
         [Fact]
         public void PassingTest()
         {
-            var apphost = AppHost.Simulate("EF6TempTableKit.Edmx.Web");
+            var apphost = AppHost.Simulate("EF6TempTableKit.Test.Web");
             apphost.Start(browsingSession =>
             {
                 RequestResult result = browsingSession.Get("/Home/Index");

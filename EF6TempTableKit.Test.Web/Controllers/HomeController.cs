@@ -1,7 +1,11 @@
 ﻿using EF6TempTableKit.Extensions;
-using EF6TempTableKit.Test.Web.Context;
+using EF6TempTableKit.Test.Web.Model.TempTables;
+using EF6TempTableKit.Test.Web.Models;
+using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 
 namespace EF6TempTableKit.Test.Web.Controllers
@@ -10,44 +14,27 @@ namespace EF6TempTableKit.Test.Web.Controllers
     {
         public ActionResult Index()
         {
-            using (var adventureWorksDW2008R2Entities = new AdventureWorksDW2008R2Entities())
+            using (var context = new AdventureWorks())
             {
-                Database.SetInitializer<AdventureWorksDW2008R2Entities>(null);
+                //Database.SetInitializer<AdventureWorksDW2008R2Entities>(null); //Obviously not needed
 
-                var a = 1;
-                var b = 2;
-                string c1 = "3";
+                var tempAddressQuery = context.Addresses.Select(a => new AddressTempTableDto
+                {
+                    Id = a.AddressID,
+                    AddressLine1 = a.AddressLine1
+                });
 
-                var q = FirstExpression(adventureWorksDW2008R2Entities, a, b, c1);
-                var listResseler = adventureWorksDW2008R2Entities
-                    .WithTempTableExpression<AdventureWorksDW2008R2Entities>(q)
-                    .DimReseller.Join(adventureWorksDW2008R2Entities.TemporaryStudents,
-                    c => c.ResellerKey,
-                    c => c.Id,
-                    (reseller, student) =>
-                    new
-                    {
-                        Id = reseller.ResellerKey,
-                        Name = reseller.ResellerName,
-                    }).ToList();
+                var joinedAddress = context
+                        .WithTempTableExpression<AdventureWorks>(tempAddressQuery)
+                        .AddressesTempTable.Join(context.Addresses,
+                        (a) => a.Id,
+                        (aa) => aa.AddressID,
+                        (at, a) => new { Id = at.Id }).ToList();
 
-                var t = adventureWorksDW2008R2Entities.DimReseller.First();
-                
+                ViewBag.EF6TempTableKitResult = "EF6TempTableKit.Passed.OK";    
             }
 
             return View();
-        }
-
-        public IQueryable<TemporaryStudentIdentityDto> FirstExpression(System.Data.Entity.DbContext context, int a, int b, string c)
-        {
-            var myContext = context as AdventureWorksDW2008R2Entities;
-            var resselersQuery = myContext.DimReseller.Where(t => t.FirstOrderYear == 4).Select(x => new TemporaryStudentIdentityDto
-            {
-                Name = x.YearOpened.ToString(),
-                Id = (int)x.FirstOrderYear,
-            });
-
-            return resselersQuery;
         }
 
         public ActionResult About()

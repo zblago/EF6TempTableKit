@@ -103,7 +103,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ClassTest.cs" />
+    <Compile Include="UnitTest.cs" />
     <Compile Include="CodeFirst\Address.cs" />
     <Compile Include="CodeFirst\AddressType.cs" />
     <Compile Include="CodeFirst\AdventureWorksCodeFirst.cs" />
@@ -195,7 +195,7 @@
     <Compile Include="CodeFirst\vVendorWithContact.cs" />
     <Compile Include="CodeFirst\WorkOrder.cs" />
     <Compile Include="CodeFirst\WorkOrderRouting.cs" />
-    <Compile Include="EdmxIntegrationTest.cs" />
+    <Compile Include="IntegrationTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TempTables\Address.cs" />
   </ItemGroup>

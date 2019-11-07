@@ -8,13 +8,13 @@
     <ProductVersion>
     </ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{E21F8441-78FA-4EC2-BA4A-FC3CF7380424}</ProjectGuid>
+    <ProjectGuid>{8058CCF2-B71C-4F27-B3A4-DD816F0E352D}</ProjectGuid>
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>EF6TempTableKit.Test.Web</RootNamespace>
     <AssemblyName>EF6TempTableKit.Test.Web</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
     <Use64BitIISExpress />
@@ -118,35 +118,11 @@
       <Private>True</Private>
       <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="xunit.assert">
+      <HintPath>..\packages\xunit.assert.2.4.1\lib\netstandard1.1\xunit.assert.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="System.Diagnostics.DiagnosticSource">
-      <HintPath>..\packages\System.Diagnostics.DiagnosticSource.4.4.1\lib\net46\System.Diagnostics.DiagnosticSource.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.AspNet.TelemetryCorrelation">
-      <HintPath>..\packages\Microsoft.AspNet.TelemetryCorrelation.1.0.0\lib\net45\Microsoft.AspNet.TelemetryCorrelation.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.ApplicationInsights">
-      <HintPath>..\packages\Microsoft.ApplicationInsights.2.5.1\lib\net46\Microsoft.ApplicationInsights.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.AI.Agent.Intercept">
-      <HintPath>..\packages\Microsoft.ApplicationInsights.Agent.Intercept.2.4.0\lib\net45\Microsoft.AI.Agent.Intercept.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.AI.DependencyCollector">
-      <HintPath>..\packages\Microsoft.ApplicationInsights.DependencyCollector.2.5.1\lib\net45\Microsoft.AI.DependencyCollector.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.AI.PerfCounterCollector">
-      <HintPath>..\packages\Microsoft.ApplicationInsights.PerfCounterCollector.2.5.1\lib\net45\Microsoft.AI.PerfCounterCollector.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.AI.ServerTelemetryChannel">
-      <HintPath>..\packages\Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.2.5.1\lib\net45\Microsoft.AI.ServerTelemetryChannel.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.AI.WindowsServer">
-      <HintPath>..\packages\Microsoft.ApplicationInsights.WindowsServer.2.5.1\lib\net45\Microsoft.AI.WindowsServer.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.AI.Web">
-      <HintPath>..\packages\Microsoft.ApplicationInsights.Web.2.5.1\lib\net45\Microsoft.AI.Web.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform">
       <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
     </Reference>
@@ -155,12 +131,103 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
-    <Compile Include="Context\AdventureWorkQueryInterceptor.cs" />
-    <Compile Include="Context\Context.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Address.cs" />
+    <Compile Include="Models\AddressType.cs" />
+    <Compile Include="Models\AdventureWorks.cs" />
+    <Compile Include="Models\AWBuildVersion.cs" />
+    <Compile Include="Models\BillOfMaterial.cs" />
+    <Compile Include="Models\BusinessEntity.cs" />
+    <Compile Include="Models\BusinessEntityAddress.cs" />
+    <Compile Include="Models\BusinessEntityContact.cs" />
+    <Compile Include="Models\ContactType.cs" />
+    <Compile Include="Models\CountryRegion.cs" />
+    <Compile Include="Models\CountryRegionCurrency.cs" />
+    <Compile Include="Models\CreditCard.cs" />
+    <Compile Include="Models\Culture.cs" />
+    <Compile Include="Models\Currency.cs" />
+    <Compile Include="Models\CurrencyRate.cs" />
+    <Compile Include="Models\Customer.cs" />
+    <Compile Include="Models\DatabaseLog.cs" />
+    <Compile Include="Models\Department.cs" />
+    <Compile Include="Models\EmailAddress.cs" />
+    <Compile Include="Models\Employee.cs" />
+    <Compile Include="Models\EmployeeDepartmentHistory.cs" />
+    <Compile Include="Models\EmployeePayHistory.cs" />
+    <Compile Include="Models\ErrorLog.cs" />
+    <Compile Include="Models\Extended\AdventureWorksExtended.cs" />
+    <Compile Include="Models\Illustration.cs" />
+    <Compile Include="Models\JobCandidate.cs" />
+    <Compile Include="Models\Location.cs" />
+    <Compile Include="Models\Password.cs" />
+    <Compile Include="Models\Person.cs" />
+    <Compile Include="Models\PersonCreditCard.cs" />
+    <Compile Include="Models\PersonPhone.cs" />
+    <Compile Include="Models\PhoneNumberType.cs" />
+    <Compile Include="Models\Product.cs" />
+    <Compile Include="Models\ProductCategory.cs" />
+    <Compile Include="Models\ProductCostHistory.cs" />
+    <Compile Include="Models\ProductDescription.cs" />
+    <Compile Include="Models\ProductDocument.cs" />
+    <Compile Include="Models\ProductInventory.cs" />
+    <Compile Include="Models\ProductListPriceHistory.cs" />
+    <Compile Include="Models\ProductModel.cs" />
+    <Compile Include="Models\ProductModelIllustration.cs" />
+    <Compile Include="Models\ProductModelProductDescriptionCulture.cs" />
+    <Compile Include="Models\ProductPhoto.cs" />
+    <Compile Include="Models\ProductProductPhoto.cs" />
+    <Compile Include="Models\ProductReview.cs" />
+    <Compile Include="Models\ProductSubcategory.cs" />
+    <Compile Include="Models\ProductVendor.cs" />
+    <Compile Include="Models\PurchaseOrderDetail.cs" />
+    <Compile Include="Models\PurchaseOrderHeader.cs" />
+    <Compile Include="Models\SalesOrderDetail.cs" />
+    <Compile Include="Models\SalesOrderHeader.cs" />
+    <Compile Include="Models\SalesOrderHeaderSalesReason.cs" />
+    <Compile Include="Models\SalesPerson.cs" />
+    <Compile Include="Models\SalesPersonQuotaHistory.cs" />
+    <Compile Include="Models\SalesReason.cs" />
+    <Compile Include="Models\SalesTaxRate.cs" />
+    <Compile Include="Models\SalesTerritory.cs" />
+    <Compile Include="Models\SalesTerritoryHistory.cs" />
+    <Compile Include="Models\ScrapReason.cs" />
+    <Compile Include="Models\Shift.cs" />
+    <Compile Include="Models\ShipMethod.cs" />
+    <Compile Include="Models\ShoppingCartItem.cs" />
+    <Compile Include="Models\SpecialOffer.cs" />
+    <Compile Include="Models\SpecialOfferProduct.cs" />
+    <Compile Include="Models\StateProvince.cs" />
+    <Compile Include="Models\Store.cs" />
+    <Compile Include="Models\TempTables\Address.cs" />
+    <Compile Include="Models\TransactionHistory.cs" />
+    <Compile Include="Models\TransactionHistoryArchive.cs" />
+    <Compile Include="Models\UnitMeasure.cs" />
+    <Compile Include="Models\vAdditionalContactInfo.cs" />
+    <Compile Include="Models\vEmployee.cs" />
+    <Compile Include="Models\vEmployeeDepartment.cs" />
+    <Compile Include="Models\vEmployeeDepartmentHistory.cs" />
+    <Compile Include="Models\Vendor.cs" />
+    <Compile Include="Models\vIndividualCustomer.cs" />
+    <Compile Include="Models\vJobCandidate.cs" />
+    <Compile Include="Models\vJobCandidateEducation.cs" />
+    <Compile Include="Models\vJobCandidateEmployment.cs" />
+    <Compile Include="Models\vPersonDemographic.cs" />
+    <Compile Include="Models\vProductAndDescription.cs" />
+    <Compile Include="Models\vProductModelCatalogDescription.cs" />
+    <Compile Include="Models\vProductModelInstruction.cs" />
+    <Compile Include="Models\vSalesPerson.cs" />
+    <Compile Include="Models\vSalesPersonSalesByFiscalYear.cs" />
+    <Compile Include="Models\vStateProvinceCountryRegion.cs" />
+    <Compile Include="Models\vStoreWithAddress.cs" />
+    <Compile Include="Models\vStoreWithContact.cs" />
+    <Compile Include="Models\vStoreWithDemographic.cs" />
+    <Compile Include="Models\vVendorWithAddress.cs" />
+    <Compile Include="Models\vVendorWithContact.cs" />
+    <Compile Include="Models\WorkOrder.cs" />
+    <Compile Include="Models\WorkOrderRouting.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -185,7 +252,6 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
-    <Content Include="TODO.txt" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -203,7 +269,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
@@ -219,13 +284,6 @@
     <Content Include="Scripts\jquery-3.3.1.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\EF6TempTableKit\EF6TempTableKit.csproj">
-      <Project>{4ecee5ef-a20d-4d0e-9abd-40e9eaa27459}</Project>
-      <Name>EF6TempTableKit</Name>
-    </ProjectReference>
     <ProjectReference Include="..\EF6TempTableKit\EF6TempTableKit.csproj">
       <Project>{4ecee5ef-a20d-4d0e-9abd-40e9eaa27459}</Project>
       <Name>EF6TempTableKit</Name>
@@ -247,9 +305,9 @@
         <WebProjectProperties>
           <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>59429</DevelopmentServerPort>
+          <DevelopmentServerPort>54245</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:59429/</IISUrl>
+          <IISUrl>http://localhost:54245/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
