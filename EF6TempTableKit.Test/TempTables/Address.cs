@@ -2,7 +2,7 @@
 using EF6TempTableKit.Model;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace EF6TempTableKit.UnitTest.TempTables
+namespace EF6TempTableKit.Test.TempTables
 {
     [Table("#tempAddress", Schema = "tempDb")]
     public class AddressTempTable : ITempTable

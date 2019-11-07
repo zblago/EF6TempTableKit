@@ -2,7 +2,7 @@
 using MvcIntegrationTestFramework.Hosting;
 using Xunit;
 
-namespace EF6TempTableKit.UnitTest
+namespace EF6TempTableKit.Test
 {
     public class EdmxIntegrationTest
     {
