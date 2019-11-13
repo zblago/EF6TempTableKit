@@ -51,9 +51,9 @@
     <Compile Include="Attributes\ClusteredIndexAttribute.cs" />
     <Compile Include="Attributes\NonClusteredIndexAttribute.cs" />
     <Compile Include="Attributes\TempFieldTypeAttribute.cs" />
-    <Compile Include="DbContext\DbConfig.cs" />
+    <Compile Include="DbContext\EF6TempTableKitDbConfiguration.cs" />
     <Compile Include="DbContext\IDbContextWithTempTable.cs" />
-    <Compile Include="DbContext\QueryInterceptor.cs" />
+    <Compile Include="DbContext\EF6TempTableKitQueryInterceptor.cs" />
     <Compile Include="DbContext\TempTableContainer.cs" />
     <Compile Include="Extensions\DbContextExtensions.cs" />
     <Compile Include="Extensions\IQueryableExtensions.cs" />
