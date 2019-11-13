@@ -1,12 +1,13 @@
 ﻿using EF6TempTableKit.Extensions;
 using EF6TempTableKit.Test.Web.Model.TempTables;
-using EF6TempTableKit.Test.Web.Models;
+using EF6TempTableKit.Test.Web.Entities;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using MyContextNamespace = EF6TempTableKit.Test.Web.Entities.MyContext;
 
 namespace EF6TempTableKit.Test.Web.Controllers
 {
@@ -14,9 +15,35 @@ namespace EF6TempTableKit.Test.Web.Controllers
     {
         public ActionResult Index()
         {
-            using (var context = new AdventureWorks())
+            //using (var context = new AdventureWorks())
+            //{
+            //    //Database.SetInitializer<AdventureWorksDW2008R2Entities>(null); //Obviously not needed
+
+            //    var tempAddressQuery = context.Addresses.Select(a => new AddressTempTableDto
+            //    {
+            //        Id = a.AddressID,
+            //        AddressLine1 = a.AddressLine1
+            //    });
+
+            //    var joinedAddress = context
+            //            .WithTempTableExpression<AdventureWorks>(tempAddressQuery)
+            //            .AddressesTempTable.Join(context.Addresses,
+            //            (a) => a.Id,
+            //            (aa) => aa.AddressID,
+            //            (at, a) => new { Id = at.Id }).ToList();
+
+            //    ViewBag.EF6TempTableKitResult = "EF6TempTableKit.Passed.OK";
+            //}
+
+            return View();
+        }
+
+
+        public ActionResult IndexWithMyContext()
+        {
+            using (var context = new MyContextNamespace.MyContext())
             {
-                //Database.SetInitializer<AdventureWorksDW2008R2Entities>(null); //Obviously not needed
+                //Database.SetInitializer<MyContextNamespace.MyContext>(null); //Obviously not needed
 
                 var tempAddressQuery = context.Addresses.Select(a => new AddressTempTableDto
                 {
@@ -25,16 +52,16 @@ namespace EF6TempTableKit.Test.Web.Controllers
                 });
 
                 var joinedAddress = context
-                        .WithTempTableExpression<AdventureWorks>(tempAddressQuery)
+                        .WithTempTableExpression<MyContextNamespace.MyContext>(tempAddressQuery)
                         .AddressesTempTable.Join(context.Addresses,
                         (a) => a.Id,
                         (aa) => aa.AddressID,
                         (at, a) => new { Id = at.Id }).ToList();
 
-                ViewBag.EF6TempTableKitResult = "EF6TempTableKit.Passed.OK";    
+                ViewBag.EF6TempTableKitResult = "EF6TempTableKit.Passed.OK";
             }
 
-            return View();
+            return View("Index");
         }
 
         public ActionResult About()

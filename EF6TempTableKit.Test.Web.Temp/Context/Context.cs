@@ -13,7 +13,7 @@
         public DbConfig()
         {
             AddInterceptor(new AdventureWorkQueryInterceptor());
-            AddInterceptor(new QueryInterceptor());
+            AddInterceptor(new EF6TempTableKitQueryInterceptor());
         }
     }
 

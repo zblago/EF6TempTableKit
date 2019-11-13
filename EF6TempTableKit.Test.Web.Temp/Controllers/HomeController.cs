@@ -32,7 +32,6 @@ namespace EF6TempTableKit.Test.Web.Controllers
                     }).ToList();
 
                 var t = adventureWorksDW2008R2Entities.DimReseller.First();
-                
             }
 
             return View();

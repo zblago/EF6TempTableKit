@@ -1,4 +1,4 @@
-﻿using EF6TempTableKit.Test.Web.Models;
+﻿using EF6TempTableKit.Test.Web.Entities;
 using System.Data.Entity;
 using System.Web.Mvc;
 using System.Web.Optimization;
