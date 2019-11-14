@@ -132,13 +132,15 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Entities\MyContext\AdventureWorkQueryInterceptor.cs" />
     <Compile Include="Entities\MyContext\MyContext.cs" />
+    <Compile Include="Entities\MyContext\MyContextDbConfiguration.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Entities\Address.cs" />
     <Compile Include="Entities\AddressType.cs" />
-    <Compile Include="Entities\AdventureWorks.cs" />
+    <Compile Include="Entities\AdventureWorksContext\AdventureWorks.cs" />
     <Compile Include="Entities\AWBuildVersion.cs" />
     <Compile Include="Entities\BillOfMaterial.cs" />
     <Compile Include="Entities\BusinessEntity.cs" />
@@ -159,7 +161,7 @@
     <Compile Include="Entities\EmployeeDepartmentHistory.cs" />
     <Compile Include="Entities\EmployeePayHistory.cs" />
     <Compile Include="Entities\ErrorLog.cs" />
-    <Compile Include="Entities\Extended\AdventureWorksExtended.cs" />
+    <Compile Include="Entities\AdventureWorksContext\AdventureWorksExtended.cs" />
     <Compile Include="Entities\Illustration.cs" />
     <Compile Include="Entities\JobCandidate.cs" />
     <Compile Include="Entities\Location.cs" />

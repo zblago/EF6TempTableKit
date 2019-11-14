@@ -15,25 +15,25 @@ namespace EF6TempTableKit.Test.Web.Controllers
     {
         public ActionResult Index()
         {
-            //using (var context = new AdventureWorks())
-            //{
-            //    //Database.SetInitializer<AdventureWorksDW2008R2Entities>(null); //Obviously not needed
+            using (var context = new AdventureWorks())
+            {
+                //Database.SetInitializer<AdventureWorksDW2008R2Entities>(null); //Obviously not needed
 
-            //    var tempAddressQuery = context.Addresses.Select(a => new AddressTempTableDto
-            //    {
-            //        Id = a.AddressID,
-            //        AddressLine1 = a.AddressLine1
-            //    });
+                var tempAddressQuery = context.Addresses.Select(a => new AddressTempTableDto
+                {
+                    Id = a.AddressID,
+                    AddressLine1 = a.AddressLine1
+                });
 
-            //    var joinedAddress = context
-            //            .WithTempTableExpression<AdventureWorks>(tempAddressQuery)
-            //            .AddressesTempTable.Join(context.Addresses,
-            //            (a) => a.Id,
-            //            (aa) => aa.AddressID,
-            //            (at, a) => new { Id = at.Id }).ToList();
+                var joinedAddress = context
+                        .WithTempTableExpression<AdventureWorks>(tempAddressQuery)
+                        .AddressesTempTable.Join(context.Addresses,
+                        (a) => a.Id,
+                        (aa) => aa.AddressID,
+                        (at, a) => new { Id = at.Id }).ToList();
 
-            //    ViewBag.EF6TempTableKitResult = "EF6TempTableKit.Passed.OK";
-            //}
+                ViewBag.EF6TempTableKitResult = "EF6TempTableKit.Passed.OK";
+            }
 
             return View();
         }
