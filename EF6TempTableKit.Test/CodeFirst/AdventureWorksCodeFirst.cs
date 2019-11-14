@@ -5,13 +5,19 @@ namespace EF6TempTableKit.Test.CodeFirst
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Linq;
     using EF6TempTableKit.DbContext;
+    using EF6TempTableKit.Test.TempTables;
 
+    [DbConfigurationType(typeof(EF6TempTableKitDbConfiguration))]
     public partial class AdventureWorksCodeFirst : DbContext, IDbContextWithTempTable
     {
         public AdventureWorksCodeFirst()
             : base("name=AdventureWorksCodeFirst")
         {
         }
+
+        public virtual DbSet<AddressTempTable> AddressesTempTable { get; set; }
+        public virtual DbSet<AddressTempTableMultipleId> AddressesTempTableMultipleId { get; set; }
+        public TempTableContainer TempTableContainer { get; set; } = new TempTableContainer();
 
         public virtual DbSet<AWBuildVersion> AWBuildVersions { get; set; }
         public virtual DbSet<DatabaseLog> DatabaseLogs { get; set; }
@@ -102,9 +108,7 @@ namespace EF6TempTableKit.Test.CodeFirst
         public virtual DbSet<vSalesPersonSalesByFiscalYear> vSalesPersonSalesByFiscalYears { get; set; }
         public virtual DbSet<vStoreWithAddress> vStoreWithAddresses { get; set; }
         public virtual DbSet<vStoreWithContact> vStoreWithContacts { get; set; }
-        public virtual DbSet<vStoreWithDemographic> vStoreWithDemographics { get; set; }
-        public virtual DbSet<TempTables.AddressTempTable> AddressesTemp { get; set; }
-        public TempTableContainer TempTableContainer { get; set; }
+        public virtual DbSet<vStoreWithDemographic> vStoreWithDemographics { get; set; }        
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

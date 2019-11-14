@@ -15,12 +15,12 @@ namespace EF6TempTableKit.Test.TempTables
 
         [NonClusteredIndex("third")]
         [NonClusteredIndex("second")]
-        [TempFieldTypeAttribute("varchar(20)")]
+        [TempFieldTypeAttribute("varchar(200)")]
         public virtual string Name { get; set; }
     }
 
     [NotMapped]
-    public class AddressDto : AddressTempTable
+    public class AddressTempTableDto : AddressTempTable
     {
     }
 }

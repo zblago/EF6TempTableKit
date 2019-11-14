@@ -103,6 +103,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="TempTables\AddressTempTableMultipleId.cs" />
     <Compile Include="UnitTest.cs" />
     <Compile Include="CodeFirst\Address.cs" />
     <Compile Include="CodeFirst\AddressType.cs" />
@@ -197,7 +198,7 @@
     <Compile Include="CodeFirst\WorkOrderRouting.cs" />
     <Compile Include="IntegrationTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TempTables\Address.cs" />
+    <Compile Include="TempTables\AddressTempTable.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
