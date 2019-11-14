@@ -132,9 +132,6 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Entities\MyContext\AdventureWorkQueryInterceptor.cs" />
-    <Compile Include="Entities\MyContext\MyContext.cs" />
-    <Compile Include="Entities\MyContext\MyContextDbConfiguration.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -287,10 +284,6 @@
     <Content Include="Scripts\jquery-3.3.1.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\EF6TempTableKit.Test.Interceptors\EF6TempTableKit.Test.Interceptors.csproj">
-      <Project>{e08a410e-4e23-4fe0-9bad-1fae9f13ee9f}</Project>
-      <Name>EF6TempTableKit.Test.Interceptors</Name>
-    </ProjectReference>
     <ProjectReference Include="..\EF6TempTableKit\EF6TempTableKit.csproj">
       <Project>{4ecee5ef-a20d-4d0e-9abd-40e9eaa27459}</Project>
       <Name>EF6TempTableKit</Name>
