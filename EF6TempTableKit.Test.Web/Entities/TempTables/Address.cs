@@ -11,12 +11,12 @@ namespace EF6TempTableKit.Test.Web.Model.TempTables
         [NonClusteredIndex("first")]
         [NonClusteredIndex("second")]
         [TempFieldTypeAttribute("int")]
-        public virtual int Id { get; set; }
+        public int Id { get; set; }
 
         [NonClusteredIndex("third")]
         [NonClusteredIndex("second")]
         [TempFieldTypeAttribute("varchar(200)")]
-        public virtual string AddressLine1 { get; set; }
+        public string AddressLine1 { get; set; }
     }
 
     [NotMapped]

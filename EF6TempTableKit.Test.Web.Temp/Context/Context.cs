@@ -81,12 +81,12 @@
         [ClusteredIndex]
         [NonClusteredIndex("first")]
         [NonClusteredIndex("second")]
-        public virtual int Id { get; set; }
+        public int Id { get; set; }
 
         [TempFieldTypeAttribute("varchar(20)")]
         [NonClusteredIndex("third")]
         [NonClusteredIndex("second")]
-        public virtual string Name { get; set; }
+        public string Name { get; set; }
     }
 
     [NotMapped]

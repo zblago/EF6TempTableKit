@@ -104,6 +104,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="TempTables\AddressTempTableMultipleId.cs" />
+    <Compile Include="TempTables\ProductCategoryCount.cs" />
     <Compile Include="UnitTest.cs" />
     <Compile Include="CodeFirst\Address.cs" />
     <Compile Include="CodeFirst\AddressType.cs" />

@@ -7,7 +7,7 @@ namespace EF6TempTableKit.Test
     public class IntegrationTest
     {
         [Fact]
-        public void PassingTest()
+        public void LoadAddressList()
         {
             var apphost = AppHost.Simulate("EF6TempTableKit.Test.Web");
             apphost.Start(browsingSession =>
@@ -18,12 +18,6 @@ namespace EF6TempTableKit.Test
                 Assert.Contains("EF6TempTableKit.Passed.OK", responseText);
             });
             apphost.Dispose();
-        }
-
-        [Fact]
-        public void PassingTest1()
-        {
-            Assert.Equal("1", "1");
         }
     }
 }
