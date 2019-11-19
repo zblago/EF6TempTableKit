@@ -8,7 +8,7 @@ namespace EF6TempTableKit.Test.TempTables
     [Table("#tempProductCategoryCount", Schema = "tempDb")]
     public class ProductCategoryCountTempTable : ITempTable
     {
-        [Key]
+        [Key] //As we don't have Id property, we have to mark primary key with [Key] attribute.
         [ClusteredIndex]
         [NonClusteredIndex("CategoryId_CategoryName")]
         [TempFieldTypeAttribute("int")]

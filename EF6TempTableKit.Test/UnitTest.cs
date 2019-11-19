@@ -65,7 +65,6 @@ namespace EF6TempTableKit.Test
             {
                 var tempAddressQuery = context.Addresses.Select(a => new AddressTempTableDto
                 {
-                    //AddressID is mapped twice; exception is throwing up
                     Id = a.AddressID,
                     Name = a.AddressLine1
                 });
@@ -140,7 +139,7 @@ namespace EF6TempTableKit.Test
         }
 
         [Fact]
-        public void GetProductCategory()
+        public void ProductListWithCategoryDetails()
         {
             using (var context = new AdventureWorksCodeFirst())
             {
@@ -215,6 +214,9 @@ namespace EF6TempTableKit.Test
 
                 var productList = productsQuery.ToList();
                 Assert.NotEmpty(productList);
+
+                var productCount = productsQuery.Count();
+                Assert.True(productCount > 0);
             }
         }
     }
