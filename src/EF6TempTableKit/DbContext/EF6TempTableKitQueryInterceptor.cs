@@ -29,7 +29,7 @@ namespace EF6TempTableKit.DbContext
                         dbContextWithTempTable.Database.ExecuteSqlCommand(
                                 generatedByEf6TempTableKitStartMsg
                                 + "\n"
-                                + sqlTempQuery.Value.Query
+                                + sqlTempQuery.Value.QueryString
                                 + "\n"
                                 + generatedByEf6TempTableKitEndMsg
                             );
@@ -42,7 +42,7 @@ namespace EF6TempTableKit.DbContext
                                 "\n" 
                                 + generatedByEf6TempTableKitStartMsg
                                 + "\n"
-                                + sqlTempQuery.Value.Query
+                                + sqlTempQuery.Value.QueryString
                                 + "\n" 
                                 + generatedByEf6TempTableKitEndMsg
                                 + "\n"

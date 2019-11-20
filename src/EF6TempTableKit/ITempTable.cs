@@ -1,4 +1,4 @@
-﻿namespace EF6TempTableKit.Model
+﻿namespace EF6TempTableKit
 {
     /// <summary>
     /// This is a marker interface

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using EF6TempTableKit.Model;
 using EF6TempTableKit.DbContext;
 using EF6TempTableKit.SqlCommands;
 
@@ -50,7 +49,7 @@ namespace EF6TempTableKit.Extensions
             }
 
             contextWithTempTable.TempTableContainer.TempSqlQueriesList.Add(tempTableName, 
-                new QueryString { Query = sqlAllCommandsQuery, ReuseExisting = reuseExisting });
+                new Query { QueryString = sqlAllCommandsQuery, ReuseExisting = reuseExisting });
                  
             return dbContexWithTempTable as T;
         }

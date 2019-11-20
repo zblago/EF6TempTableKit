@@ -1,5 +1,4 @@
 ﻿using EF6TempTableKit.Attributes;
-using EF6TempTableKit.Model;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 

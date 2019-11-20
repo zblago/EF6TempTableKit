@@ -1,5 +1,4 @@
-﻿using EF6TempTableKit.Model;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace EF6TempTableKit.DbContext
 {
@@ -7,9 +6,9 @@ namespace EF6TempTableKit.DbContext
     {
         public TempTableContainer()
         {
-            TempSqlQueriesList = new Dictionary<string, QueryString>();
+            TempSqlQueriesList = new Dictionary<string, Query>();
         }
 
-        public IDictionary<string, QueryString> TempSqlQueriesList { set; get; }
+        public IDictionary<string, Query> TempSqlQueriesList { set; get; }
     }
 }

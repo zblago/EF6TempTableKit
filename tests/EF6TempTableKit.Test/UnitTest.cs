@@ -1,9 +1,7 @@
 ﻿using EF6TempTableKit.Extensions;
 using EF6TempTableKit.Test.CodeFirst;
 using EF6TempTableKit.Test.TempTables;
-using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 using Xunit;
 
@@ -16,8 +14,6 @@ namespace EF6TempTableKit.Test
         {
             using (var context = new AdventureWorksCodeFirst())
             {
-                //Database.SetInitializer<AdventureWorksCodeFirst>(null);
-
                 var tempAddressQuery = context.Addresses.Select(a => new AddressTempTableDto { Id = a.AddressID, Name = a.AddressLine1 });
 
                 var addressList = context
@@ -41,7 +37,7 @@ namespace EF6TempTableKit.Test
                 {
                     var tempAddressQuery = context.Addresses.Select(a => new AddressTempTableMultipleIdDto
                     {
-                        //AddressID is mapped twice; exception occurs
+                        //AddressID is mapped twice; EF throws exception
                         Id = a.AddressID,
                         Id2 = a.AddressID,
                         Name = a.AddressLine1
@@ -58,7 +54,8 @@ namespace EF6TempTableKit.Test
         }
 
         [Fact(DisplayName = "Reuse temp table")]
-        //In order to reuse the same table table (previously created in some of the top queries) in a second query just join with temp table. Calling again WithTempTableExpression() not needed as temp table already exists.
+        //In order to reuse the same table table (previously created in some of the top queries) in a second query just join with temp table. 
+        //Calling again WithTempTableExpression() not needed as temp table already exists.
         public void ReuseSameTempTable()
         {
             using (var context = new AdventureWorksCodeFirst())
@@ -75,13 +72,13 @@ namespace EF6TempTableKit.Test
                         (a) => a.Id,
                         (aa) => aa.AddressID,
                         (at, a) => new { Id = at.Id }).ToList();
+                Assert.NotEmpty(addressList);
 
                 var shipToAddress = context
-                        .AddressesTempTable.Join(context.SalesOrderHeaders,
+                        .AddressesTempTable.Join(context.SalesOrderHeaders, //WithTempTableExpression() not needed; temp table is already created.
                             (a) => a.Id,
                             (soh) => soh.ShipToAddressID,
                             (soh, a) => new { Id = soh.Id }).ToList();
-
                 Assert.NotEmpty(shipToAddress);
             }
         }

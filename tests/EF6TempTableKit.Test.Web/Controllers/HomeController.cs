@@ -12,8 +12,6 @@ namespace EF6TempTableKit.Test.Web.Controllers
         {
             using (var context = new AdventureWorks())
             {
-                //Database.SetInitializer<AdventureWorksDW2008R2Entities>(null); //Obviously not needed
-
                 var tempAddressQuery = context.Addresses.Select(a => new AddressTempTableDto
                 {
                     Id = a.AddressID,
