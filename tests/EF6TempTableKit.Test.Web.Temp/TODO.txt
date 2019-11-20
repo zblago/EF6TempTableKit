@@ -1,2 +1,0 @@
-﻿1. sql for check if temp table exists and drop the same
-2. c# code that takes care about column order
