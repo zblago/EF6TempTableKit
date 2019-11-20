@@ -1,5 +1,6 @@
-# EF6TempTableKit
-Provides temp table functionallity in EF6
+# EF6TempTableKit 
+
+Extension method that provides creating and using temp table(s) in your EF6 context.
 
 ## Getting Started
 
