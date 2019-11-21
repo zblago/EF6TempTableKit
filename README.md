@@ -36,7 +36,14 @@ Ensure unique temporary table name that starts with # and has an marker interfac
 ```csharp
   public virtual DbSet<AddressTempTable> AddressesTempTable { get; set; }
 ```
-5. Write a query
+5. Apply a configuration on a context
+```csharp
+    [DbConfigurationType(typeof(EF6TempTableKitDbConfiguration))]
+    public partial class AdventureWorksCodeFirst : DbContext, IDbContextWithTempTable
+    ...
+    ...
+```
+6. Write a query
 ```csharp
             using (var context = new AdventureWorksCodeFirst())
             {
