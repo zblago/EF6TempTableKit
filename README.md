@@ -36,13 +36,30 @@ Ensure unique temporary table name that starts with # and has an marker interfac
 ```csharp
   public virtual DbSet<AddressTempTable> AddressesTempTable { get; set; }
 ```
-5. Apply a configuration on a context
+5. Apply a configuration on a context.
 ```csharp
     [DbConfigurationType(typeof(EF6TempTableKitDbConfiguration))]
     public partial class AdventureWorksCodeFirst : DbContext, IDbContextWithTempTable
     ...
-    ...
+    ...    
 ```
+If you don't have already any configuration, use EF6TempTableKitDbConfiguration. Otherwise, apply your custom configuration.
+```csharp
+    [DbConfigurationType(typeof(CustomDbContextConfiguration))]
+    public partial class AdventureWorksCodeFirst : DbContext, IDbContextWithTempTable
+    {
+````
+ But be sure that you have injected `EF6TempTableKitQueryInterceptor` interceptor.
+````csharp
+    public class CustomDbContextConfiguration : DbConfiguration
+    {
+        public CustomDbContextConfiguration()
+        {
+            AddInterceptor(new AdventureWorkQueryInterceptor());
+            AddInterceptor(new EF6TempTableKitQueryInterceptor());
+        }
+    }
+````
 6. Write a query
 ```csharp
   using (var context = new AdventureWorksCodeFirst())
@@ -58,7 +75,7 @@ Ensure unique temporary table name that starts with # and has an marker interfac
               (at, a) => new { Id = at.Id }).ToList();                
   }
 ```
-6. Run your code.
+7. Run a code.
 
 ### Features
 
