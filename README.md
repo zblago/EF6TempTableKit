@@ -1,6 +1,6 @@
 # EF6TempTableKit 
 
-EF6TempTableKit is a library that helps you utilize temporary tables in your Entity Framework 6 context.
+EF6TempTableKit is a library that helps you utilize temporary tables in your Entity Framework 6 context mapped to Microsoft SQL Server database.
 
 ## Overview
 
