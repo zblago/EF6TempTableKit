@@ -4,7 +4,7 @@ EF6TempTableKit is a library that helps you utilize temporary tables in your Ent
 
 ## Overview
 
-Sometimes, when you write LINQ-to-Entities queries, you would like to have a benefit of using temp tables (e.g. create and insert records in temporary tables and later on reusing it as much as you want in a query). By default, EF doesn't support temporary tables and there is a reason why it is like that. To overcome this weakness, using EF6TempTableKit, we can add a "temporary" entity as we are used to do it with "permanent" entities. In generated T-SQL query "temporary" entity will be mapped to a temporary table. 
+Sometimes, when you write LINQ-to-Entities queries, you would like to have a benefit of using temp tables (e.g. create and insert records in temporary tables and later on reusing it as much as you want in a query). By default, EF doesn't support temporary tables and there is a reason why it is like that. To overcome this weakness, using EF6TempTableKit, we can add a "temporary" entity as we are used to do it with "permanent" entities. In generated T-SQL query "temporary" entity will be mapped to a temporary table which resides in `tempDb` database and used normally like other tables.
 Don't forget: You are still writing LINQ-to-Entities to insert records in a "temporary" entity.
 
 ## Getting Started
@@ -18,18 +18,18 @@ Follow these steps:
 3. Add a "temporary" entity and a DTO entity which inherits the previouse one. You need a both to make it work.
 Ensure unique temporary table name that starts with # and has an marker interface `ITempTable`. Also, add  a sufix `TempTable` to make it unique and easy to distinguish later in a code.
 ```csharp
-    [Table("#tempAddress")]
-    public class AddressTempTable : ITempTable
-    {
-        public int Id { get; set; }
-        
-        public string AddressLine { get; set; }
-    }
+  [Table("#tempAddress")]
+  public class AddressTempTable : ITempTable
+  {
+      public int Id { get; set; }
 
-    [NotMapped]
-    public class AddressTempTableDto : AddressTempTable
-    {
-    }
+      public string AddressLine { get; set; }
+  }
+
+  [NotMapped]
+  public class AddressTempTableDto : AddressTempTable
+  {
+  }
 ```
 4. Add a "temporary" entity into your context 
 
@@ -40,6 +40,7 @@ Ensure unique temporary table name that starts with # and has an marker interfac
 ```csharp
             using (var context = new AdventureWorksCodeFirst())
             {
+                //Be sure that result is mapped into Dto table
                 var tempAddressQuery = context.Addresses.Select(a => new AddressTempTableDto { Id = a.AddressID, Name = a.AddressLine1 });
 
                 var addressList = context
@@ -50,8 +51,9 @@ Ensure unique temporary table name that starts with # and has an marker interfac
                         (at, a) => new { Id = at.Id }).ToList();                
             }
 ```
+6. Run your code.
 
-### Prerequisites
+### Features
 
 What things you need to install the software and how to install them
 
