@@ -43,11 +43,10 @@ Ensure unique temporary table name that starts with # and has an marker interfac
     ...
     ...    
 ```
-If you don't have already any configuration, use EF6TempTableKitDbConfiguration. Otherwise, apply your custom configuration.
+If you don't have already any configuration, use `EF6TempTableKitDbConfiguration`. Otherwise, apply your custom configuration.
 ```csharp
     [DbConfigurationType(typeof(CustomDbContextConfiguration))]
     public partial class AdventureWorksCodeFirst : DbContext, IDbContextWithTempTable
-    {
 ````
  But be sure that you have injected `EF6TempTableKitQueryInterceptor` interceptor.
 ````csharp
