@@ -6,8 +6,10 @@ namespace EF6TempTableKit.Test.CodeFirst
     using System.Linq;
     using EF6TempTableKit.DbContext;
     using EF6TempTableKit.Test.TempTables;
+    using EF6TempTableKit.Test.DbContextConfiguration;
 
-    [DbConfigurationType(typeof(EF6TempTableKitDbConfiguration))]
+    //[DbConfigurationType(typeof(EF6TempTableKitDbConfiguration))]
+    [DbConfigurationType(typeof(CustomDbContextConfiguration))]
     public partial class AdventureWorksCodeFirst : DbContext, IDbContextWithTempTable
     {
         public AdventureWorksCodeFirst()

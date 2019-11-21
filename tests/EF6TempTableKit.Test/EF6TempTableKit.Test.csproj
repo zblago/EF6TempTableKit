@@ -103,6 +103,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DbContextConfiguration\AdventureWorkQueryInterceptor.cs" />
+    <Compile Include="DbContextConfiguration\CustomDbContextConfiguration.cs" />
     <Compile Include="TempTables\AddressTempTableMultipleId.cs" />
     <Compile Include="TempTables\ProductCategoryCount.cs" />
     <Compile Include="UnitTest.cs" />
