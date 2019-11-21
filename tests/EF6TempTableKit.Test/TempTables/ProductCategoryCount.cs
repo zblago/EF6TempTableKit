@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EF6TempTableKit.Test.TempTables
 {
-    [Table("#tempProductCategoryCount", Schema = "tempDb")]
+    [Table("#tempProductCategoryCount")]
     public class ProductCategoryCountTempTable : ITempTable
     {
         [Key] //As we don't have Id property, we have to mark primary key with [Key] attribute.

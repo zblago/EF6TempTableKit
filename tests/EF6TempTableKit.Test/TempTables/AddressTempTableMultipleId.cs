@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EF6TempTableKit.Test.TempTables
 {
-    [Table("#tempAddressMultipleId", Schema = "tempDb")]
+    [Table("#tempAddressMultipleId")]
     public class AddressTempTableMultipleId : ITempTable
     {
         [ClusteredIndex]

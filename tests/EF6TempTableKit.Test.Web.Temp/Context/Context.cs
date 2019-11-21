@@ -70,7 +70,7 @@
         public string Name { get; set; }
     }
 
-    [Table("#tempStudent", Schema = "tempDb")]
+    [Table("#tempStudent")]
     public class TemporaryStudentIdentity : ITempTable
     {
         public TemporaryStudentIdentity()
