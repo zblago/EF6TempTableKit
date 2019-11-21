@@ -45,18 +45,18 @@ Ensure unique temporary table name that starts with # and has an marker interfac
 ```
 6. Write a query
 ```csharp
-            using (var context = new AdventureWorksCodeFirst())
-            {
-                //Be sure that result is mapped into Dto table
-                var tempAddressQuery = context.Addresses.Select(a => new AddressTempTableDto { Id = a.AddressID, Name = a.AddressLine1 });
+  using (var context = new AdventureWorksCodeFirst())
+  {
+      //Be sure that result is mapped into Dto table
+      var tempAddressQuery = context.Addresses.Select(a => new AddressTempTableDto { Id = a.AddressID, Name = a.AddressLine1 });
 
-                var addressList = context
-                        .WithTempTableExpression<AdventureWorksCodeFirst>(tempAddressQuery)
-                        .AddressesTempTable.Join(context.Addresses,
-                        (a) => a.Id,
-                        (aa) => aa.AddressID,
-                        (at, a) => new { Id = at.Id }).ToList();                
-            }
+      var addressList = context
+              .WithTempTableExpression<AdventureWorksCodeFirst>(tempAddressQuery)
+              .AddressesTempTable.Join(context.Addresses,
+              (a) => a.Id,
+              (aa) => aa.AddressID,
+              (at, a) => new { Id = at.Id }).ToList();                
+  }
 ```
 6. Run your code.
 
