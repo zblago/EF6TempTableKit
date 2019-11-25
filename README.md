@@ -86,51 +86,19 @@ EF6TempTableKit supports some features like reusing existing table under the sam
 |`[ClusteredIndex]` attribute| Add this attribute on all fields you want in clustered index. Name in T-SQL code will be generated automatically|
 |`[NonClusteredIndex("nameOfIndex")]` attribute| Add this attribute under the fields you want in non-clustered index. Number of non-clustered index is limited by SQL Server. If you want more columns under the same non-clustered index, just add a same name. Currently, order of columns in index is not supported|
 
-```
-Give examples
-```
+### How it works
 
-### Installing
+Brief description how it works, about sql server profiles with sample code.
 
-A step by step series of examples that tell you how to get a development env running
+### Possible obstacles
 
-Say what the step will be
+### So(l)utio(n) file 
 
-```
-Give the example
-```
-
-And repeat
-
-```
-until finished
-```
-
-End with an example of getting some data out of the system or using it for a little demo
+Describe here solution file. Connect test with description.
 
 ## Running the tests
 
 Explain how to run the automated tests for this system
-
-### Break down into end to end tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-### And coding style tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-## Deployment
-
-Add additional notes about how to deploy this on a live system
 
 ## Built With
 
@@ -148,9 +116,7 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 
 ## Authors
 
-* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
-
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
+* **Zoran Blagojević** - https://www.linkedin.com/in/zoran-blagojevi%C4%87-b2540a6/
 
 ## License
 
