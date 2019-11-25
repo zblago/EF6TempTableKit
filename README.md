@@ -4,8 +4,8 @@ EF6TempTableKit is a library that helps you utilize temporary tables in your Ent
 
 ## Overview
 
-Sometimes, when you write LINQ-to-Entities queries, you would like to have a benefit of using temp tables (e.g. create and insert records in temporary tables and later on reusing it as much as you want in a query). By default, EF doesn't support temporary tables and there is a reason why it is like that. To overcome this weakness, using EF6TempTableKit, we can add a "temporary" entity as we are used to do it with "permanent" entities. In generated T-SQL query "temporary" entity will be mapped to a temporary table which resides in `tempDb` database and used normally like other tables.
-Don't forget: You are still writing LINQ-to-Entities to insert records in a "temporary" entity.
+Sometimes, when you write LINQ-to-Entities queries, you would like to have a benefit of using temp tables (e.g. create and insert records in temporary tables and later on reusing it as much as you want in a query). By default, EF doesn't support temporary tables and there is a reason why is like that. To overcome this weakness, using EF6TempTableKit, we can add a "temporary" entity as we are used to do it with "permanent" entities. In generated T-SQL query "temporary" entity will be mapped to a temporary table which resides in `tempDb` database and used normally like other tables.
+Keep in mind: You are still writing LINQ-to-Entities to insert records in a "temporary" entity.
 
 ## Getting Started
 
@@ -16,7 +16,7 @@ Follow these steps:
   public TempTableContainer TempTableContainer { get; set; } = new TempTableContainer();
 ```
 3. Add a "temporary" entity and a DTO entity which inherits the previouse one. You need a both to make it work.
-Ensure unique temporary table name that starts with # and has an marker interface `ITempTable`. Also, add  a sufix `TempTable` to make it unique and easy to distinguish later in a code.
+Ensure unique temporary table name that starts with # and has a marker interface `ITempTable`. Also, add  a sufix `TempTable` to make it unique and easy to distinguish later in a code.
 ```csharp
   [Table("#tempAddress")]
   public class AddressTempTable : ITempTable
@@ -63,7 +63,7 @@ If you don't have already any configuration, use `EF6TempTableKitDbConfiguration
 ```csharp
   using (var context = new AdventureWorksCodeFirst())
   {
-      //Be sure that result is mapped into Dto table
+      //Be sure that result is mapped into DTO object
       var tempAddressQuery = context.Addresses.Select(a => new AddressTempTableDto { Id = a.AddressID, Name = a.AddressLine1 });
 
       var addressList = context
@@ -78,7 +78,13 @@ If you don't have already any configuration, use `EF6TempTableKitDbConfiguration
 
 ### Features
 
-What things you need to install the software and how to install them
+EF6TempTableKit supports some features like reusing existing table under the same connection, clustered index and non-clustered indexes.
+
+| Feature       | Description |
+| ------------- |-------------|
+| `reuseExisting` flag | Method `WithTempTableExpression<T>(this System.Data.Entity.DbContext dbContexWithTempTable, IQueryable<ITempTable> expression, bool reuseExisting = false)` supports reusing existing temp table under the same [SPID](https://docs.microsoft.com/en-us/sql/t-sql/functions/spid-transact-sql?view=sql-server-ver15). If you set this flag on `true` generated T-SQL will check whether temp table already exists or not. That means if you run mutliple queries under the same connection you can reuse created temp table as temp table is scoped in SPID in which is created http://www.sqlservertutorial.net/sql-server-basics/sql-server-temporary-tables/| 
+|`[ClusteredIndex]` attribute| Add this attribute on all fields you want in clustered index. Name in T-SQL code will be generated automatically|
+|`[NonClusteredIndex("nameOfIndex")]` attribute| Add this attribute under the fields you want in non-clustered index. Number of non-clustered index is limited by SQL Server. If you want more columns under the same non-clustered index, just add a same name. Currently, order of columns in index is not supported|
 
 ```
 Give examples
@@ -155,3 +161,5 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 * Hat tip to anyone whose code was used
 * Inspiration
 * etc
+
+
