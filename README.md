@@ -4,7 +4,7 @@ EF6TempTableKit is a library that helps you utilize temporary tables in your Ent
 
 ## Overview
 
-Sometimes, when you write LINQ-to-Entities queries, you would like to have a benefit of using temp tables (e.g. create and insert records in temporary tables and later on reusing it as much as you want in a query). By default, EF doesn't support temporary tables and there is a reason why is like that. To overcome this weakness, using EF6TempTableKit, we can add a "temporary" entity as we are used to do it with "permanent" entities. In generated T-SQL query "temporary" entity will be mapped to a temporary table which resides in `tempDb` database and used normally like other tables.
+Sometimes, when you write LINQ-to-Entities queries, you would like to have a benefit of using temp tables (e.g. create and insert records in temporary tables and later on reusing it as much as you want in a query). By default, EF doesn't support temporary tables and there is a reason why is like that. To overcome this weakness, using EF6TempTableKit, we can add a "temporary" entity as we are used to do it with "permanent" entities. In generated T-SQL query "temporary" entity will be mapped to a temporary table which resides in `tempDb` database and used normally like other tables.<br/>
 Keep in mind: You are still writing LINQ-to-Entities to insert records in a "temporary" entity.
 
 ## Getting Started
@@ -43,12 +43,12 @@ Ensure unique temporary table name that starts with # and has a marker interface
     ...
     ...    
 ```
-If you don't have already any configuration, use `EF6TempTableKitDbConfiguration`. Otherwise, apply your custom configuration.
+If you don't have already any configuration, use `EF6TempTableKitDbConfiguration`. Otherwise, apply your custom configuration...
 ```csharp
     [DbConfigurationType(typeof(CustomDbContextConfiguration))]
     public partial class AdventureWorksCodeFirst : DbContext, IDbContextWithTempTable
 ````
- But be sure that you have injected `EF6TempTableKitQueryInterceptor` interceptor.
+ ...but be sure that you have injected `EF6TempTableKitQueryInterceptor` interceptor.
 ````csharp
     public class CustomDbContextConfiguration : DbConfiguration
     {
