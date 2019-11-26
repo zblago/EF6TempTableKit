@@ -76,7 +76,7 @@ If you don't have already any configuration, use `EF6TempTableKitDbConfiguration
 ```
 7. Run a code.
 
-### Features
+## Features
 
 EF6TempTableKit supports some features like reusing existing table under the same connection, clustered index and non-clustered indexes.
 
@@ -86,37 +86,37 @@ EF6TempTableKit supports some features like reusing existing table under the sam
 |`[ClusteredIndex]` attribute| Add this attribute on all fields you want in clustered index. Name in T-SQL code will be generated automatically|
 |`[NonClusteredIndex("nameOfIndex")]` attribute| Add this attribute under the fields you want in non-clustered index. Number of non-clustered index is limited by SQL Server. If you want more columns under the same non-clustered index, just add a same name. Currently, order of columns in index is not supported|
 
-### How it works
+## How it works
 
-Brief description how it works, about sql server profiles with sample code.
+Before brief explanation how EF6TempTableKit does his work keep in mind that **EF6TempTableKit doesn't interfer EF6 default behaviour at all**. So, how it works? It uses EF6 ability to intercept a generated query before it hits a DB. But, before that, it does some digging through the internal/hidden EF6 properties and fields to get needed metadata (e.g. column order) and raw query. Using those informations it builds DML and DDL queries. When code execution goes through the attached `EF6TempTableKitQueryInterceptor` interceptor, previously generated query is being attached at the begining of the existing query.
 
-### Possible obstacles
+## Possible obstacles
 
-### So(l)utio(n) file 
+## So(l)utio(n) file 
 
 Describe here solution file. Connect test with description.
 
-## Running the tests
+### Running the tests
 
 Explain how to run the automated tests for this system
 
-## Built With
+### Built With
 
 * [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
 * [Maven](https://maven.apache.org/) - Dependency Management
 * [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
 
-## Contributing
+### Contributing
 
 Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
 
-## Versioning
+### Versioning
 
 We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
 
-## Authors
+### Authors
 
-* **Zoran Blagojević** - https://www.linkedin.com/in/zoran-blagojevi%C4%87-b2540a6/
+* **Zoran Blagojevic** - https://www.linkedin.com/in/zoran-blagojevi%C4%87-b2540a6/
 
 ## License
 
