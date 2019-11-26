@@ -16,13 +16,15 @@ Follow these steps:
   public TempTableContainer TempTableContainer { get; set; } = new TempTableContainer();
 ```
 3. Add a "temporary" entity and a DTO entity which inherits the previouse one. You need a both to make it work.
-Ensure unique temporary table name that starts with # and has a marker interface `ITempTable`. Also, add  a sufix `TempTable` to make it unique and easy to distinguish later in a code.
+Ensure unique temporary table name that starts with # and has a marker interface `ITempTable`. Also, add  a sufix `TempTable` to make it unique and easy to distinguish later in a code. For each field set appropiate SQL Server data type that will be used on table creation. 
 ```csharp
   [Table("#tempAddress")]
   public class AddressTempTable : ITempTable
   {
+      [TempFieldTypeAttribute("int")]
       public int Id { get; set; }
-
+      
+      [TempFieldTypeAttribute("varchar(200)")]
       public string AddressLine { get; set; }
   }
 
