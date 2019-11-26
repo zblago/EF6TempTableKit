@@ -106,7 +106,9 @@
     <Compile Include="DbContextConfiguration\AdventureWorkQueryInterceptor.cs" />
     <Compile Include="DbContextConfiguration\CustomDbContextConfiguration.cs" />
     <Compile Include="TempTables\AddressTempTableMultipleId.cs" />
-    <Compile Include="TempTables\ProductCategoryCount.cs" />
+    <Compile Include="TempTables\ProductCategoryCountTempTable.cs" />
+    <Compile Include="TempTables\ProductSubCategoryTempTable.cs" />
+    <Compile Include="TempTables\ProductCategoryTempTable.cs" />
     <Compile Include="UnitTest.cs" />
     <Compile Include="CodeFirst\Address.cs" />
     <Compile Include="CodeFirst\AddressType.cs" />

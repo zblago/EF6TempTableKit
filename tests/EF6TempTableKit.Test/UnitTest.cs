@@ -18,7 +18,7 @@ namespace EF6TempTableKit.Test
 
                 var addressList = context
                         .WithTempTableExpression<AdventureWorksCodeFirst>(tempAddressQuery)
-                        .AddressesTempTable.Join(context.Addresses,
+                        .TempAddresses.Join(context.Addresses,
                         (a) => a.Id,
                         (aa) => aa.AddressID,
                         (at, a) => new { Id = at.Id }).ToList();
@@ -27,7 +27,9 @@ namespace EF6TempTableKit.Test
             }
         }
 
-        //Expected message: SqlException: 'aliastempAddressMultipleId' has fewer columns than were specified in the column list.
+        /// <summary>
+        /// Expected message: SqlException: 'aliastempAddressMultipleId' has fewer columns than were specified in the column list.
+        /// </summary>
         [Fact]
         public void TestGetAddressMultipleId()
         {
@@ -45,7 +47,7 @@ namespace EF6TempTableKit.Test
 
                     var addressList = context
                             .WithTempTableExpression<AdventureWorksCodeFirst>(tempAddressQuery)
-                            .AddressesTempTableMultipleId.Join(context.Addresses,
+                            .TempAddressesMultipleId.Join(context.Addresses,
                             (a) => a.Id,
                             (aa) => aa.AddressID,
                             (at, a) => new { Id = at.Id }).ToList();
@@ -53,9 +55,12 @@ namespace EF6TempTableKit.Test
             });
         }
 
+        /// <summary>
+        /// In order to reuse the same table table (previously created in some of the top queries) in a second query just join with 
+        /// temp table. 
+        /// Calling again WithTempTableExpression() not needed as temp table already exists.
+        /// </summary>
         [Fact(DisplayName = "Reuse temp table")]
-        //In order to reuse the same table table (previously created in some of the top queries) in a second query just join with temp table. 
-        //Calling again WithTempTableExpression() not needed as temp table already exists.
         public void ReuseSameTempTable()
         {
             using (var context = new AdventureWorksCodeFirst())
@@ -68,14 +73,14 @@ namespace EF6TempTableKit.Test
 
                 var addressList = context
                         .WithTempTableExpression<AdventureWorksCodeFirst>(tempAddressQuery)
-                        .AddressesTempTable.Join(context.Addresses,
+                        .TempAddresses.Join(context.Addresses,
                         (a) => a.Id,
                         (aa) => aa.AddressID,
                         (at, a) => new { Id = at.Id }).ToList();
                 Assert.NotEmpty(addressList);
 
                 var shipToAddress = context
-                        .AddressesTempTable.Join(context.SalesOrderHeaders, //WithTempTableExpression() not needed; temp table is already created.
+                        .TempAddresses.Join(context.SalesOrderHeaders, //WithTempTableExpression() not needed; temp table is already created.
                             (a) => a.Id,
                             (soh) => soh.ShipToAddressID,
                             (soh, a) => new { Id = soh.Id }).ToList();
@@ -96,7 +101,7 @@ namespace EF6TempTableKit.Test
 
                 IQueryable<int> joinAddressQuery = context
                         .WithTempTableExpression<AdventureWorksCodeFirst>(tempAddressQuery)
-                        .AddressesTempTable.Join(context.Addresses,
+                        .TempAddresses.Join(context.Addresses,
                         (a) => a.Id,
                         (aa) => aa.AddressID,
                         (at, a) => at.Id);
@@ -121,7 +126,7 @@ namespace EF6TempTableKit.Test
 
                 IQueryable<int> joinAddressQuery = context
                         .WithTempTableExpression<AdventureWorksCodeFirst>(tempAddressQuery, true)
-                        .AddressesTempTable.Join(context.Addresses,
+                        .TempAddresses.Join(context.Addresses,
                         (a) => a.Id,
 
                         (aa) => aa.AddressID,
@@ -195,7 +200,7 @@ namespace EF6TempTableKit.Test
                                 ProductNumber = wo.ProductNumber,
                                 CategoryId = ps.ProductCategoryID
                             })
-                        .Join(context.ProductCategoryCountTempTables,
+                        .Join(context.TempProductCategoryCounts,
                             (wo) => wo.CategoryId,
                             (temp) => temp.CategoryId,
                             (wo, temp) => new
@@ -214,6 +219,72 @@ namespace EF6TempTableKit.Test
 
                 var productCount = productsQuery.Count();
                 Assert.True(productCount > 0);
+            }
+        }
+
+        /// <summary>
+        /// Demo with two temp tables
+        /// </summary>
+        [Fact]
+        public void ProductListWithCategoryDetailsTwoTempTables()
+        {
+            using (var context = new AdventureWorksCodeFirst())
+            {
+                var categories = context.ProductCategories.Select(pc => new ProductCategoryTempTableDto
+                {
+                    Id = pc.ProductCategoryID,
+                    CategoryName = pc.Name
+                });
+
+                var subCategories = context.ProductSubcategories.Select(psc => new ProductSubCategoryTempTableDto
+                {
+                    Id = psc.ProductSubcategoryID,
+                    CategoryId = psc.ProductCategoryID,
+                    CategoryName = psc.Name,
+                });
+
+                var productsQuery = context
+                        .WithTempTableExpression<AdventureWorksCodeFirst>(categories)
+                        .WithTempTableExpression<AdventureWorksCodeFirst>(subCategories)
+                        .WorkOrders
+                        .Join(context.Products,
+                            (wo) => wo.ProductID,
+                            (p) => p.ProductID,
+                            (wo, p) => new
+                            {
+                                WorkOrderId = wo.WorkOrderID,
+                                ScrappedQty = wo.ScrappedQty,
+                                ProductId = p.ProductID,
+                                ProductSubcategoryId = p.ProductSubcategoryID,
+                                ProductNumber = p.ProductNumber,
+                            })
+                        .Join(context.TempProductCategories,
+                            (wo) => wo.ProductSubcategoryId,
+                            (ps) => ps.Id,
+                            (wo, ps) => new
+                            {
+                                WorkOrderId = wo.WorkOrderId,
+                                ScrappedQty = wo.ScrappedQty,
+                                ProductId = wo.ProductId,
+                                ProductSubcategoryId = wo.ProductSubcategoryId,
+                                ProductNumber = wo.ProductNumber,
+                                CategoryId = ps.Id
+                            })
+                        .Join(context.TempProductSubCategories,
+                            (wo) => wo.CategoryId,
+                            (temp) => temp.CategoryId,
+                            (wo, temp) => new
+                            {
+                                WorkOrderId = wo.WorkOrderId,
+                                ScrappedQty = wo.ScrappedQty,
+                                ProductId = wo.ProductId,
+                                ProductSubcategoryId = wo.ProductSubcategoryId,
+                                ProductName = wo.ProductNumber,
+                                CategoryName = temp.CategoryName,
+                            });
+
+                var productList = productsQuery.ToList();
+                Assert.NotEmpty(productList);
             }
         }
     }
