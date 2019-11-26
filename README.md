@@ -76,15 +76,19 @@ If you don't have already any configuration, use `EF6TempTableKitDbConfiguration
 ```
 7. Run a code.
 
-## Features
+## Extension & Attributes
 
 EF6TempTableKit supports some features like reusing existing table under the same connection, clustered index and non-clustered indexes.
 
-| Feature       | Description |
-| ------------- |-------------|
-| `reuseExisting` flag | Extension method `WithTempTableExpression<T>(this System.Data.Entity.DbContext dbContexWithTempTable, IQueryable<ITempTable> expression, bool reuseExisting = false)` supports reusing existing temp table under the same [SPID](https://docs.microsoft.com/en-us/sql/t-sql/functions/spid-transact-sql?view=sql-server-ver15). If you set this flag on `true` generated T-SQL will check whether temp table already exists or not. That means if you run mutliple queries under the same connection you can reuse created temp table as temp table is scoped in SPID in which is created http://www.sqlservertutorial.net/sql-server-basics/sql-server-temporary-tables/|
-|`[ClusteredIndex]` attribute| Add this attribute on all fields you want in clustered index. Name in T-SQL code will be generated automatically|
-|`[NonClusteredIndex("nameOfIndex")]` attribute| Add this attribute under the fields you want in non-clustered index. Number of non-clustered index is limited by SQL Server. If you want more columns under the same non-clustered index, just add a same name. Currently, order of columns in index is not supported|
+| Extension       | Description |
+| --------------- |-------------|
+| `WithTempTableExpression`| Extension method `WithTempTableExpression<T>(this System.Data.Entity.DbContext dbContexWithTempTable, IQueryable<ITempTable> expression, bool reuseExisting = false)` supports reusing existing temp table under the same [SPID](https://docs.microsoft.com/en-us/sql/t-sql/functions/spid-transact-sql?view=sql-server-ver15). If you set this flag on `true` generated T-SQL will check whether temp table already exists or not. That means if you run mutliple queries under the same connection you can reuse created temp table as temp table is scoped in SPID in which is created http://www.sqlservertutorial.net/sql-server-basics/sql-server-temporary-tables/|
+
+| Attribute       | Description |
+| --------------- |-------------|
+|`[ClusteredIndex]`| Add this attribute on all fields you want in clustered index. Name in T-SQL code will be generated automatically|
+|`[NonClusteredIndex("nameOfIndex")]`| Add this attribute under the fields you want in non-clustered index. Number of non-clustered index is limited by SQL Server. If you want more columns under the same non-clustered index, just add a same name. Currently, order of columns in index is not supported|
+| `TempFieldTypeAttribute` |Use this attribute to define field data type |
 
 ## How it works
 
@@ -92,7 +96,7 @@ Before brief explanation how EF6TempTableKit does his work keep in mind that **E
 
 ## Problems
 
-## So(l)utio(n) file 
+## So(l)utio(n) file & how to install run it
 
 Describe here solution file. Connect test with description.
 
