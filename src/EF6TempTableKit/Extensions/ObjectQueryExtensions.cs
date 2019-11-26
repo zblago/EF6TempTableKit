@@ -47,8 +47,6 @@ namespace EF6TempTableKit.Extensions
                 }
             }
 
-            var a =  new ReadOnlyDictionary<string, int>(propertyPositions);
-
             return objectQuery;
         }
 
