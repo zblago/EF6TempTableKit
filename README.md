@@ -94,11 +94,11 @@ EF6TempTableKit supports some features like reusing existing table under the sam
 
 ## How it works
 
-Before brief explanation how EF6TempTableKit does his work keep in mind that **EF6TempTableKit doesn't interfer EF6 default behaviour at all**. So, how it works? It uses EF6 ability to intercept a generated query before it hits a DB. But, before that, it does some digging through the internal/hidden EF6 properties and fields to get needed metadata (e.g. column order) and raw query. Using those informations it builds DML and DDL queries. When code execution goes through the attached `EF6TempTableKitQueryInterceptor` interceptor, previously generated query is being attached at the begining of the existing query.
+Before brief explanation of how EF6TempTableKit does his work keep in mind that **EF6TempTableKit doesn't interfer EF6 default behaviour at all**. So, how it works? It uses EF6 ability to intercept a generated query before it hits a DB. But, before that, it does some digging through the internal/hidden EF6 properties and fields to get needed metadata (e.g. column order) and raw query. Using those informations it builds DML and DDL queries. When code execution goes through the attached `EF6TempTableKitQueryInterceptor` interceptor, previously generated query is being attached at the begining of the existing query.
 
 ## Problems
 
-## So(l)utio(n) file & how to install run it
+## So(l)utio(n) file & how to run it
 
 Describe here solution file. Connect test with description.
 
