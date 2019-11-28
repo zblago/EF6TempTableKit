@@ -97,6 +97,8 @@ EF6TempTableKit supports some features like reusing existing table under the sam
 
 Before brief explanation of how EF6TempTableKit does his work keep in mind that **EF6TempTableKit doesn't affect EF6 default behaviour at all**. So, how it works? It uses EF6 ability to intercept a generated query before it hits a DB. But, before that, it does some digging through the internal/hidden EF6 properties and fields to get needed metadata (e.g. column order) and raw query. Using those informations it builds DML and DDL queries. When code execution goes through the attached `EF6TempTableKitQueryInterceptor` interceptor, previously generated query is being attached at the begining of the existing query.
 
+![Final T-SQL](EF6TempTableKit-T-SQL.png)
+
 ## Problems
 
 EF6TempTableKit has been implemented on enterprise project which has VS solution with more than 15 projects, where base context is inherited on multiple levels, where DBContext has DbConfiguration in a different project, etc... <br/>In such a bit complicated scenario, ony one exception occured that was not explicity related to E6TempTableKit. It was about how to apply custom configuration on your `DbContext`.<br/>So, If you get exception like this:<br/>
@@ -122,7 +124,9 @@ Ensure that your "temporary" entity has ID field (`public int ID {get; set;}`) o
 
 ## So(l)utio(n) file & how to run it
 
-After downloading source code, you can run and debug provided tests. Also, here is a simple Web application. It has a very simple code. The idea is to show how to write and run integration test.<br/>
+Solution has a source code and tests that covers all features from Documentation secion.
+
+After downloading source code, you can run and debug provided tests. Also, here is a simple Web application. It has almost nothing. The idea is to show how to write and run integration test.<br/>
 Before you run test project, be sure that you have executed DB script from database folder:
 1. Navigate to `...\EFIntercept\database\oltp-install-script`
 2. Open `instawdb.sql` in SQL Server Management Studio
@@ -145,7 +149,7 @@ Projects liste below are built on [.NET Framework 4.6](https://www.microsoft.com
 
 ### Authors
 
-* **Zoran Blagojevic** - https://www.linkedin.com/in/zoran-blagojevi%C4%87-b2540a6/
+[* **Zoran Blagojevic**](https://www.linkedin.com/in/zoran-blagojevic/)
 
 ## License
 
