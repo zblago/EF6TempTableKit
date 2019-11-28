@@ -88,7 +88,7 @@ EF6TempTableKit supports some features like reusing existing table under the sam
 
 | Attribute       | Description |
 | --------------- |-------------|
-| `ClusteredIndex` | Associate this attribute with a field(s) you want in clustered index. Name in T-SQL code will be generated automatically|
+| `ClusteredIndex` | Associate this attribute with a field(s) you want in clustered index. |
 | `NonClusteredIndex("nameOfIndex")` | Associate this attribute with a field(s) you want in non-clustered index. Number of non-clustered index is limited by SQL Server. If you want more columns under the same non-clustered index, just add a same name. Currently, order of columns in index is not supported |
 | `TempFieldTypeAttribute` | Use this attribute to define field data type in a SQL Server manner. E.g. `([TempFieldTypeAttribute("varchar(200)")])`. |
 
