@@ -147,9 +147,12 @@ Projects liste below are built on [.NET Framework 4.6](https://www.microsoft.com
 - EF6TempTableKit.Test.Web
 - EF6TempTableKit.Test.Web.Temp
 
+### Final word
+Say that this is a hacky way to introduce some new functionallity into DBContext. It's not tested with delete, update, insert statemetns.
+
 ### Authors
 
-[* **Zoran Blagojevic**](https://www.linkedin.com/in/zoran-blagojevic/)
+[**Zoran Blagojevic**](https://www.linkedin.com/in/zoran-blagojevic/)
 
 ## License
 
@@ -158,5 +161,6 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE) f
 ## Acknowledgments
 
 * Hat tip to anyone whose code was used
+* Hat tip to guys who has found how to get metadata from IQueryable
 * Inspiration
 * etc
