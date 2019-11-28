@@ -4,7 +4,7 @@ EF6TempTableKit is a library that helps you utilize temporary tables in your Ent
 
 ## Overview
 
-In some cases, when you write LINQ-to-Entities queries, you would like to have a benefit of using temp tables (e.g. create and insert records in temporary tables and later on reusing it as much as you want in a query). By default, EF doesn't support temporary tables and there is a reason why is like that. To overcome this "weakness", introducing EF6TempTableKit in our project, we can add a "temporary" entity as we are used to do it with "permanent" entities. In generated T-SQL query "temporary" entity will be mapped to a temporary table which resides in `tempDb` database and used normally like other tables.<br/>
+In some cases, when you write LINQ-to-Entities(L2E) queries, you would like to have a benefit of using temp tables (e.g. create and insert records in temporary tables and later on reusing it as much as you want in a query). By default, EF doesn't support temporary tables and there is a reason why is like that. To overcome this "weakness", introducing EF6TempTableKit in our project, we can add a "temporary" entity as we are used to do it with "permanent" entities. In generated T-SQL query "temporary" entity will be mapped to a temporary table which resides in `tempDb` database and used normally like other tables.<br/>
 Keep in mind: You are still writing LINQ-to-Entities to insert records in a "temporary" entity.
 
 ## Getting Started
@@ -84,7 +84,7 @@ EF6TempTableKit supports some features like reusing existing table under the sam
 
 | Extension       | Description |
 | --------------- |-------------|
-| `WithTempTableExpression` | Extension that accepts an expression being translated into T-SQL query that has a logic for inserting records in temp table. `WithTempTableExpression<T>(this System.Data.Entity.DbContext dbContexWithTempTable, IQueryable<ITempTable> expression, bool reuseExisting = false)` supports reusing existing temp table under the same [SPID](https://docs.microsoft.com/en-us/sql/t-sql/functions/spid-transact-sql?view=sql-server-ver15). If you set this flag on `true` generated T-SQL will check whether temp table already exists or not. That means if you run mutliple queries under the same connection you can reuse created temp table as temp table is scoped in SPID in which is created http://www.sqlservertutorial.net/sql-server-basics/sql-server-temporary-tables/ |
+| `WithTempTableExpression` | Extension that accepts an expression being translated into T-SQL query that has a logic for inserting records in temp table. `WithTempTableExpression<T>(this System.Data.Entity.DbContext dbContexWithTempTable, IQueryable<ITempTable> expression, bool reuseExisting = false)` supports reusing existing temp table under the same [SPID](https://docs.microsoft.com/en-us/sql/t-sql/functions/spid-transact-sql?view=sql-server-ver15). If you set `reuseExisting` flag on `true`, generated T-SQL will check whether temp table already exists or not. That means, if you run mutliple queries under the same connection you can reuse created temp table as temp table is scoped in SPID in which is (created)[http://www.sqlservertutorial.net/sql-server-basics/sql-server-temporary-tables/] |
 
 | Attribute       | Description |
 | --------------- |-------------|
