@@ -1,6 +1,7 @@
 # EF6TempTableKit 
 
-EF6TempTableKit is a library that helps you utilize temporary tables in your Entity Framework 6 context mapped to Microsoft SQL Server database.
+EF6TempTableKit is a library that helps you utilize 
+tables in your Entity Framework 6 context mapped to Microsoft SQL Server database.
 
 ## Overview
 
@@ -98,6 +99,22 @@ Before brief explanation of how EF6TempTableKit does his work keep in mind that 
 
 ## Problems
 
+I've implemented this plugin on enterprise project which has VS solution with more than 15 projects, where base context is inherited on multiple levels, where DBContext has DbConfiguration in a different project, etc... <br/>In such a bit complicated scenario, I came accross only on some issues during the implementation. Those issues were not explicity related to E6TempTableKit. They were related on how to apply custom configuration on your `DbContext`.<br/>So, If you get exception like this:<br/>
+
+*The default DbConfiguration instance was used by the Entity Framework before the 'DbConfig' type was discovered. An instance of 'DbConfig' must be set at application start before using any Entity Framework features or must be registered in the application's config file. See http://go.microsoft.com/fwlink/?LinkId=260883* 
+
+just follow solution from [here] (https://docs.microsoft.com/hr-hr/ef/ef6/fundamentals/configuring/code-based?redirectedfrom=MSDN)
+or [here] (https://stackoverflow.com/questions/19929282/ef6-modelconfiguration-set-but-not-discovered)
+
+If you get the following error message:
+
+*One or more validation errors were detected during model generation:
+EF6TempTableKit.Test.CodeFirst.ProductCategoryCountTempTable: : EntityType 'ProductCategoryCountTempTable' has no key defined. Define the key for this EntityType.
+ProductCategoryCountTempTables: EntityType: EntitySet 'ProductCategoryCountTempTables' is based on type 'ProductCategoryCountTempTable' that has no keys defined.
+Also, that's the case when we don't have Id field (CategoryId - throws exception, if we rename it to Id- it works)*
+
+Ensure that your "temporary" entity has ID field (`public int ID {get; set;}`) or `[Key]` attribute associated with a column that represents ID.
+
 ## So(l)utio(n) file & how to run it
 
 After downloading source code, you can run and debug provided tests. Also, here is a simple Web application. It has a very simple code. The idea is to show how to write and run integration test.<br/>
@@ -106,12 +123,12 @@ Before you run test project, be sure that you have executed DB script from datab
 2. Open `instawdb.sql` in SQL Server Management Studio
 3. Enable [SQLCMD Mode](https://www.sqlshack.com/use-sqlcmd-commands-ssms-query-editor/)
 4. This variable should point on directory where you downloaded this project
-`:setvar SqlSamplesSourceDataPath "C:\Projects\EFIntercept\DBScript\oltp-install-script\"`
+`:setvar SqlSamplesSourceDataPath "C:\Projects\EFIntercept\DBScript\oltp-install-script\"`<br/>
 5. Run a script
 
 ## Running the tests
 
-Test project is base on [xunit](https://xunit.net/) testing framework. In order to run tests follow this [steps](https://xunit.net/docs/getting-started/netfx/visual-studio) as I did.
+Test project is base on [xunit](https://xunit.net/) testing framework. In order to run tests follow this [steps](https://xunit.net/docs/getting-started/netfx/visual-studio).
 
 ### Installation Prerequisites
 - EF6TempTableKit is built on [.NET Framework 4.5](https://www.microsoft.com/en-us/download/details.aspx?id=30653)
