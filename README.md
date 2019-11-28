@@ -103,8 +103,13 @@ EF6TempTableKit has been implemented on enterprise project which has VS solution
 
 *The default DbConfiguration instance was used by the Entity Framework before the 'DbConfig' type was discovered. An instance of 'DbConfig' must be set at application start before using any Entity Framework features or must be registered in the application's config file. See http://go.microsoft.com/fwlink/?LinkId=260883*
 
-just follow solution from [here] (https://docs.microsoft.com/hr-hr/ef/ef6/fundamentals/configuring/code-based?redirectedfrom=MSDN)
-or [here] (https://stackoverflow.com/questions/19929282/ef6-modelconfiguration-set-but-not-discovered)
+just follow solution from [here](https://docs.microsoft.com/hr-hr/ef/ef6/fundamentals/configuring/code-based?redirectedfrom=MSDN)
+or [here](https://stackoverflow.com/questions/19929282/ef6-modelconfiguration-set-but-not-discovered)
+
+In my case, the following code was enough:<br/>
+`<entityFramework codeConfigurationType="MyNamespace.MyDbConfiguration, MyAssembly">
+    ...Your EF config...
+</entityFramework>`
 
 In addition to that, if you are getting the following exception:
 
