@@ -134,11 +134,11 @@ Before you run test project, be sure that you have executed DB script from datab
 `:setvar SqlSamplesSourceDataPath "C:\Projects\EFIntercept\DBScript\oltp-install-script\"`<br/>
 5. Run a script
 
-## Running the tests
+### Running the tests
 
 Test project is based on [xunit](https://xunit.net/) testing framework. In order to run test project, just follow these [steps](https://xunit.net/docs/getting-started/netfx/visual-studio).
 
-### Installation Prerequisites
+## Installation Prerequisites
 - EF6TempTableKit is built on [.NET Framework 4.5](https://www.microsoft.com/en-us/download/details.aspx?id=30653)
 
 Projects liste below are built on [.NET Framework 4.6](https://www.microsoft.com/en-us/download/details.aspx?id=48130) <br/>
@@ -146,10 +146,10 @@ Projects liste below are built on [.NET Framework 4.6](https://www.microsoft.com
 - EF6TempTableKit.Test.Web
 - EF6TempTableKit.Test.Web.Temp
 
-### Final word
+## Final word
 Say that this is a hacky way to introduce some new functionallity into DBContext. It's not tested with delete, update, insert statemetns.
 
-### Authors
+## Authors
 
 [**Zoran Blagojevic**](https://www.linkedin.com/in/zoran-blagojevic/)
 
