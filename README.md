@@ -33,7 +33,7 @@ Ensure unique temporary table name that starts with # and has implemented marker
   {
   }
 ```
-4. Add a "temporary" entity into your context 
+4. Add a "temporary" entity on a context 
 
 ```csharp
   public virtual DbSet<AddressTempTable> AddressesTempTable { get; set; }
