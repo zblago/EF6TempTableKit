@@ -1,11 +1,10 @@
 # EF6TempTableKit 
 
-EF6TempTableKit is a library that helps you utilize temp
-tables in your Entity Framework 6 context mapped to Microsoft SQL Server database.
+EF6TempTableKit is a library that helps you utilize temp tables in your Entity Framework 6 context mapped to Microsoft SQL Server database.
 
 ## Overview
 
-In some cases, when you write LINQ-to-Entities(L2E) queries, you would like to use a benefit of using temp tables (e.g. create and insert records in temporary tables and later on reusing them as much as you want in a query). By default, EF doesn't support temporary tables and there is a reason why is like that. To overcome this "weakness", introducing EF6TempTableKit in our project, we can add a "temporary" entity as we are used to do it with "permanent" entities. In generated T-SQL query "temporary" entity will be mapped to a temporary table which resides in `tempDb` database and used normally like other tables.<br/>
+In some cases, when you write LINQ-to-Entities(L2E) queries, you would like to have a benefit like temp tables (e.g. create and insert records in temporary tables and later on reusing them as much as you want in a query). By default, EF doesn't support temporary tables and there is a reason why is like that. To overcome this "weakness", introducing EF6TempTableKit in your project, you can add a "temporary" entity as we are used to do it with "permanent" entitiy. In generated T-SQL query "temporary" entity will be mapped to a temporary table which resides in `tempDb` database and used normally like any other table.<br/>
 Keep in mind: You are still writing LINQ-to-Entities to insert records in a "temporary" entity.
 
 ## Getting Started
@@ -16,8 +15,8 @@ Follow these steps:
 ```csharp
   public TempTableContainer TempTableContainer { get; set; } = new TempTableContainer();
 ```
-3. Add a "temporary" entity and a DTO entity which inherits the previouse one. You need a both to make it work.
-Ensure unique temporary table name that starts with # and has implemented marker interface `ITempTable`. Also, add  a sufix `TempTable` to make it unique and easy to distinguish later in a code. For each field set appropiate SQL Server data type that will be used on table creation. 
+3. Add a "temporary" entity and a DTO entity which inherits the previouse one. You need a both of them to make it work.
+Ensure unique temporary table name that starts with # and has implemented marker interface `ITempTable`. Also, add  a sufix `TempTable` to make it unique and easy to distinguish it later in a code. For each field, set appropiate SQL Server data type that will be used throughout table creation. 
 ```csharp
   [Table("#tempAddress")]
   public class AddressTempTable : ITempTable
@@ -46,7 +45,7 @@ Ensure unique temporary table name that starts with # and has implemented marker
     ...
     ...    
 ```
-If you don't have already any configuration, use `EF6TempTableKitDbConfiguration`. Otherwise, apply your custom configuration ...
+If you don't have already any configuration, use `EF6TempTableKitDbConfiguration`. Otherwise, apply your own custom configuration ...
 ```csharp
     [DbConfigurationType(typeof(CustomDbContextConfiguration))]
     public partial class AdventureWorksCodeFirst : DbContext, IDbContextWithTempTable
@@ -81,11 +80,11 @@ If you don't have already any configuration, use `EF6TempTableKitDbConfiguration
 
 ## Documentation
 
-EF6TempTableKit supports some features like reusing existing table under the same connection([SPID](https://docs.microsoft.com/en-us/sql/t-sql/functions/spid-transact-sql?view=sql-server-ver15)), clustered index and non-clustered indexes. Here is a short documentation
+EF6TempTableKit supports some features like reusing existing table under the same connection([SPID](https://docs.microsoft.com/en-us/sql/t-sql/functions/spid-transact-sql?view=sql-server-ver15)), clustered index and non-clustered indexes. Here is a short documentation:
 
 | Extension       | Description |
 | --------------- |-------------|
-| `WithTempTableExpression` | Extension that accepts an expression being translated into T-SQL query that has a logic for inserting records in temp table. `WithTempTableExpression<T>(this System.Data.Entity.DbContext dbContexWithTempTable, IQueryable<ITempTable> expression, bool reuseExisting = false)` supports reusing existing temp table under the same [SPID](https://docs.microsoft.com/en-us/sql/t-sql/functions/spid-transact-sql?view=sql-server-ver15). If you set `reuseExisting` flag on `true`, generated T-SQL will check whether temp table already exists or not. That means, if you run mutliple queries under the same connection you can reuse created temp table as temp table is scoped in SPID in which is created |
+| `WithTempTableExpression` | Extension that accepts an expression being translated into T-SQL query that has a logic for inserting records in temp table. `WithTempTableExpression<T>(this System.Data.Entity.DbContext dbContexWithTempTable, IQueryable<ITempTable> expression, bool reuseExisting = false)` supports reusing existing temp table under the same [SPID](https://docs.microsoft.com/en-us/sql/t-sql/functions/spid-transact-sql?view=sql-server-ver15). If you set `reuseExisting` flag on `true`, generated T-SQL will check whether temp table already exists or not. That means, if you run mutliple queries under the same connection, you can reuse created temp table as temp table is scoped in SPID in which is created |
 
 | Attribute       | Description |
 | --------------- |-------------|
@@ -137,7 +136,7 @@ Before you run test project, be sure that you have executed DB script from datab
 
 ## Running the tests
 
-Test project is base on [xunit](https://xunit.net/) testing framework. In order to run tests follow this [steps](https://xunit.net/docs/getting-started/netfx/visual-studio).
+Test project is based on [xunit](https://xunit.net/) testing framework. In order to run test project, just follow these [steps](https://xunit.net/docs/getting-started/netfx/visual-studio).
 
 ### Installation Prerequisites
 - EF6TempTableKit is built on [.NET Framework 4.5](https://www.microsoft.com/en-us/download/details.aspx?id=30653)
