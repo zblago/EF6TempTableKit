@@ -123,7 +123,7 @@ Ensure that your "temporary" entity has ID field (`public int ID {get; set;}`) o
 
 ## So(l)utio(n) file & how to run it
 
-Solution has a source code and tests that covers all features from Documentation secion.
+Solution has a source code and tests that covers all features from Documentation section.
 
 After downloading source code, you can run and debug provided tests. Also, here is a simple Web application. It has almost nothing. The idea is to show how to write and run integration test.<br/>
 Before you run test project, be sure that you have executed DB script from database folder:
