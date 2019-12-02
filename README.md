@@ -4,7 +4,7 @@ EF6TempTableKit is a library that helps you utilize temp tables in your Entity F
 
 ## Overview
 
-In some cases, when you write LINQ-to-Entities(L2E) queries, you would like to have a benefit like temp tables (e.g. create and insert records in temporary tables and later on reusing them as much as you want in a query). By default, EF doesn't support temporary tables and there is a reason why is like that. To overcome this "weakness", introducing EF6TempTableKit in your project, you can add a "temporary" entity as we are used to do it with "permanent" entitiy. In generated T-SQL query "temporary" entity will be mapped to a temporary table which resides in `tempDb` database and used normally like any other table.<br/>
+In some cases, when you write LINQ-to-Entities(L2E) queries, you would like to have a benefit like temp tables (e.g. create and insert records in temporary tables and later on reusing them as much as you want in a query). By default, EF doesn't support temporary tables and there is a reason why is like that. To overcome this "weakness", introducing EF6TempTableKit in your project, you can add a "temporary" entity as we are used to do it with "permanent" entitiy. In generated T-SQL query, "temporary" entity will be mapped to a temporary table which resides in `tempDb` database and used normally like any other table.<br/>
 Keep in mind: You are still writing LINQ-to-Entities to insert records in a "temporary" entity.
 
 ## Getting Started
