@@ -127,11 +127,11 @@ Solution has a source code and tests that covers all features from Documentation
 
 After downloading source code, you can run and debug provided tests. Also, here is a simple Web application. It has almost nothing. The idea is to show how to write and run integration test.<br/>
 Before you run test project, be sure that you have executed DB script from database folder:
-1. Navigate to `...\EFIntercept\database\oltp-install-script`
+1. Navigate to `...\EF6TempTableKit\database\oltp-install-script`
 2. Open `instawdb.sql` in SQL Server Management Studio
 3. Enable [SQLCMD Mode](https://www.sqlshack.com/use-sqlcmd-commands-ssms-query-editor/)
 4. This variable should point on directory where you downloaded this project
-`:setvar SqlSamplesSourceDataPath "C:\Projects\EFIntercept\DBScript\oltp-install-script\"`<br/>
+`:setvar SqlSamplesSourceDataPath "C:\Projects\EF6TempTableKit\DBScript\oltp-install-script\"`<br/>
 5. Run a script
 
 ### Running the tests
@@ -139,15 +139,15 @@ Before you run test project, be sure that you have executed DB script from datab
 Test project is based on [xunit](https://xunit.net/) testing framework. In order to run test project, just follow these [steps](https://xunit.net/docs/getting-started/netfx/visual-studio).
 
 ## Installation Prerequisites
-- EF6TempTableKit is built on [.NET Framework 4.5](https://www.microsoft.com/en-us/download/details.aspx?id=30653)
+- EF6TempTableKit is built under [.NET Framework 4.5](https://www.microsoft.com/en-us/download/details.aspx?id=30653)
 
-Projects liste below are built on [.NET Framework 4.6](https://www.microsoft.com/en-us/download/details.aspx?id=48130) <br/>
+Projects liste below are built under [.NET Framework 4.6](https://www.microsoft.com/en-us/download/details.aspx?id=48130) <br/>
 - EF6TempTableKit.Test
 - EF6TempTableKit.Test.Web
 - EF6TempTableKit.Test.Web.Temp
 
 ## Final word
-Say that this is a hacky way to introduce some new functionallity into DBContext. It's not tested with delete, update, insert statemetns.
+You might find this library useful for you. However, this libarary is not tested for insert, delete and update scenarios. It's on you to test whether it works or not.
 
 ## Authors
 
@@ -159,7 +159,7 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE) f
 
 ## Acknowledgments
 
-* Hat tip to anyone whose code was used
-* Hat tip to guys who has found how to get metadata from IQueryable
-* Inspiration
-* etc
+Hat tip to guys who made some useful things used here:
+* https://www.stevefenton.co.uk/2015/07/getting-the-sql-query-from-an-entity-framework-iqueryable/
+* http://www.davidberube.me/getting-the-sql-generated-by-entity-framework-queryable/
+* https://www.tpeczek.com/2016/10/entity-framework-6-dynamically-creating_13.html
