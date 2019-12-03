@@ -121,7 +121,7 @@ Also, that's the case when we don't have Id field (CategoryId - throws exception
 
 Ensure that your "temporary" entity has ID field (`public int ID {get; set;}`) or `[Key]` attribute associated with a column that represents ID.
 
-## So(l)utio(n) file & how to run it
+## (S)o(l)utio(n) file & how to run it
 
 Solution has a source code and tests that covers all features from Documentation section.
 
