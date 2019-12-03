@@ -121,7 +121,7 @@ Also, that's the case when we don't have Id field (CategoryId - throws exception
 
 Ensure that your "temporary" entity has ID field (`public int ID {get; set;}`) or `[Key]` attribute associated with a column that represents ID.
 
-## So(l)utio(n) file & how to run it
+## (S)o(l)utio(n) file & how to run it
 
 Solution has a source code and tests that covers all features from Documentation section.
 
@@ -134,17 +134,16 @@ Before you run test project, be sure that you have executed DB script from datab
 `:setvar SqlSamplesSourceDataPath "C:\Projects\EF6TempTableKit\DBScript\oltp-install-script\"`<br/>
 5. Run a script
 
-### Running the tests
+### Running tests
 
-Test project is based on [xunit](https://xunit.net/) testing framework. In order to run test project, just follow these [steps](https://xunit.net/docs/getting-started/netfx/visual-studio).
+Test project is based on [xunit](https://xunit.net/) testing framework. In order to run test project, just follow these [steps](https://xunit.net/docs/getting-started/netfx/visual-studio). Before you run test project, make sure that you have changed connection strings.
 
 ## Installation Prerequisites
 - EF6TempTableKit is built under [.NET Framework 4.5](https://www.microsoft.com/en-us/download/details.aspx?id=30653)
 
-Projects liste below are built under [.NET Framework 4.6](https://www.microsoft.com/en-us/download/details.aspx?id=48130) <br/>
+Projects listed below are built under [.NET Framework 4.6](https://www.microsoft.com/en-us/download/details.aspx?id=48130) <br/>
 - EF6TempTableKit.Test
 - EF6TempTableKit.Test.Web
-- EF6TempTableKit.Test.Web.Temp
 
 ## Final word
 You might find this library useful for you. However, this library is not tested for insert, delete and update scenarios. It's on you to test whether it works or not.
