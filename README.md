@@ -147,7 +147,7 @@ Projects liste below are built under [.NET Framework 4.6](https://www.microsoft.
 - EF6TempTableKit.Test.Web.Temp
 
 ## Final word
-You might find this library useful for you. However, this libarary is not tested for insert, delete and update scenarios. It's on you to test whether it works or not.
+You might find this library useful for you. However, this library is not tested for insert, delete and update scenarios. It's on you to test whether it works or not.
 
 ## Authors
 
