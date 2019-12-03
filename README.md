@@ -134,9 +134,9 @@ Before you run test project, be sure that you have executed DB script from datab
 `:setvar SqlSamplesSourceDataPath "C:\Projects\EF6TempTableKit\DBScript\oltp-install-script\"`<br/>
 5. Run a script
 
-### Running the tests
+### Running tests
 
-Test project is based on [xunit](https://xunit.net/) testing framework. In order to run test project, just follow these [steps](https://xunit.net/docs/getting-started/netfx/visual-studio).
+Test project is based on [xunit](https://xunit.net/) testing framework. In order to run test project, just follow these [steps](https://xunit.net/docs/getting-started/netfx/visual-studio). Before you run test project, make sure that you have changed connection strings.
 
 ## Installation Prerequisites
 - EF6TempTableKit is built under [.NET Framework 4.5](https://www.microsoft.com/en-us/download/details.aspx?id=30653)
