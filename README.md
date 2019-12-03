@@ -141,7 +141,7 @@ Test project is based on [xunit](https://xunit.net/) testing framework. In order
 ## Installation Prerequisites
 - EF6TempTableKit is built under [.NET Framework 4.5](https://www.microsoft.com/en-us/download/details.aspx?id=30653)
 
-Projects liste below are built under [.NET Framework 4.6](https://www.microsoft.com/en-us/download/details.aspx?id=48130) <br/>
+Projects listed below are built under [.NET Framework 4.6](https://www.microsoft.com/en-us/download/details.aspx?id=48130) <br/>
 - EF6TempTableKit.Test
 - EF6TempTableKit.Test.Web
 
