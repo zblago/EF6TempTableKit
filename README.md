@@ -144,7 +144,6 @@ Test project is based on [xunit](https://xunit.net/) testing framework. In order
 Projects liste below are built under [.NET Framework 4.6](https://www.microsoft.com/en-us/download/details.aspx?id=48130) <br/>
 - EF6TempTableKit.Test
 - EF6TempTableKit.Test.Web
-- EF6TempTableKit.Test.Web.Temp
 
 ## Final word
 You might find this library useful for you. However, this library is not tested for insert, delete and update scenarios. It's on you to test whether it works or not.
