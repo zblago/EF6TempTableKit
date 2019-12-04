@@ -121,8 +121,8 @@ Also, that's the case when we don't have Id field (CategoryId - throws exception
 
 Ensure that your "temporary" entity has ID field (`public int ID {get; set;}`) or `[Key]` attribute associated with a column that represents ID.
 
-If you have mapped, into DTO entity, the same field twice or more like here
-`
+If you are mapping, into DTO entity, the same field twice or more like here <br/>
+```csharp
 var tempAddressQuery = context.Addresses.Select(a => new AddressTempTableMultipleIdDto
 {
     //AddressID is mapped twice; EF throws exception
@@ -138,8 +138,8 @@ var addressList = context
         (aa) => aa.AddressID,
         (at, a) => new { Id = at.Id }).ToList();
 }
-`
-you may get exception like *SqlException: 'tempTableName' has fewer columns than were specified in the column list*. In that case ensure that is mapped only once. Later on, if you need to map it again somewhere, do that under materialized data (in memory). This case is also covered in test project.
+```
+you may get an exception like *SqlException: 'tempTableName' has fewer columns than were specified in the column list*. In that case ensure that is mapped only once. Later on, if you need to map it again, do that under materialized data (in memory). This case is also covered in test project.
 
 ## (S)o(l)utio(n) file & how to run it
 
