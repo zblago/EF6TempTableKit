@@ -121,7 +121,7 @@ Also, that's the case when we don't have Id field (CategoryId - throws exception
 
 Ensure that your "temporary" entity has ID field (`public int ID {get; set;}`) or `[Key]` attribute associated with a column that represents ID.
 
-If you are mapping, into DTO entity, the same field twice or more like here <br/>
+If you are mapping the same field twice or more into DTO entity, like here (a.AddressID) <br/>
 ```csharp
 var tempAddressQuery = context.Addresses.Select(a => new AddressTempTableMultipleIdDto
 {
