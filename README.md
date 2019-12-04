@@ -1,6 +1,6 @@
 # EF6TempTableKit 
 
-![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/zblago/ef6temptablekit)
+[![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/zblago/ef6temptablekit)](https://github.com/zblago/EF6TempTableKit/releases)
 
 EF6TempTableKit is a library that helps you utilize temp tables in your Entity Framework 6 context mapped to Microsoft SQL Server database.
 
