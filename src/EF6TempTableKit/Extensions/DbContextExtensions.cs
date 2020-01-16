@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using EF6TempTableKit.DbContext;
 using EF6TempTableKit.SqlCommands;
@@ -48,8 +49,30 @@ namespace EF6TempTableKit.Extensions
                     .Execute();
             }
 
-            contextWithTempTable.TempTableContainer.TempSqlQueriesList.Add(tempTableName, 
-                new Query { QueryString = sqlAllCommandsQuery, ReuseExisting = reuseExisting });
+            var existingTables = contextWithTempTable.TempTableContainer.TempSqlQueriesList.Keys;
+            foreach (var table in existingTables)
+            {
+                var doesContain = sqlSelectQuery.Contains(table.ToString());
+                if (doesContain)
+                {
+                    if (!contextWithTempTable.TempTableContainer.TempOnTempDependecies.ContainsKey(tempTableName))
+                    {
+                        contextWithTempTable.TempTableContainer.TempOnTempDependecies = new Dictionary<string, string[]>();
+                        contextWithTempTable.TempTableContainer.TempOnTempDependecies
+                            .Add(new KeyValuePair<string, string[]>(tempTableName, new string[] { table.ToString() }));
+                    }
+                    else
+                    {
+                        var values = contextWithTempTable.TempTableContainer.TempOnTempDependecies[tempTableName];
+                        Array.Resize(ref values, values.Length);
+                        values[values.Length] = table.ToString();
+                        contextWithTempTable.TempTableContainer.TempOnTempDependecies[tempTableName] = values;
+                    }
+                }
+            }
+
+            contextWithTempTable.TempTableContainer
+                .TempSqlQueriesList.Add(tempTableName, new Query { QueryString = sqlAllCommandsQuery, ReuseExisting = reuseExisting });
                  
             return dbContexWithTempTable as T;
         }
@@ -61,7 +84,7 @@ namespace EF6TempTableKit.Extensions
                 throw new Exception($"Object of type TempTableContainer is not instantiated. Please, make an instance in your DbContext.");
             }
 
-            if (contextWithTempTable.TempTableContainer.TempSqlQueriesList.ContainsKey(tempTableType))
+            if (contextWithTempTable.TempTableContainer.TempSqlQueriesList[tempTableType] != null)
             {
                 throw new Exception($"Can't override query for temp table {tempTableType} as it is already attached to the context.");
             }
