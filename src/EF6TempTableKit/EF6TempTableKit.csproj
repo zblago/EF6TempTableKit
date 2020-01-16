@@ -70,9 +70,11 @@
     <Compile Include="SqlCommands\Interfaces\IInsertQuery.cs" />
     <Compile Include="SqlCommands\SqlInsertCommandBuilder.cs" />
     <Compile Include="TableMetadataProvider.cs" />
+    <Compile Include="Utilities\TempTableDependencyManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

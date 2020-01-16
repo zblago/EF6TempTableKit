@@ -28,29 +28,28 @@ namespace EF6TempTableKit.DbContext
                 var tempSqlQueriesEnumerator = contextWithTempTable.TempTableContainer.TempSqlQueriesList.Cast<DictionaryEntry>().Reverse().GetEnumerator();
                 while (tempSqlQueriesEnumerator.MoveNext())
                 {
-                    var tempSqlQueryKey = (string)tempSqlQueriesEnumerator.Current.Key;
-                    var tempSqlQueryValue = (Query)tempSqlQueriesEnumerator.Current.Value;
+                    var tempTableName = (string)tempSqlQueriesEnumerator.Current.Key;
+                    var tempSqlQuery = (Query)tempSqlQueriesEnumerator.Current.Value;
 
-                    if (tempSqlQueryValue.ReuseExisting)
+                    if (tempSqlQuery.ReuseExisting)
                     {
                         dbContextWithTempTable.Database.ExecuteSqlCommand(
                                 generatedByEf6TempTableKitStartMsg
                                 + "\n"
-                                + tempSqlQueryValue.QueryString
+                                + tempSqlQuery.QueryString
                                 + "\n"
                                 + generatedByEf6TempTableKitEndMsg
                             );
                     }
                     else
                     {
-                        if (command.CommandText.Contains(tempSqlQueryKey) 
-                            || contextWithTempTable.TempTableContainer.TempOnTempDependecies.ContainsKey(tempSqlQueryKey))
+                        if (contextWithTempTable.TempTableContainer.TempOnTempDependencies.ContainsKey(tempTableName) || command.CommandText.Contains(tempTableName))
                         {
                             selectCommandText =
                                 "\n" 
                                 + generatedByEf6TempTableKitStartMsg
                                 + "\n"
-                                + tempSqlQueryValue.QueryString
+                                + tempSqlQuery.QueryString
                                 + "\n" 
                                 + generatedByEf6TempTableKitEndMsg
                                 + "\n"

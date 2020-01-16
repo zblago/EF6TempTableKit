@@ -8,10 +8,10 @@ namespace EF6TempTableKit.DbContext
         public TempTableContainer()
         {
             TempSqlQueriesList = new OrderedDictionary();
-            TempOnTempDependecies = new Dictionary<string, string[]>();
+            TempOnTempDependencies = new Dictionary<string, string[]>();
         }
 
         public IOrderedDictionary TempSqlQueriesList { set; get; }
-        public IDictionary<string, string[]> TempOnTempDependecies { get; set; }
+        public IDictionary<string, string[]> TempOnTempDependencies { get; set; }
     }
 }
