@@ -30,7 +30,9 @@ namespace EF6TempTableKit.Utilities
                 {
                     if (!_tempTableContainer.TempOnTempDependencies.ContainsKey(addedTempTableString))
                     {
-                        _tempTableContainer.TempOnTempDependencies.Add(new KeyValuePair<string, string[]>(addedTempTableString, new string[] { newTempTableName }));
+                        _tempTableContainer
+                            .TempOnTempDependencies
+                            .Add(new KeyValuePair<string, string[]>(addedTempTableString, new string[] { newTempTableName }));
                     }
                     else
                     {
