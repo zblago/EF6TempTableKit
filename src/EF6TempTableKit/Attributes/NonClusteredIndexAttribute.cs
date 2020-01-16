@@ -6,10 +6,12 @@ namespace EF6TempTableKit.Attributes
     public class NonClusteredIndexAttribute : Attribute
     {
         public string Name { get; private set; }
+        public byte OrderNo { get; private set; }
 
-        public NonClusteredIndexAttribute(string name)
+        public NonClusteredIndexAttribute(string name, byte orderNo = 0)
         {
             this.Name = name;
+            this.OrderNo = orderNo;
         }
     }
 }
