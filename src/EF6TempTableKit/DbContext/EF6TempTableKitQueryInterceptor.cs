@@ -43,7 +43,8 @@ namespace EF6TempTableKit.DbContext
                     }
                     else
                     {
-                        if (command.CommandText.Contains(tempSqlQueryKey))
+                        if (command.CommandText.Contains(tempSqlQueryKey) 
+                            || contextWithTempTable.TempTableContainer.TempOnTempDependecies.ContainsKey(tempSqlQueryKey))
                         {
                             selectCommandText =
                                 "\n" 

@@ -55,18 +55,18 @@ namespace EF6TempTableKit.Extensions
                 var doesContain = sqlSelectQuery.Contains(table.ToString());
                 if (doesContain)
                 {
-                    if (!contextWithTempTable.TempTableContainer.TempOnTempDependecies.ContainsKey(tempTableName))
+                    if (!contextWithTempTable.TempTableContainer.TempOnTempDependecies.ContainsKey(table.ToString()))
                     {
                         contextWithTempTable.TempTableContainer.TempOnTempDependecies = new Dictionary<string, string[]>();
                         contextWithTempTable.TempTableContainer.TempOnTempDependecies
-                            .Add(new KeyValuePair<string, string[]>(tempTableName, new string[] { table.ToString() }));
+                            .Add(new KeyValuePair<string, string[]>(table.ToString(), new string[] { tempTableName }));
                     }
                     else
                     {
-                        var values = contextWithTempTable.TempTableContainer.TempOnTempDependecies[tempTableName];
+                        var values = contextWithTempTable.TempTableContainer.TempOnTempDependecies[table.ToString()];
                         Array.Resize(ref values, values.Length);
-                        values[values.Length] = table.ToString();
-                        contextWithTempTable.TempTableContainer.TempOnTempDependecies[tempTableName] = values;
+                        values[values.Length] = tempTableName;
+                        contextWithTempTable.TempTableContainer.TempOnTempDependecies[table.ToString()] = values;
                     }
                 }
             }
