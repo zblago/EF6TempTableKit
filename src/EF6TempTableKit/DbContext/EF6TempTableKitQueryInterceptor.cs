@@ -26,6 +26,8 @@ namespace EF6TempTableKit.DbContext
 
                 var contextWithTempTable = (IDbContextWithTempTable)dbContextWithTempTable;
                 var tempSqlQueriesEnumerator = contextWithTempTable.TempTableContainer.TempSqlQueriesList.Cast<DictionaryEntry>().Reverse().GetEnumerator();
+
+                var lastReferencedTempTableInQuery = ""; //Keep track of table that uses some other temp tables in a final query.
                 while (tempSqlQueriesEnumerator.MoveNext())
                 {
                     var tempTableName = (string)tempSqlQueriesEnumerator.Current.Key;
@@ -43,8 +45,10 @@ namespace EF6TempTableKit.DbContext
                     }
                     else
                     {
-                        if (contextWithTempTable.TempTableContainer.TempOnTempDependencies.ContainsKey(tempTableName) || interceptedComandText.Contains(tempTableName))
+                        if (interceptedComandText.Contains(tempTableName) 
+                            || contextWithTempTable.TempTableContainer.TempOnTempDependencies.ContainsKey(lastReferencedTempTableInQuery))
                         {
+                            lastReferencedTempTableInQuery = tempTableName;
                             selectCommandText =
                                 "\n" 
                                 + generatedByEf6TempTableKitStartMsg

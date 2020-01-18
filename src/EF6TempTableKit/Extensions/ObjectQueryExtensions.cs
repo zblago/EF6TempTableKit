@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Data.Entity.Core.Objects;
 using System.Linq;
 using System.Reflection;
+using System.Data.Entity.Core.Metadata.Edm;
 
 namespace EF6TempTableKit.Extensions
 {
@@ -85,6 +86,22 @@ namespace EF6TempTableKit.Extensions
             }
 
             return new ReadOnlyDictionary<string, int>(propertyPositions);
+        }
+
+        public static IEnumerable<EntitySet> GetTables(this ObjectQuery objectQuery)
+        {
+            IDictionary<string, int> propertyPositions = new Dictionary<string, int>();
+
+            // Get the query state.
+            object objectQueryState = GetProperty(objectQuery, "QueryState");
+
+            // Get the cached query execution plan.
+            object cachedPlan = GetField(objectQueryState, "_cachedPlan");
+
+            // Get the command definition.
+            object commandDefinition = GetField(cachedPlan, "CommandDefinition");
+
+            return (IEnumerable<EntitySet>)GetProperty(commandDefinition, "EntitySets");
         }
 
         private static object GetProperty(object objectInstance, string propertyName)

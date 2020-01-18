@@ -48,8 +48,8 @@ namespace EF6TempTableKit.Extensions
                     .Execute();
             }
 
-            var tempTableDependencyUtility = new TempTableDependencyManager(sqlSelectQuery, contextWithTempTable.TempTableContainer);
-            tempTableDependencyUtility.AddDependency(tempTableName);
+            var tempTableDependencyManager = new TempTableDependencyManager(sqlSelectQuery, objectQuery, contextWithTempTable.TempTableContainer);
+            tempTableDependencyManager.AddDependencyTreeForTable(tempTableName);
 
             contextWithTempTable.TempTableContainer
                 .TempSqlQueriesList
