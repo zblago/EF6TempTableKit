@@ -40,21 +40,21 @@ namespace EF6TempTableKit.Utilities
             var hasDependeciesAtFirstLevel = firstLevelTableDependencies.Length > 0;
             if (hasDependeciesAtFirstLevel)
             {
-                var allLevelsDependencies = FindNestedDependencies(firstLevelTableDependencies.Select(fl => new TempTableInQuery { Name = fl }));
+                var allLevelsDependencies = FindNestedDependencies(firstLevelTableDependencies);
 
-                _tempTableContainer.TempOnTempDependencies.Add(new KeyValuePair<string, IEnumerable<TempTableInQuery>>(newTempTableName, allLevelsDependencies));
+                _tempTableContainer.TempOnTempDependencies.Add(new KeyValuePair<string, IEnumerable<TempTableInQuery>>(newTempTableName, allLevelsDependencies.Select(d => new TempTableInQuery { Name = d })));
 
-                System.Diagnostics.Debug.WriteLine(newTempTableName + " " + string.Join(",", allLevelsDependencies.Select(a => a.Name)));
+                System.Diagnostics.Debug.WriteLine(newTempTableName + " " + string.Join(",", allLevelsDependencies));
             }
         }
 
-        private IEnumerable<TempTableInQuery> FindNestedDependencies(IEnumerable<TempTableInQuery> tableDependencies)
+        private string[] FindNestedDependencies(string[] tableDependencies)
         {
             foreach (var item in tableDependencies)
             {
-                if (_tempTableContainer.TempOnTempDependencies.ContainsKey(item.Name))
+                if (_tempTableContainer.TempOnTempDependencies.ContainsKey(item))
                 {
-                    var nestedDependencies = FindNestedDependencies(_tempTableContainer.TempOnTempDependencies[item.Name]);
+                    var nestedDependencies = FindNestedDependencies(_tempTableContainer.TempOnTempDependencies[item].Select(tt => tt.Name).ToArray());
 
                     var nestedDependeciesList = nestedDependencies.ToList();
                     nestedDependeciesList.AddRange(tableDependencies);
