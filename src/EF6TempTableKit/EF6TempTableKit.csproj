@@ -60,6 +60,7 @@
     <Compile Include="Extensions\ObjectQueryExtensions.cs" />
     <Compile Include="Extensions\StringBuilder.cs" />
     <Compile Include="ITempTable.cs" />
+    <Compile Include="Models\TempTableInQuery.cs" />
     <Compile Include="Query.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SqlCommands\Interfaces\IAddClusteredIndex.cs" />
