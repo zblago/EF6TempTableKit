@@ -19,7 +19,7 @@ namespace EF6TempTableKit.Extensions
             Validate(contextWithTempTable, tempTableName);
 
             var fieldsWithTypes = tableMetadataProvider.GetFieldsWithTypes(tempTableType);
-            var fieldsForClusteredIndex = tableMetadataProvider.GetClusteredIndexColumns(tempTableType);
+            var clusteredIndexesWithFields = tableMetadataProvider.GetClusteredIndexColumns(tempTableType);
             var nonClusteredIndexesWithFields = tableMetadataProvider.GetNonClusteredIndexesWithColumns(tempTableType);
 
             var sqlSelectQuery = expression.ToTraceQuery();
@@ -33,7 +33,7 @@ namespace EF6TempTableKit.Extensions
                 sqlAllCommandsQuery = SqlInsertCommandBuilder.Begin(tempTableName)
                     .DropIfExists()
                     .Create(fieldsWithTypes)
-                    .AddClusteredIndex(fieldsForClusteredIndex)
+                    .AddClusteredIndex(clusteredIndexesWithFields)
                     .AddNonClusteredIndexes(nonClusteredIndexesWithFields)
                     .AddInsertQuery(fieldsWithPositions, sqlSelectQuery)
                     .Execute();
@@ -42,7 +42,7 @@ namespace EF6TempTableKit.Extensions
             {
                 sqlAllCommandsQuery = SqlInsertCommandBuilder.Begin(tempTableName)
                     .CreateIfNotExists(fieldsWithTypes)
-                    .AddClusteredIndex(fieldsForClusteredIndex)
+                    .AddClusteredIndex(clusteredIndexesWithFields)
                     .AddNonClusteredIndexes(nonClusteredIndexesWithFields)
                     .AddInsertQueryIfCreated(fieldsWithPositions, sqlSelectQuery)
                     .Execute();
