@@ -27,7 +27,6 @@ namespace EF6TempTableKit.Extensions
             var fieldsWithPositions = objectQuery.GetQueryPropertyPositions();
 
             var sqlAllCommandsQuery = "";
-
             if (!reuseExisting)
             {
                 sqlAllCommandsQuery = SqlInsertCommandBuilder.Begin(tempTableName)

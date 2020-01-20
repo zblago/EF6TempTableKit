@@ -34,46 +34,19 @@ namespace EF6TempTableKit.DbContext
                     var tempTableName = (string)tempSqlQueriesEnumerator.Current.Key;
                     var tempSqlQuery = (Query)tempSqlQueriesEnumerator.Current.Value;
 
-                    if (tempSqlQuery.ReuseExisting)
+                    if (!alreadyAttachedTempTableQuery.Any(t => t == tempTableName) && interceptedComandText.Contains(tempTableName))
                     {
-                        dbContextWithTempTable.Database.ExecuteSqlCommand(
-                                generatedByEf6TempTableKitStartMsg
-                                + "\n"
-                                + tempSqlQuery.QueryString
-                                + "\n"
-                                + generatedByEf6TempTableKitEndMsg
-                            );
-                    }
-                    else
-                    {
-                        if (!alreadyAttachedTempTableQuery.Any(t => t == tempTableName) && interceptedComandText.Contains(tempTableName))
-                        {
-                            selectCommandText = 
-                                "\n" 
-                                + generatedByEf6TempTableKitStartMsg
-                                + "\n"
-                                + tempSqlQuery.QueryString
-                                + "\n" 
-                                + generatedByEf6TempTableKitEndMsg
-                                + "\n"
-                                + selectCommandText;
+                        var selectCommandTextFormat = "\n{0}\n{1}\n{2}\n{3}";
+                        selectCommandText = string.Format(selectCommandTextFormat, generatedByEf6TempTableKitStartMsg, tempSqlQuery.QueryString, generatedByEf6TempTableKitEndMsg, selectCommandText);
 
-                            var hasTempTableDependencies = contextWithTempTable?.TempTableContainer?.TempOnTempDependencies.ContainsKey(tempTableName);
-                            if (hasTempTableDependencies.Value)
+                        var hasTempTableDependencies = contextWithTempTable?.TempTableContainer?.TempOnTempDependencies.ContainsKey(tempTableName);
+                        if (hasTempTableDependencies.Value)
+                        {
+                            foreach (var tempTable in contextWithTempTable?.TempTableContainer?.TempOnTempDependencies[tempTableName].Reverse())
                             {
-                                foreach (var tempTable in contextWithTempTable?.TempTableContainer?.TempOnTempDependencies[tempTableName].Reverse())
-                                {
-                                    var query = (Query)contextWithTempTable.TempTableContainer.TempSqlQueriesList[tempTable];
-                                    selectCommandText = "\n"
-                                        + generatedByEf6TempTableKitStartMsg
-                                        + "\n"
-                                        + query.QueryString
-                                        + "\n"
-                                        + generatedByEf6TempTableKitEndMsg
-                                        + "\n"
-                                        + selectCommandText;
-                                    alreadyAttachedTempTableQuery.Add(tempTable);
-                                }
+                                var query = (Query)contextWithTempTable.TempTableContainer.TempSqlQueriesList[tempTable];
+                                selectCommandText = string.Format(selectCommandTextFormat, generatedByEf6TempTableKitStartMsg, query.QueryString, generatedByEf6TempTableKitEndMsg, selectCommandText);
+                                alreadyAttachedTempTableQuery.Add(tempTable);
                             }
                         }
                     }
