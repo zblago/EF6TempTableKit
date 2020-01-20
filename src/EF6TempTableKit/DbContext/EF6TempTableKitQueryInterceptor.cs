@@ -26,7 +26,7 @@ namespace EF6TempTableKit.DbContext
 
                 var contextWithTempTable = (IDbContextWithTempTable)dbContextWithTempTable;
 
-                var alreadyAttachedTempTableQuery = new List<string>();
+                var alreadyAttachedTempTableQuery = new HashSet<string>();
 
                 var tempSqlQueriesEnumerator = contextWithTempTable.TempTableContainer.TempSqlQueriesList.Cast<DictionaryEntry>().Reverse().GetEnumerator();
                 while (tempSqlQueriesEnumerator.MoveNext())
@@ -63,7 +63,7 @@ namespace EF6TempTableKit.DbContext
                             {
                                 foreach (var tempTable in contextWithTempTable?.TempTableContainer?.TempOnTempDependencies[tempTableName])
                                 {
-                                    var query = contextWithTempTable.TempTableContainer.TempSqlQueriesList[tempTable.Name] as Query;
+                                    var query = (Query)contextWithTempTable.TempTableContainer.TempSqlQueriesList[tempTable.Name];
                                     selectCommandText = "\n"
                                         + generatedByEf6TempTableKitStartMsg
                                         + "\n"
