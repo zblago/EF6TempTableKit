@@ -3,10 +3,17 @@ using System.Collections.Generic;
 using System.Data.Entity.Core.Objects;
 using EF6TempTableKit.DbContext;
 using EF6TempTableKit.Extensions;
-using EF6TempTableKit.Models;
 
 namespace EF6TempTableKit.Utilities
 {
+    /// <summary>
+    /// Handles dependencies in a form of a tree. As root node doesn't exist think about it like something imaginary.
+    /// Node - represent parent of children nodes.
+    /// Children - list of nodes that belongs to parent node.
+    /// Level - only two levels 
+    ///     1. parent (temp table
+    ///     2. children(dependencies - tables on which parent depends).
+    /// </summary>
     internal class TempTableDependencyManager
     {
         private readonly string _sqlSelectQuery;
@@ -26,43 +33,43 @@ namespace EF6TempTableKit.Utilities
 
         /// <summary>
         /// Use all tables from attached query and compare with already attached temp tables.
-        /// Get match into a separate collection. Traverse through the all leafs to construct dependencies.
+        /// Get match into a separate collection. Traverse through the all nodes to get their children.
         /// </summary>
         /// <param name="newTempTableName"></param>
-        public void AddDependencyTreeForTable(string newTempTableName)
+        public void AddDependenciesForTable(string newTempTableName)
         {
             //newTempTableName = key
-            var firstLevelTableDependencies = _tempSqlQueryList
+            var firstLevelNodeChildren = _tempSqlQueryList
                 .Where(aaTT => _tablesUsedInQuery.Any(tiQ => tiQ == aaTT))
                 .Select(aaTT => aaTT)
                 .ToArray();
 
-            var hasDependeciesAtFirstLevel = firstLevelTableDependencies.Length > 0;
-            if (hasDependeciesAtFirstLevel)
+            var doesFirstLeveNodeHasChildren = firstLevelNodeChildren.Length > 0;
+            if (doesFirstLeveNodeHasChildren)
             {
-                var allLevelsDependencies = FindNestedDependencies(firstLevelTableDependencies);
+                var childrenFlatList = FindNodeChildren(firstLevelNodeChildren);
 
-                _tempTableContainer.TempOnTempDependencies.Add(new KeyValuePair<string, IEnumerable<TempTableInQuery>>(newTempTableName, allLevelsDependencies.Select(d => new TempTableInQuery { Name = d })));
+                _tempTableContainer.TempOnTempDependencies.Add(new KeyValuePair<string, HashSet<string>>(newTempTableName, new HashSet<string>(childrenFlatList)));
 
-                System.Diagnostics.Debug.WriteLine(newTempTableName + " " + string.Join(",", allLevelsDependencies));
+                System.Diagnostics.Debug.WriteLine(newTempTableName + " " + string.Join(",", childrenFlatList));
             }
         }
 
-        private string[] FindNestedDependencies(string[] tableDependencies)
+        private string[] FindNodeChildren(string[] nodesChildren)
         {
-            foreach (var item in tableDependencies)
+            foreach (var node in nodesChildren)
             {
-                if (_tempTableContainer.TempOnTempDependencies.ContainsKey(item))
+                if (_tempTableContainer.TempOnTempDependencies.ContainsKey(node))
                 {
-                    var nestedDependencies = FindNestedDependencies(_tempTableContainer.TempOnTempDependencies[item].Select(tt => tt.Name).ToArray());
+                    var nestedChildrenNodes = FindNodeChildren(_tempTableContainer.TempOnTempDependencies[node].ToArray());
 
-                    var nestedDependeciesList = nestedDependencies.ToList();
-                    nestedDependeciesList.AddRange(tableDependencies);
+                    var nestedChildrenNodesList = nestedChildrenNodes.ToList();
+                    nestedChildrenNodesList.AddRange(nodesChildren);
 
-                    return nestedDependeciesList.ToArray();
+                    return nestedChildrenNodesList.ToArray();
                 }
             }
-            return tableDependencies;
+            return nodesChildren;
         }
 
         private string[] GetAllTablesInQuery()

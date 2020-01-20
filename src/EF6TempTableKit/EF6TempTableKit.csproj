@@ -60,7 +60,6 @@
     <Compile Include="Extensions\ObjectQueryExtensions.cs" />
     <Compile Include="Extensions\StringBuilder.cs" />
     <Compile Include="ITempTable.cs" />
-    <Compile Include="Models\TempTableInQuery.cs" />
     <Compile Include="Query.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SqlCommands\Interfaces\IAddClusteredIndex.cs" />
@@ -71,6 +70,7 @@
     <Compile Include="SqlCommands\Interfaces\IInsertQuery.cs" />
     <Compile Include="SqlCommands\SqlInsertCommandBuilder.cs" />
     <Compile Include="TableMetadataProvider.cs" />
+    <Compile Include="Utilities\SqlFromTableTreeBuilder.cs" />
     <Compile Include="Utilities\TempTableDependencyManager.cs" />
   </ItemGroup>
   <ItemGroup>

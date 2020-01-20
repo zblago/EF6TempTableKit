@@ -61,9 +61,9 @@ namespace EF6TempTableKit.DbContext
                             var hasTempTableDependencies = contextWithTempTable?.TempTableContainer?.TempOnTempDependencies.ContainsKey(tempTableName);
                             if (hasTempTableDependencies.Value)
                             {
-                                foreach (var tempTable in contextWithTempTable?.TempTableContainer?.TempOnTempDependencies[tempTableName])
+                                foreach (var tempTable in contextWithTempTable?.TempTableContainer?.TempOnTempDependencies[tempTableName].Reverse())
                                 {
-                                    var query = (Query)contextWithTempTable.TempTableContainer.TempSqlQueriesList[tempTable.Name];
+                                    var query = (Query)contextWithTempTable.TempTableContainer.TempSqlQueriesList[tempTable];
                                     selectCommandText = "\n"
                                         + generatedByEf6TempTableKitStartMsg
                                         + "\n"
@@ -72,7 +72,7 @@ namespace EF6TempTableKit.DbContext
                                         + generatedByEf6TempTableKitEndMsg
                                         + "\n"
                                         + selectCommandText;
-                                    alreadyAttachedTempTableQuery.Add(tempTable.Name);
+                                    alreadyAttachedTempTableQuery.Add(tempTable);
                                 }
                             }
                         }
