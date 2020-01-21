@@ -70,7 +70,7 @@
     <Compile Include="SqlCommands\Interfaces\IInsertQuery.cs" />
     <Compile Include="SqlCommands\SqlInsertCommandBuilder.cs" />
     <Compile Include="TableMetadataProvider.cs" />
-    <Compile Include="Utilities\SqlFromTableTreeBuilder.cs" />
+    <Compile Include="Utilities\SqlFromTempTableDependenciesBuilder.cs" />
     <Compile Include="Utilities\TempTableDependencyManager.cs" />
   </ItemGroup>
   <ItemGroup>

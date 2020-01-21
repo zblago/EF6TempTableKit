@@ -11,7 +11,7 @@ namespace EF6TempTableKit.Utilities
     /// Node - represent parent of children nodes.
     /// Children - list of nodes that belongs to parent node.
     /// Level - only two levels 
-    ///     1. parent (temp table
+    ///     1. parent (temp table)
     ///     2. children(dependencies - tables on which parent depends).
     /// </summary>
     internal class TempTableDependencyManager

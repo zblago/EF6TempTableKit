@@ -12,6 +12,11 @@ namespace EF6TempTableKit.DbContext
         }
 
         public IOrderedDictionary TempSqlQueriesList { set; get; }
+
+        /// <summary>
+        /// Key is node. Value are children.
+        /// Children are like this - at the top is an item that has dependecies to the items below. Last item has no any dependecies
+        /// </summary>
         internal IDictionary<string, HashSet<string>> TempOnTempDependencies { get; set; }
     }
 }
