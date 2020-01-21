@@ -57,19 +57,17 @@ namespace EF6TempTableKit.Utilities
 
         private string[] FindNodeChildren(string[] nodesChildren)
         {
+            var nestedChildrenNodesList = nodesChildren.ToList();
             foreach (var node in nodesChildren)
             {
                 if (_tempTableContainer.TempOnTempDependencies.ContainsKey(node))
                 {
                     var nestedChildrenNodes = FindNodeChildren(_tempTableContainer.TempOnTempDependencies[node].ToArray());
 
-                    var nestedChildrenNodesList = nestedChildrenNodes.ToList();
-                    nestedChildrenNodesList.AddRange(nodesChildren);
-
-                    return nestedChildrenNodesList.ToArray();
+                    nestedChildrenNodesList.AddRange(nestedChildrenNodes);
                 }
             }
-            return nodesChildren;
+            return nestedChildrenNodesList.ToArray();
         }
 
         private string[] GetAllTablesInQuery()

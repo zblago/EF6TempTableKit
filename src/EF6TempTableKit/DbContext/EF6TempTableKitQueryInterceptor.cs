@@ -42,7 +42,7 @@ namespace EF6TempTableKit.DbContext
                         var hasTempTableDependencies = contextWithTempTable?.TempTableContainer?.TempOnTempDependencies.ContainsKey(tempTableName);
                         if (hasTempTableDependencies.Value)
                         {
-                            foreach (var tempTable in contextWithTempTable?.TempTableContainer?.TempOnTempDependencies[tempTableName].Reverse())
+                            foreach (var tempTable in contextWithTempTable?.TempTableContainer?.TempOnTempDependencies[tempTableName])
                             {
                                 var query = (Query)contextWithTempTable.TempTableContainer.TempSqlQueriesList[tempTable];
                                 injectedSqlCommandText = string.Format(selectCommandTextFormat, generatedByEf6TempTableKitStartMsg, query.QueryString, generatedByEf6TempTableKitEndMsg, injectedSqlCommandText);
