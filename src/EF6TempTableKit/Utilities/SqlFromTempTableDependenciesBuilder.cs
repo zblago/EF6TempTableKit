@@ -9,7 +9,7 @@ using System.Text;
 namespace EF6TempTableKit.Utilities
 {
     /// <summary>
-    /// Queries attached on context are reversed and stored into FILO queue. We need that because the last query has more dependencies than first one.
+    /// Queries attached on context are reversed and stored into LIFO stack. We need that because the last query has more dependencies than first one.
     /// Every iteration has sql query (one that has create and load table sql query) that has dependencies on some other temp tables stored in flatten list (TempOnTempDependencies) sorted from those who have a lot dependencies to those with one or zero dependencies.
     /// </summary>
     internal sealed class SqlFromTempTableDependenciesBuilder
