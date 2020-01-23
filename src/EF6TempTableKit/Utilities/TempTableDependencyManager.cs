@@ -47,7 +47,7 @@ namespace EF6TempTableKit.Utilities
             var doesFirstLeveNodeHasChildren = firstLevelNodeChildren.Length > 0;
             if (doesFirstLeveNodeHasChildren)
             {
-                var childrenFlatList = FindNodeChildren(firstLevelNodeChildren);
+                var childrenFlatList = FindChildren(firstLevelNodeChildren);
 
                 _tempTableContainer.TempOnTempDependencies.Add(new KeyValuePair<string, HashSet<string>>(newTempTableName, new HashSet<string>(childrenFlatList)));
 
@@ -55,14 +55,14 @@ namespace EF6TempTableKit.Utilities
             }
         }
 
-        private string[] FindNodeChildren(string[] nodesChildren)
+        private string[] FindChildren(string[] nodes)
         {
-            var nestedChildrenNodesList = nodesChildren.ToList();
-            foreach (var node in nodesChildren)
+            var nestedChildrenNodesList = nodes.ToList();
+            foreach (var node in nodes)
             {
                 if (_tempTableContainer.TempOnTempDependencies.ContainsKey(node))
                 {
-                    var nestedChildrenNodes = FindNodeChildren(_tempTableContainer.TempOnTempDependencies[node].ToArray());
+                    var nestedChildrenNodes = FindChildren(_tempTableContainer.TempOnTempDependencies[node].ToArray());
 
                     nestedChildrenNodesList.AddRange(nestedChildrenNodes);
                 }
