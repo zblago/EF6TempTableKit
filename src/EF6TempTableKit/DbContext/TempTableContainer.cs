@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Collections.Specialized;
 
 namespace EF6TempTableKit.DbContext
 {
@@ -7,11 +6,11 @@ namespace EF6TempTableKit.DbContext
     {
         public TempTableContainer()
         {
-            TempSqlQueriesList = new OrderedDictionary();
+            TempSqlQueriesList = new Stack<KeyValuePair<string, Query>>();
             TempOnTempDependencies = new Dictionary<string, HashSet<string>>();
         }
 
-        public IOrderedDictionary TempSqlQueriesList { set; get; }
+        public Stack<KeyValuePair<string, Query>> TempSqlQueriesList { set; get; }
 
         /// <summary>
         /// Key is node. Value are children.

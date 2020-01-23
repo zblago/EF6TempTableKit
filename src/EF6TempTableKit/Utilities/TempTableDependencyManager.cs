@@ -7,7 +7,7 @@ using EF6TempTableKit.Extensions;
 namespace EF6TempTableKit.Utilities
 {
     /// <summary>
-    /// Handles dependencies in a form of a tree. As root node doesn't exist think about it like something imaginary.
+    /// Handles dependencies in a form of a tree. Root node doesn't exist - think of it as something imaginary.
     /// Node - represent parent of children nodes.
     /// Children - list of nodes that belongs to parent node.
     /// Level - only two levels 
@@ -19,7 +19,7 @@ namespace EF6TempTableKit.Utilities
         private readonly string _sqlSelectQuery;
         private readonly string[] _tablesUsedInQuery;
         private readonly string[] _tempSqlQueryList;
-        private TempTableContainer _tempTableContainer;
+        private readonly TempTableContainer _tempTableContainer;
         private readonly ObjectQuery _objectQuery;
 
         internal TempTableDependencyManager(string sqlSelectQuery, ObjectQuery objectQuery, TempTableContainer tempTableContainer)
@@ -28,7 +28,7 @@ namespace EF6TempTableKit.Utilities
             _objectQuery = objectQuery;
             _tempTableContainer = tempTableContainer;
             _tablesUsedInQuery = GetAllTablesInQuery();
-            _tempSqlQueryList = _tempTableContainer.TempSqlQueriesList.Cast<System.Collections.DictionaryEntry>().Select(aaTT => aaTT.Key.ToString()).ToArray();
+            _tempSqlQueryList = _tempTableContainer.TempSqlQueriesList.Select(t => t.Key).ToArray();
         }
 
         /// <summary>
