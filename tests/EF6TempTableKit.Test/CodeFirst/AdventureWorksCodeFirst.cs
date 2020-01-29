@@ -7,6 +7,7 @@ namespace EF6TempTableKit.Test.CodeFirst
     using EF6TempTableKit.DbContext;
     using EF6TempTableKit.Test.TempTables;
     using EF6TempTableKit.Test.DbContextConfiguration;
+    using EF6TempTableKit.Test.TempTables.Dependencies;
 
     //[DbConfigurationType(typeof(EF6TempTableKitDbConfiguration))]
     [DbConfigurationType(typeof(CustomDbContextConfiguration))]
@@ -22,6 +23,16 @@ namespace EF6TempTableKit.Test.CodeFirst
         public virtual DbSet<ProductCategoryCountTempTable> TempProductCategoryCounts { get; set; }
         public virtual DbSet<ProductCategoryTempTable> TempProductCategories { get; set; }
         public virtual DbSet<ProductSubCategoryTempTable> TempProductSubCategories { get; set; }
+
+        public virtual DbSet<ChairTempTable> TempChairs { get; set; }
+        public virtual DbSet<DepartmentTempTable> TempDepartments { get; set; }
+        public virtual DbSet<ManufacturerTempTable> TempManufacturers { get; set; }
+        public virtual DbSet<OfficeTempTable> TempOffices { get; set; }
+        public virtual DbSet<PartTempTable> TempParts { get; set; }
+        public virtual DbSet<PartTypeTempTable> TempPartTypes { get; set; }
+        public virtual DbSet<PersonTempTable> TempPersons { get; set; }
+        public virtual DbSet<RoomTempTable> TempRooms { get; set; }
+        public virtual DbSet<OfficeTypeTempTable> TempOfficeTypes { get; set; }
 
         public TempTableContainer TempTableContainer { get; set; } = new TempTableContainer();
 

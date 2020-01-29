@@ -33,3 +33,7 @@ using System.Runtime.InteropServices;
 // by using the '*' as shown below:
 [assembly: AssemblyVersion("1.0.*")] //File version
 [assembly: AssemblyInformationalVersion("1.0.0.0")] //Product version
+
+#if DEBUG
+[assembly: InternalsVisibleTo("EF6TempTableKit.Test")]
+#endif
