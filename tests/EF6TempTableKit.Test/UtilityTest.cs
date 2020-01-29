@@ -4,12 +4,29 @@ using EF6TempTableKit.Test.CodeFirst;
 using EF6TempTableKit.Test.TempTables.Dependencies;
 using EF6TempTableKit.Extensions;
 using EF6TempTableKit.Test.TempTables;
+using System.Text;
 
 namespace EF6TempTableKit.Test
 {
     public class UtilityTest
     {
         [Fact]
+        //                               O f f i c e
+        //                             /    \       \
+        //                            /      \       \
+        //                           /        \       \
+        //                       Room     Department  OfficeType
+        //                      /            |
+        //                  Chair         People
+        //                  /                |
+        //              Part              Address
+        //              /    \
+        //      Manufacturer PartType
+        //           /
+        //      Address
+        ///
+        /// Queries and how are they joined doesn't matter!
+        /// This is only for internal test purpose. Tables such as Address, PartType and OfficeType don't have any dependencies whereas Office depends on all nodes below it (subtree).
         public void TestTempOnDependenciese()
         {
             using (var context = new AdventureWorksCodeFirst())
@@ -69,6 +86,7 @@ namespace EF6TempTableKit.Test
                             ChairId = tc.ChairId
                         });
 
+                var tempOfficeTypeQuery = context.Addresses.Select(tot => new OfficeTypeTempTableDto { Id = tot.AddressID, Name = tot.AddressLine1 });
 
                 var tempOfficeQuery = context.Addresses
                     .Join(context.TempRooms,
@@ -76,8 +94,10 @@ namespace EF6TempTableKit.Test
                         (to) => to.RoomId,
                         (a, to) => new OfficeTempTableDto
                         {
-                            RoomId = a.AddressID,
-                            Name = a.AddressLine1
+                            Id = a.AddressID,
+                            RoomId = to.RoomId,
+                            Name = a.AddressLine1,
+                            OfficeTypeId = context.TempOfficeTypes.FirstOrDefault().Id
                         });
 
                 var tempPeopleQuery = context.Addresses
@@ -105,6 +125,7 @@ namespace EF6TempTableKit.Test
                 #endregion
 
                 //Attach temp tables
+                context.WithTempTableExpression<AdventureWorksCodeFirst>(tempOfficeTypeQuery);
                 context.WithTempTableExpression<AdventureWorksCodeFirst>(tempAddressQuery);
                 context.WithTempTableExpression<AdventureWorksCodeFirst>(tempManufacturerQuery);
                 context.WithTempTableExpression<AdventureWorksCodeFirst>(tempPartTypeQuery);
@@ -116,6 +137,8 @@ namespace EF6TempTableKit.Test
                 context.WithTempTableExpression<AdventureWorksCodeFirst>(tempOfficeQuery);
 
                 //Test dependecies among temp tables
+                var queryAfterInterceptor = new StringBuilder();
+                context.Database.Log = q => { queryAfterInterceptor.AppendLine(q); };
                 var chairs = context.TempParts.ToList();
 
                 //Test final DB query for only needed dependecies

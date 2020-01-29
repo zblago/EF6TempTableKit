@@ -7,8 +7,7 @@ namespace EF6TempTableKit.Test.TempTables.Dependencies
     [Table("#tempOfficeType")]
     public class OfficeTypeTempTable : ITempTable
     {
-        [Key]
-        public int OfficeId { get; set; }
+        public int Id { get; set; }
 
         [TempFieldTypeAttribute("varchar(200)")]
         public string Name { get; set; }
