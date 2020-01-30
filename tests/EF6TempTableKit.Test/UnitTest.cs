@@ -10,7 +10,7 @@ namespace EF6TempTableKit.Test
     public class UnitTest
     {
         [Fact]
-        public void TestGetAddress()
+        public void GetAddress()
         {
             using (var context = new AdventureWorksCodeFirst())
             {
@@ -31,7 +31,7 @@ namespace EF6TempTableKit.Test
         /// Expected message: SqlException: 'aliastempAddressMultipleId' has fewer columns than were specified in the column list.
         /// </summary>
         [Fact]
-        public void TestGetAddressMultipleId()
+        public void GetAddressMultipleId()
         {
             Assert.Throws<System.Data.Entity.Core.EntityCommandExecutionException>(() =>
             {

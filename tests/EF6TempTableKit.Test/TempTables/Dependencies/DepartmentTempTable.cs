@@ -8,6 +8,7 @@ namespace EF6TempTableKit.Test.TempTables.Dependencies
     public class DepartmentTempTable : ITempTable
     {
         [Key]
+        [TempFieldTypeAttribute("int")]
         public int DepartmentId { get; set; }
 
         [TempFieldTypeAttribute("varchar(200)")]

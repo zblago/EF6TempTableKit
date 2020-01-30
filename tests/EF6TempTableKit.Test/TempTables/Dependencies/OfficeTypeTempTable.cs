@@ -1,5 +1,4 @@
 ﻿using EF6TempTableKit.Attributes;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EF6TempTableKit.Test.TempTables.Dependencies
@@ -7,6 +6,7 @@ namespace EF6TempTableKit.Test.TempTables.Dependencies
     [Table("#tempOfficeType")]
     public class OfficeTypeTempTable : ITempTable
     {
+        [TempFieldTypeAttribute("int")]
         public int Id { get; set; }
 
         [TempFieldTypeAttribute("varchar(200)")]

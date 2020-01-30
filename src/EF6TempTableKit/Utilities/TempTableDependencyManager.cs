@@ -64,6 +64,8 @@ namespace EF6TempTableKit.Utilities
                 {
                     var nestedChildrenNodes = FindChildren(_tempTableContainer.TempOnTempDependencies[node].ToArray());
 
+                    nestedChildrenNodes = nestedChildrenNodes.ToList().Except(nestedChildrenNodesList).ToArray();
+
                     nestedChildrenNodesList.AddRange(nestedChildrenNodes);
                 }
             }
