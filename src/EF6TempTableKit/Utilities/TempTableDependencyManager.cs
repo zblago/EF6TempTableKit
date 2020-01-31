@@ -39,37 +39,35 @@ namespace EF6TempTableKit.Utilities
         public void AddDependenciesForTable(string newTempTableName)
         {
             //newTempTableName = key
-            var firstLevelNodeChildren = _tempSqlQueryList
+            var firstLevelChildren = _tempSqlQueryList
                 .Where(aaTT => _tablesUsedInQuery.Any(tiQ => tiQ == aaTT))
                 .Select(aaTT => aaTT)
                 .ToArray();
 
-            var doesFirstLeveNodeHasChildren = firstLevelNodeChildren.Length > 0;
-            if (doesFirstLeveNodeHasChildren)
+            var firstLeveNodeHasChildren = firstLevelChildren.Length > 0;
+            if (firstLeveNodeHasChildren)
             {
-                var childrenFlatList = FindChildren(firstLevelNodeChildren);
+                _tempTableContainer
+                    .TempOnTempDependencies
+                    .Add(new KeyValuePair<string, HashSet<string>>(newTempTableName, new HashSet<string>()));
 
-                _tempTableContainer.TempOnTempDependencies.Add(new KeyValuePair<string, HashSet<string>>(newTempTableName, new HashSet<string>(childrenFlatList)));
-
-                System.Diagnostics.Debug.WriteLine(newTempTableName + " " + string.Join(",", childrenFlatList));
-            }
-        }
-
-        private string[] FindChildren(string[] nodes)
-        {
-            var nestedChildrenNodesList = nodes.ToList();
-            foreach (var node in nodes)
-            {
-                if (_tempTableContainer.TempOnTempDependencies.ContainsKey(node))
+                var childrenDependecies = new List<string>();
+                foreach (var item in firstLevelChildren)
                 {
-                    var nestedChildrenNodes = FindChildren(_tempTableContainer.TempOnTempDependencies[node].ToArray());
-
-                    nestedChildrenNodes = nestedChildrenNodes.ToList().Except(nestedChildrenNodesList).ToArray();
-
-                    nestedChildrenNodesList.AddRange(nestedChildrenNodes);
+                    if (_tempTableContainer.TempOnTempDependencies.ContainsKey(item))
+                    {
+                        childrenDependecies.AddRange(_tempTableContainer.TempOnTempDependencies[item]);
+                        childrenDependecies.Add(item);
+                        childrenDependecies.ForEach(cd => _tempTableContainer.TempOnTempDependencies[newTempTableName].AddIfNotExists(cd));
+                    }
+                    else
+                    {
+                        _tempTableContainer.TempOnTempDependencies[newTempTableName].AddIfNotExists(item);
+                    }
                 }
+
+                System.Diagnostics.Debug.WriteLine(newTempTableName + " " + string.Join(",", _tempTableContainer.TempOnTempDependencies[newTempTableName]));
             }
-            return nestedChildrenNodesList.ToArray();
         }
 
         private string[] GetAllTablesInQuery()

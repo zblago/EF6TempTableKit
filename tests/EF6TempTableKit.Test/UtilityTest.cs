@@ -146,7 +146,7 @@ namespace EF6TempTableKit.Test
             context.WithTempTableExpression<AdventureWorksCodeFirst>(tempDepartmentQuery);
             context.WithTempTableExpression<AdventureWorksCodeFirst>(tempOfficeQuery);
 
-            return context;  
+            return context;
         }
 
         [Fact]
@@ -155,23 +155,21 @@ namespace EF6TempTableKit.Test
             var context = CreateTempQueries();
             var dependencies = context.TempTableContainer.TempOnTempDependencies;
 
-            var office = context.TempOffices.ToList();
-
             var firstShouldBeManufacturer = dependencies.Skip(0).First();
             Assert.Equal(_tempTableManufacturer, firstShouldBeManufacturer.Key);
             Assert.Equal(string.Join(",", new string[] { _tempTableAddress }), string.Join(",", firstShouldBeManufacturer.Value));
 
             var secondShouldBePart = dependencies.Skip(1).First();
             Assert.Equal(_tempTablePart, secondShouldBePart.Key);
-            Assert.Equal(string.Join(",", new string[] { _tempTablePartType, _tempTableManufacturer, _tempTableAddress }), string.Join(",", secondShouldBePart.Value));
+            Assert.Equal(string.Join(",", new string[] { _tempTableAddress, _tempTableManufacturer, _tempTablePartType }), string.Join(",", secondShouldBePart.Value));
 
             var thirdShouldBeChair = dependencies.Skip(2).First();
             Assert.Equal(_tempTableChair, thirdShouldBeChair.Key);
-            Assert.Equal(string.Join(",", new string[] { _tempTablePart, _tempTablePartType, _tempTableManufacturer, _tempTableAddress }), string.Join(",", thirdShouldBeChair.Value));
+            Assert.Equal(string.Join(",", new string[] { _tempTableAddress, _tempTableManufacturer, _tempTablePartType, _tempTablePart }), string.Join(",", thirdShouldBeChair.Value));
 
             var fourthShouldBeRoom = dependencies.Skip(3).First();
             Assert.Equal(_tempTableRoom, fourthShouldBeRoom.Key);
-            Assert.Equal(string.Join(",", new string[] { _tempTableChair, _tempTablePart, _tempTablePartType, _tempTableManufacturer, _tempTableAddress }), string.Join(",", fourthShouldBeRoom.Value));
+            Assert.Equal(string.Join(",", new string[] { _tempTableAddress, _tempTableManufacturer, _tempTablePartType, _tempTablePart, _tempTableChair }), string.Join(",", fourthShouldBeRoom.Value));
 
             var fifthShouldBePerson = dependencies.Skip(4).First();
             Assert.Equal(_tempTablePerson, fifthShouldBePerson.Key);
@@ -179,12 +177,15 @@ namespace EF6TempTableKit.Test
 
             var sixthShouldBeDepartment = dependencies.Skip(5).First();
             Assert.Equal(_tempTableDepartment, sixthShouldBeDepartment.Key);
-            Assert.Equal(string.Join(",", new string[] { _tempTablePerson, _tempTableAddress }), string.Join(",", sixthShouldBeDepartment.Value));
+            Assert.Equal(string.Join(",", new string[] { _tempTableAddress, _tempTablePerson }), string.Join(",", sixthShouldBeDepartment.Value));
 
             var seventhShouldBeOffice = dependencies.Skip(6).First();
             Assert.Equal(_tempTableOffice, seventhShouldBeOffice.Key);
-            Assert.Equal(string.Join(",", new string[] { _tempTableOfficeType, _tempTablePartType, _tempTableManufacturer, _tempTableAddress, _tempTablePart, _tempTableChair, _tempTableRoom }), 
+            Assert.Equal(string.Join(",", new string[] { _tempTableOfficeType, _tempTableAddress, _tempTableManufacturer, _tempTablePartType,
+                _tempTablePart, _tempTableChair, _tempTableRoom, _tempTablePerson, _tempTableDepartment }),
                 string.Join(",", seventhShouldBeOffice.Value));
+
+            var office = context.TempOffices.ToList();
 
             //Test dependencies among temp tables
             //var queryAfterInterceptor = new StringBuilder();
@@ -192,8 +193,6 @@ namespace EF6TempTableKit.Test
             //var chairs = context.TempParts.ToList();
 
             //Test final DB query for only needed dependencies
-
-            Assert.NotEmpty(new string[] { });
         }
     }
 }

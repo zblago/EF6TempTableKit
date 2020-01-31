@@ -6,11 +6,11 @@ namespace EF6TempTableKit.DbContext
     {
         public TempTableContainer()
         {
-            TempSqlQueriesList = new Stack<KeyValuePair<string, Query>>();
+            TempSqlQueriesList = new Queue<KeyValuePair<string, Query>>();
             TempOnTempDependencies = new Dictionary<string, HashSet<string>>();
         }
 
-        public Stack<KeyValuePair<string, Query>> TempSqlQueriesList { set; get; }
+        public Queue<KeyValuePair<string, Query>> TempSqlQueriesList { set; get; }
 
         /// <summary>
         /// Key is node. 

@@ -113,7 +113,7 @@ namespace EF6TempTableKit.Test
             }
         }
 
-        [Fact(DisplayName = "Reuse temp table using flag (reuseExisting = true")]
+        [Fact(DisplayName = "Reuse temp table using flag (reuseExisting = true)")]
         public void ReuseSameTempTableWithUsingFlag()
         {
             using (var context = new AdventureWorksCodeFirst())

@@ -61,7 +61,7 @@ namespace EF6TempTableKit.Extensions
 
             contextWithTempTable.TempTableContainer
                 .TempSqlQueriesList
-                .Push(new KeyValuePair<string, Query>(tempTableName, new Query { QueryString = sqlAllCommandsQuery, ReuseExisting = reuseExisting }));
+                .Enqueue(new KeyValuePair<string, Query>(tempTableName, new Query { QueryString = sqlAllCommandsQuery, ReuseExisting = reuseExisting }));
 
             return dbContexWithTempTable as T;
         }
