@@ -4,6 +4,8 @@ using EF6TempTableKit.Test.CodeFirst;
 using EF6TempTableKit.Test.TempTables.Dependencies;
 using EF6TempTableKit.Extensions;
 using EF6TempTableKit.Test.TempTables;
+using System.Collections.Generic;
+using System.Text;
 
 namespace EF6TempTableKit.Test
 {
@@ -150,10 +152,13 @@ namespace EF6TempTableKit.Test
         }
 
         [Fact]
-        public void TempOnDependenciese()
+        public void TempOnTempDependencies()
         {
-            var context = CreateTempQueries();
-            var dependencies = context.TempTableContainer.TempOnTempDependencies;
+            IDictionary<string, HashSet<string>> dependencies;
+            using (var context = CreateTempQueries())
+            {
+                dependencies = context.TempTableContainer.TempOnTempDependencies;
+            }
 
             var firstShouldBeManufacturer = dependencies.Skip(0).First();
             Assert.Equal(_tempTableManufacturer, firstShouldBeManufacturer.Key);
@@ -184,15 +189,146 @@ namespace EF6TempTableKit.Test
             Assert.Equal(string.Join(",", new string[] { _tempTableOfficeType, _tempTableAddress, _tempTableManufacturer, _tempTablePartType,
                 _tempTablePart, _tempTableChair, _tempTableRoom, _tempTablePerson, _tempTableDepartment }),
                 string.Join(",", seventhShouldBeOffice.Value));
+        }
 
-            var office = context.TempOffices.ToList();
+        [Fact]
+        public void TempOnTempDependenciesInQuery()
+        {
+            var finalQuery = new StringBuilder();
+            using (var context = CreateTempQueries())
+            {
+                context.Database.Log = q => { finalQuery.AppendLine(q); };
 
-            //Test dependencies among temp tables
-            //var queryAfterInterceptor = new StringBuilder();
-            //context.Database.Log = q => { queryAfterInterceptor.AppendLine(q); };
-            //var chairs = context.TempParts.ToList();
+                var tempOfficeTypeQuery = context.TempOfficeTypes.Take(1).FirstOrDefault();
+                Assert.DoesNotContain(_tempTableAddress, finalQuery.ToString());
+                Assert.DoesNotContain(_tempTableManufacturer, finalQuery.ToString());
+                Assert.DoesNotContain(_tempTablePart, finalQuery.ToString());
+                Assert.DoesNotContain(_tempTablePartType, finalQuery.ToString());
+                Assert.DoesNotContain(_tempTableChair, finalQuery.ToString());
+                Assert.DoesNotContain(_tempTableRoom, finalQuery.ToString());
+                Assert.DoesNotContain(_tempTablePerson, finalQuery.ToString());
+                Assert.DoesNotContain(_tempTableDepartment, finalQuery.ToString());
+                Assert.Contains(_tempTableOffice, finalQuery.ToString());
+                Assert.DoesNotContain(_tempTableOfficeType, finalQuery.ToString());
+                finalQuery.Clear();
 
-            //Test final DB query for only needed dependencies
+                var tempAddress = context.TempAddresses.Take(1).FirstOrDefault();
+                Assert.Contains(_tempTableAddress, finalQuery.ToString());
+                Assert.DoesNotContain(_tempTableManufacturer, finalQuery.ToString());
+                Assert.DoesNotContain(_tempTablePart, finalQuery.ToString());
+                Assert.DoesNotContain(_tempTablePartType, finalQuery.ToString());
+                Assert.DoesNotContain(_tempTableChair, finalQuery.ToString());
+                Assert.DoesNotContain(_tempTableRoom, finalQuery.ToString());
+                Assert.DoesNotContain(_tempTablePerson, finalQuery.ToString());
+                Assert.DoesNotContain(_tempTableDepartment, finalQuery.ToString());
+                Assert.DoesNotContain(_tempTableOffice, finalQuery.ToString());
+                Assert.DoesNotContain(_tempTableOfficeType, finalQuery.ToString());
+                finalQuery.Clear();
+
+                var tempManufacturer = context.TempManufacturers.Take(1).FirstOrDefault();
+                Assert.Contains(_tempTableAddress, finalQuery.ToString());
+                Assert.Contains(_tempTableManufacturer, finalQuery.ToString());
+                Assert.DoesNotContain(_tempTablePart, finalQuery.ToString());
+                Assert.DoesNotContain(_tempTablePartType, finalQuery.ToString());
+                Assert.DoesNotContain(_tempTableChair, finalQuery.ToString());
+                Assert.DoesNotContain(_tempTableRoom, finalQuery.ToString());
+                Assert.DoesNotContain(_tempTablePerson, finalQuery.ToString());
+                Assert.DoesNotContain(_tempTableDepartment, finalQuery.ToString());
+                Assert.DoesNotContain(_tempTableOffice, finalQuery.ToString());
+                Assert.DoesNotContain(_tempTableOfficeType, finalQuery.ToString());
+                finalQuery.Clear();
+
+                var tempPartType = context.TempPartTypes.Take(1).FirstOrDefault();
+                Assert.DoesNotContain(_tempTableAddress, finalQuery.ToString());
+                Assert.DoesNotContain(_tempTableManufacturer, finalQuery.ToString());
+                Assert.DoesNotContain(_tempTablePart, finalQuery.ToString());
+                Assert.Contains(_tempTablePartType, finalQuery.ToString());
+                Assert.DoesNotContain(_tempTableChair, finalQuery.ToString());
+                Assert.DoesNotContain(_tempTableRoom, finalQuery.ToString());
+                Assert.DoesNotContain(_tempTablePerson, finalQuery.ToString());
+                Assert.DoesNotContain(_tempTableDepartment, finalQuery.ToString());
+                Assert.DoesNotContain(_tempTableOffice, finalQuery.ToString());
+                Assert.DoesNotContain(_tempTableOfficeType, finalQuery.ToString());
+                finalQuery.Clear();
+
+                var tempPart = context.TempParts.Take(1).FirstOrDefault();
+                Assert.Contains(_tempTableAddress, finalQuery.ToString());
+                Assert.Contains(_tempTableManufacturer, finalQuery.ToString());
+                Assert.Contains(_tempTablePart, finalQuery.ToString());
+                Assert.Contains(_tempTablePartType, finalQuery.ToString());
+                Assert.DoesNotContain(_tempTableChair, finalQuery.ToString());
+                Assert.DoesNotContain(_tempTableRoom, finalQuery.ToString());
+                Assert.DoesNotContain(_tempTablePerson, finalQuery.ToString());
+                Assert.DoesNotContain(_tempTableDepartment, finalQuery.ToString());
+                Assert.DoesNotContain(_tempTableOffice, finalQuery.ToString());
+                Assert.DoesNotContain(_tempTableOfficeType, finalQuery.ToString());
+                finalQuery.Clear();
+
+                var tempChair = context.TempChairs.Take(1).FirstOrDefault();
+                Assert.Contains(_tempTableAddress, finalQuery.ToString());
+                Assert.Contains(_tempTableManufacturer, finalQuery.ToString());
+                Assert.Contains(_tempTablePart, finalQuery.ToString());
+                Assert.Contains(_tempTablePartType, finalQuery.ToString());
+                Assert.Contains(_tempTableChair, finalQuery.ToString());
+                Assert.DoesNotContain(_tempTableRoom, finalQuery.ToString());
+                Assert.DoesNotContain(_tempTablePerson, finalQuery.ToString());
+                Assert.DoesNotContain(_tempTableDepartment, finalQuery.ToString());
+                Assert.DoesNotContain(_tempTableOffice, finalQuery.ToString());
+                Assert.DoesNotContain(_tempTableOfficeType, finalQuery.ToString());
+                finalQuery.Clear();
+
+                var tempRoom = context.TempRooms.Take(1).FirstOrDefault();
+                Assert.Contains(_tempTableAddress, finalQuery.ToString());
+                Assert.Contains(_tempTableManufacturer, finalQuery.ToString());
+                Assert.Contains(_tempTablePart, finalQuery.ToString());
+                Assert.Contains(_tempTablePartType, finalQuery.ToString());
+                Assert.Contains(_tempTableChair, finalQuery.ToString());
+                Assert.Contains(_tempTableRoom, finalQuery.ToString());
+                Assert.DoesNotContain(_tempTablePerson, finalQuery.ToString());
+                Assert.DoesNotContain(_tempTableDepartment, finalQuery.ToString());
+                Assert.DoesNotContain(_tempTableOffice, finalQuery.ToString());
+                Assert.DoesNotContain(_tempTableOfficeType, finalQuery.ToString());
+                finalQuery.Clear();
+
+                var tempPerson = context.TempPersons.Take(1).FirstOrDefault();
+                Assert.Contains(_tempTableAddress, finalQuery.ToString());
+                Assert.DoesNotContain(_tempTableManufacturer, finalQuery.ToString());
+                Assert.DoesNotContain(_tempTablePart, finalQuery.ToString());
+                Assert.DoesNotContain(_tempTablePartType, finalQuery.ToString());
+                Assert.DoesNotContain(_tempTableChair, finalQuery.ToString());
+                Assert.DoesNotContain(_tempTableRoom, finalQuery.ToString());
+                Assert.Contains(_tempTablePerson, finalQuery.ToString());
+                Assert.DoesNotContain(_tempTableDepartment, finalQuery.ToString());
+                Assert.DoesNotContain(_tempTableOffice, finalQuery.ToString());
+                Assert.DoesNotContain(_tempTableOfficeType, finalQuery.ToString());
+                finalQuery.Clear();
+
+                var tempDepartment = context.TempDepartments.Take(1).FirstOrDefault();
+                Assert.Contains(_tempTableAddress, finalQuery.ToString());
+                Assert.DoesNotContain(_tempTableManufacturer, finalQuery.ToString());
+                Assert.DoesNotContain(_tempTablePart, finalQuery.ToString());
+                Assert.DoesNotContain(_tempTablePartType, finalQuery.ToString());
+                Assert.DoesNotContain(_tempTableChair, finalQuery.ToString());
+                Assert.DoesNotContain(_tempTableRoom, finalQuery.ToString());
+                Assert.Contains(_tempTablePerson, finalQuery.ToString());
+                Assert.Contains(_tempTableDepartment, finalQuery.ToString());
+                Assert.DoesNotContain(_tempTableOffice, finalQuery.ToString());
+                Assert.DoesNotContain(_tempTableOfficeType, finalQuery.ToString());
+                finalQuery.Clear();
+
+                var tempOffice = context.TempOffices.Take(1).FirstOrDefault();
+                Assert.Contains(_tempTableAddress, finalQuery.ToString());
+                Assert.Contains(_tempTableManufacturer, finalQuery.ToString());
+                Assert.Contains(_tempTablePart, finalQuery.ToString());
+                Assert.Contains(_tempTablePartType, finalQuery.ToString());
+                Assert.Contains(_tempTableChair, finalQuery.ToString());
+                Assert.Contains(_tempTableRoom, finalQuery.ToString());
+                Assert.Contains(_tempTablePerson, finalQuery.ToString());
+                Assert.Contains(_tempTableDepartment, finalQuery.ToString());
+                Assert.Contains(_tempTableOffice, finalQuery.ToString());
+                Assert.Contains(_tempTableOfficeType, finalQuery.ToString());
+                finalQuery.Clear();
+            }
         }
     }
 }
