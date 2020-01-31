@@ -2,9 +2,9 @@
 
 namespace EF6TempTableKit.Extensions
 {
-    public static class HashSetExtensionsExtensions
+    internal static class HashSetExtensionsExtensions
     {
-        public static void AddIfNotExists(this HashSet<string> hs, string item)
+        internal static void AddIfNotExists(this HashSet<string> hs, string item)
         {
             if (!hs.Contains(item))
                 hs.Add(item);

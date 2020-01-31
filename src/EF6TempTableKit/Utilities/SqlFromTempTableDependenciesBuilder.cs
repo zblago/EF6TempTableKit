@@ -36,7 +36,7 @@ namespace EF6TempTableKit.Utilities
             foreach (var tempSqlQuery in _tempSqlQueriesList)
             {
                 var tempTableName = tempSqlQuery.Key;
-                if (!alreadyAttachedTempTableQuery.Any(t => t == tempTableName) && interceptedComandText.Contains(tempTableName))
+                if (!alreadyAttachedTempTableQuery.Any(t => t == tempTableName) && interceptedComandText.Contains("[" + tempTableName + "]"))
                 {
                     var hasTempTableDependencies = _tempOnTempDependencies.ContainsKey(tempTableName);
                     if (hasTempTableDependencies)

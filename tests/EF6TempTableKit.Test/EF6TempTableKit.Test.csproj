@@ -105,6 +105,7 @@
   <ItemGroup>
     <Compile Include="DbContextConfiguration\AdventureWorkQueryInterceptor.cs" />
     <Compile Include="DbContextConfiguration\CustomDbContextConfiguration.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="TempTables\Dependencies\OfficeTypeTempTable.cs" />
     <Compile Include="TempTables\Dependencies\DepartmentTempTable.cs" />
     <Compile Include="TempTables\Dependencies\PartTypeTempTable.cs" />
