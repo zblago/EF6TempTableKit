@@ -59,7 +59,6 @@
     <Compile Include="Extensions\HashSetExtensions.cs" />
     <Compile Include="Extensions\IQueryableExtensions.cs" />
     <Compile Include="Extensions\ObjectQueryExtensions.cs" />
-    <Compile Include="Extensions\StringBuilder.cs" />
     <Compile Include="ITempTable.cs" />
     <Compile Include="Query.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
