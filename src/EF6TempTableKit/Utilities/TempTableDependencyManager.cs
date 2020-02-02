@@ -33,26 +33,26 @@ namespace EF6TempTableKit.Utilities
 
         /// <summary>
         /// Use all tables from attached query and compare with already attached temp tables.
-        /// Get match into a separate collection. Traverse through the all nodes to get their children.
+        /// Get match into a separate collection. Traverse through the first level children as they already have their dependencies.
         /// </summary>
         /// <param name="newTempTableName"></param>
         public void AddDependenciesForTable(string newTempTableName)
         {
             //newTempTableName = key
-            var firstLevelChildren = _tempSqlQueryList
+            var alreadyAttachedTempTables = _tempSqlQueryList
                 .Where(aaTT => _tablesUsedInQuery.Any(tiQ => tiQ == aaTT))
                 .Select(aaTT => aaTT)
                 .ToArray();
 
-            var firstLeveNodeHasChildren = firstLevelChildren.Length > 0;
-            if (firstLeveNodeHasChildren)
+            var alreadyAttachedTempTablesHasChildren = alreadyAttachedTempTables.Length > 0;
+            if (alreadyAttachedTempTablesHasChildren)
             {
                 _tempTableContainer
                     .TempOnTempDependencies
                     .Add(new KeyValuePair<string, HashSet<string>>(newTempTableName, new HashSet<string>()));
 
                 var childrenDependecies = new List<string>();
-                foreach (var item in firstLevelChildren)
+                foreach (var item in alreadyAttachedTempTables)
                 {
                     if (_tempTableContainer.TempOnTempDependencies.ContainsKey(item))
                     {

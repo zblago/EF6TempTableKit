@@ -268,7 +268,7 @@ namespace EF6TempTableKit.Test
             context.WithTempTableExpression<AdventureWorksCodeFirst>(queryModel.TempRoomQuery);
             context.WithTempTableExpression<AdventureWorksCodeFirst>(queryModel.TempOfficeQuery);
 
-            var test = context.TempAddresses.Select(a => new
+            var list = context.TempAddresses.Select(a => new
             {
                 id1 = context.TempOffices.FirstOrDefault().Id,
                 id2 = context.TempAddresses.FirstOrDefault().Id,
@@ -281,7 +281,7 @@ namespace EF6TempTableKit.Test
                 id9 = context.TempOffices.FirstOrDefault().Id,
             }).ToList();
 
-            Assert.NotEmpty(test);
+            Assert.NotEmpty(list);
         }
     }
 }
