@@ -287,5 +287,32 @@ namespace EF6TempTableKit.Test
                 Assert.NotEmpty(productList);
             }
         }
+
+        [Fact]
+        public void ReinitializeTempTableContainer()
+        {
+            using (var context = new AdventureWorksCodeFirst())
+            {
+                for (var i = 0; i < 6; i++)
+                {
+                    var tempAddressQuery = context.Addresses.Select(a => new AddressTempTableDto
+                    {
+                        Id = a.AddressID,
+                        Name = a.AddressLine1
+                    }).OrderBy(ta => ta.Id).Skip(i).Take(1);
+
+                    context.ReinitializeTempTableContainer();
+
+                    var address = context
+                            .WithTempTableExpression<AdventureWorksCodeFirst>(tempAddressQuery)
+                            .TempAddresses.Join(context.Addresses,
+                            (a) => a.Id,
+                            (aa) => aa.AddressID,
+                            (at, a) => new { Id = at.Id }).Single();
+
+                    Assert.NotNull(address);
+                }
+            }
+        }
     }
 }

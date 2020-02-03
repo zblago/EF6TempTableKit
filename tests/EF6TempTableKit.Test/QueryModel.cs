@@ -20,7 +20,6 @@ namespace EF6TempTableKit.Test
 
         public QueryModel(AdventureWorksCodeFirst context)
         {
-
             TempAddressQuery = context.Addresses.Select(a => new AddressTempTableDto { Id = a.AddressID, Name = a.AddressLine1 });
 
             TempPartTypeQuery = context.Addresses.Select(a => new PartTypeTempTableDto { PartTypeId = a.AddressID, Name = a.AddressLine1 });

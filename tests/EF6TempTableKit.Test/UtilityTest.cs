@@ -237,16 +237,6 @@ namespace EF6TempTableKit.Test
                 Assert.Contains(_tempTableOffice.WrapWithSquareBrackets(), finalQuery.ToString());
                 Assert.Contains(_tempTableOfficeType.WrapWithSquareBrackets(), finalQuery.ToString());
                 finalQuery.Clear();
-
-                var x = context.TempAddresses.Join(context.Addresses,
-                    (ta) => ta.Id,
-                    (a) => a.AddressID,
-                    (ta, a) => new
-                    {
-                        TaId = ta.Id,
-                        AddId = a.AddressID,
-                        T = context.TempAddresses.FirstOrDefault().Id
-                    }).ToList();
             }
         }
 
@@ -280,6 +270,8 @@ namespace EF6TempTableKit.Test
                 id8 = context.TempDepartments.FirstOrDefault().DepartmentId,
                 id9 = context.TempOffices.FirstOrDefault().Id,
             }).ToList();
+
+            context.Dispose();
 
             Assert.NotEmpty(list);
         }
