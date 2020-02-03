@@ -1,4 +1,4 @@
-# EF6TempTableKit 
+# EF6TempTableKit - version 1.0.0
 
 [![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/zblago/ef6temptablekit)](https://github.com/zblago/EF6TempTableKit/releases) 
 [![Build status](https://ci.appveyor.com/api/projects/status/tsdv1s7v897f2mwv?svg=true)](https://ci.appveyor.com/project/zblago/ef6temptablekit)
