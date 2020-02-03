@@ -8,7 +8,7 @@ using System.Data.Entity.Core.Metadata.Edm;
 
 namespace EF6TempTableKit.Extensions
 {
-    public static class ObjectQueryExtensions
+    internal static class ObjectQueryExtensions
     {
         public static ObjectQuery GetObjectQuery(this IQueryable<dynamic> query)
         {
