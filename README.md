@@ -1,4 +1,4 @@
-# EF6TempTableKit 
+# EF6TempTableKit - version 2.0.0
 
 [![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/zblago/ef6temptablekit)](https://github.com/zblago/EF6TempTableKit/releases) 
 [![Build status](https://ci.appveyor.com/api/projects/status/tsdv1s7v897f2mwv?svg=true)](https://ci.appveyor.com/project/zblago/ef6temptablekit)
@@ -15,7 +15,7 @@ Keep in mind: You are still writing LINQ-to-Entities to insert records in a "tem
 ## Getting Started
 
 Follow these steps:
-1. Install Nuget package (Install-Package EF6TempTableKit -Version 1.0.0)
+1. Install Nuget package (Install-Package EF6TempTableKit -Version 2.0.0)
 2. Implement `IDbContextWithTempTable` under your context. What does that mean? Add a public property and initialize it via constructor or auto-property initializer
 ```csharp
   public TempTableContainer TempTableContainer { get; set; } = new TempTableContainer();
