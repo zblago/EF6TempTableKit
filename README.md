@@ -1,7 +1,9 @@
-# EF6TempTableKit - version 2.0.0
+# EF6TempTableKit
 
 ## Versions
 1.0.0 - check for details [here](https://github.com/zblago/EF6TempTableKit/tree/EF6TempTableKit_version_1_0_0)
+
+# Version 2.0.0
 
 [![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/zblago/ef6temptablekit)](https://github.com/zblago/EF6TempTableKit/releases) 
 [![Build status](https://ci.appveyor.com/api/projects/status/tsdv1s7v897f2mwv?svg=true)](https://ci.appveyor.com/project/zblago/ef6temptablekit)
