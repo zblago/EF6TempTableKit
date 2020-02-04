@@ -103,7 +103,7 @@ EF6TempTableKit supports some features like reusing existing table under the sam
 | Attribute       | Description |
 | --------------- |-------------|
 | `ClusteredIndex` | Associate this attribute with a field(s) you want in clustered index. |
-| `NonClusteredIndex("indexName, [orderNo = 0]")` | Associate this attribute with a field(s) you want in non-clustered index. Number of non-clustered index is limited by SQL Server. If you want more columns under the same non-clustered index, just add a same name. You can set order of columns by using orderNo parameter. |
+| `NonClusteredIndex("indexName, [orderNo = 0]")` | Associate this attribute with a field(s) you want in non-clustered index. Number of non-clustered index is limited by SQL Server. If you want more columns under the same non-clustered index, just add a same name. You can set order of columns by using `orderNo` parameter. |
 | `TempFieldTypeAttribute` | Use this attribute to define field data type in a SQL Server manner. E.g. `([TempFieldTypeAttribute("varchar(200)")])`. |
 
 ## How it works
@@ -112,7 +112,7 @@ Before brief explanation of how EF6TempTableKit does his work keep in mind that 
 
 ![Final T-SQL](EF6TempTableKit-T-SQL.png)
 
-## Problems
+## Known issues
 
 EF6TempTableKit has been implemented on enterprise project which has VS solution with more than 15 projects, where base context is inherited on multiple levels, where DBContext has DbConfiguration in a different project, etc... <br/>In such a bit complicated scenario, ony one exception occured that was not explicity related to E6TempTableKit. It was about how to apply custom configuration on your `DbContext`.<br/>So, If you get exception like this:<br/>
 
