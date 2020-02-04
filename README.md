@@ -99,6 +99,7 @@ EF6TempTableKit supports some features like reusing existing table under the sam
 | Extension       | Description |
 | --------------- |-------------|
 | `WithTempTableExpression` | Extension that accepts an expression being translated into T-SQL query that has a logic for inserting records in temp table. `WithTempTableExpression<T>(this System.Data.Entity.DbContext dbContexWithTempTable, IQueryable<ITempTable> expression, bool reuseExisting = false)` supports reusing existing temp table under the same [SPID](https://docs.microsoft.com/en-us/sql/t-sql/functions/spid-transact-sql?view=sql-server-ver15). If you set `reuseExisting` flag on `true`, generated T-SQL will check whether temp table already exists or not. That means, if you run mutliple queries under the same connection, you can reuse created temp table as temp table is scoped in SPID in which is created |
+| `ReinitializeTempTableContainer` | description |
 
 | Attribute       | Description |
 | --------------- |-------------|
