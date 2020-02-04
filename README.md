@@ -16,6 +16,11 @@ Keep in mind: You are still writing LINQ-to-Entities to insert records in a "tem
 
 ## What is changed in version 2.0.0
 
+- load table from another table
+- nonclustered index columns ordering
+- clear temp table container
+- more tests
+
 ## Getting Started
 
 Follow these steps:
@@ -98,7 +103,7 @@ EF6TempTableKit supports some features like reusing existing table under the sam
 | Attribute       | Description |
 | --------------- |-------------|
 | `ClusteredIndex` | Associate this attribute with a field(s) you want in clustered index. |
-| `NonClusteredIndex("nameOfIndex")` | Associate this attribute with a field(s) you want in non-clustered index. Number of non-clustered index is limited by SQL Server. If you want more columns under the same non-clustered index, just add a same name. Currently, order of columns in index is not supported |
+| `NonClusteredIndex("indexName, [orderNo = 0]")` | Associate this attribute with a field(s) you want in non-clustered index. Number of non-clustered index is limited by SQL Server. If you want more columns under the same non-clustered index, just add a same name. You can set order of columns by using orderNo parameter. |
 | `TempFieldTypeAttribute` | Use this attribute to define field data type in a SQL Server manner. E.g. `([TempFieldTypeAttribute("varchar(200)")])`. |
 
 ## How it works
