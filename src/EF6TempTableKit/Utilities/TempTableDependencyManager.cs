@@ -65,8 +65,6 @@ namespace EF6TempTableKit.Utilities
                         _tempTableContainer.TempOnTempDependencies[newTempTableName].AddIfNotExists(item);
                     }
                 }
-
-                System.Diagnostics.Debug.WriteLine(newTempTableName + " " + string.Join(",", _tempTableContainer.TempOnTempDependencies[newTempTableName]));
             }
         }
 
