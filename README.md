@@ -16,16 +16,17 @@ Keep in mind: You are still writing LINQ-to-Entities to insert records in a "tem
 
 ## What is changed in version 2.0.0
 
-- load table from another table
-- nonclustered index columns ordering
-- clear temp table container
-- more tests
+Version 2.0.0 has some improvements such as:
+- support for multiple temporary tables
+- columns order in nonclustered index
+- injecting into final query only needed DDL and DML queries and their related dependencies
+- more tests in solution
 
 ## Getting Started
 
 Follow these steps:
 1. Install Nuget package (Install-Package EF6TempTableKit -Version 2.0.0)
-2. Implement `IDbContextWithTempTable` under your context. What does that mean? Add a public property and initialize it via constructor or auto-property initializer
+2. Implement `IDbContextWithTempTable` within your context. What does that mean? Add a public property and initialize it via constructor or auto-property initializer
 ```csharp
   public TempTableContainer TempTableContainer { get; set; } = new TempTableContainer();
 ```
@@ -94,24 +95,25 @@ If you don't have already any configuration, use `EF6TempTableKitDbConfiguration
 
 ## Documentation
 
-EF6TempTableKit supports some features like reusing existing table under the same connection([SPID](https://docs.microsoft.com/en-us/sql/t-sql/functions/spid-transact-sql?view=sql-server-ver15)), clustered index and non-clustered indexes. Here is a short documentation:
+EF6TempTableKit supports some features like reusing existing table within the same connection([SPID](https://docs.microsoft.com/en-us/sql/t-sql/functions/spid-transact-sql?view=sql-server-ver15)), clustered index and non-clustered indexes. Here is a short documentation:
 
 | Extension       | Description |
 | --------------- |-------------|
-| `WithTempTableExpression` | Extension that accepts an expression being translated into T-SQL query that has a logic for inserting records in temp table. `WithTempTableExpression<T>(this System.Data.Entity.DbContext dbContexWithTempTable, IQueryable<ITempTable> expression, bool reuseExisting = false)` supports reusing existing temp table under the same [SPID](https://docs.microsoft.com/en-us/sql/t-sql/functions/spid-transact-sql?view=sql-server-ver15). If you set `reuseExisting` flag on `true`, generated T-SQL will check whether temp table already exists or not. That means, if you run mutliple queries under the same connection, you can reuse created temp table as temp table is scoped in SPID in which is created |
-| `ReinitializeTempTableContainer` | description |
+| `WithTempTableExpression` | Extension that accepts an expression being translated into T-SQL query that has a logic for inserting records in temp table. `WithTempTableExpression<T>(this System.Data.Entity.DbContext dbContexWithTempTable, IQueryable<ITempTable> expression, bool reuseExisting = false)` supports reusing existing temp table within the same [SPID](https://docs.microsoft.com/en-us/sql/t-sql/functions/spid-transact-sql?view=sql-server-ver15). If you set `reuseExisting` flag on `true`, generated T-SQL will check whether temp table already exists or not. That means, if you run mutliple queries within the same connection, you can reuse created temp table as temp table is scoped in SPID in which is created. You can attach an expression that requires for its creation some other expression. In that case, you have to take care of an order in which expressions are being been attached in a way that first are coming expressions that have a little or no dependencies to those that have some dependencies on previously attached expressions.|
+| `ReinitializeTempTableContainer` | clears out attached expressions. When you run your query in a loop, second iteration will throw an exception `Can't override query for temp table {tempTableName} as it is already attached to the context."`. In that case and for every subsuqent call ensure that temp tables will be generated again with new data specific for that iteration. |
 
 | Attribute       | Description |
 | --------------- |-------------|
 | `ClusteredIndex` | Associate this attribute with a field(s) you want in clustered index. |
-| `NonClusteredIndex("indexName, [orderNo = 0]")` | Associate this attribute with a field(s) you want in non-clustered index. Number of non-clustered index is limited by SQL Server. If you want more columns under the same non-clustered index, just add a same name. You can set order of the columns by using `orderNo` parameter. |
+| `NonClusteredIndex("indexName, [orderNo = 0]")` | Associate this attribute with a field(s) you want in non-clustered index. Number of non-clustered index is limited by SQL Server. If you want more columns within the same non-clustered index, just add a same name. You can set order of the columns by using `orderNo` parameter. |
 | `TempFieldTypeAttribute` | Use this attribute to define field data type in a SQL Server manner. E.g. `([TempFieldTypeAttribute("varchar(200)")])`. |
 
 ## How it works
 
 Before brief explanation of how EF6TempTableKit does his work keep in mind that **EF6TempTableKit doesn't affect EF6 default behaviour at all**. So, how it works? It uses EF6 ability to intercept a generated query before it hits a DB. But, before that, it does some digging through the internal/hidden EF6 properties and fields to get needed metadata (e.g. column order) and raw query. Using those informations it builds DML and DDL queries. When code execution goes through the attached `EF6TempTableKitQueryInterceptor` interceptor, previously attached queries are being attached at the begining of the intercepted query.
 
-Describe here how it works with multiple temporary tables mutually connected (keep order...)
+```csharp
+```
 
 ![Final T-SQL](EF6TempTableKit-T-SQL.png)
 
@@ -156,7 +158,7 @@ var addressList = context
         (at, a) => new { Id = at.Id }).ToList();
 }
 ```
-you may get an exception like *SqlException: 'tempTableName' has fewer columns than were specified in the column list*. In that case ensure that is mapped only once. Later on, if you need to map it again, do that under materialized data (in memory). This case is also covered in test project.
+you may get an exception like *SqlException: 'tempTableName' has fewer columns than were specified in the column list*. In that case ensure that is mapped only once. Later on, if you need to map it again, do that on materialized data (in memory). This case is also covered in test project.
 
 ## (S)o(l)utio(n) file & how to run it
 
