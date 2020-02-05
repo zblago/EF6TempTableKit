@@ -114,7 +114,7 @@ Before brief explanation of how EF6TempTableKit does his work keep in mind that 
 
 ![Final T-SQL](EF6TempTableKit-T-SQL.png)
 
-This code below represents importance of an order in which expressions are attached. Expressions with no or little dependencies are coming first, those with dependencies are coming afterward.
+The code below represents importance of an order in which expressions are attached. Expressions with no or little dependencies are coming first, those with dependencies are coming afterward.
 
 ```csharp
     ....
@@ -131,7 +131,7 @@ This code below represents importance of an order in which expressions are attac
     
     var tempAddress = context.TempAddresses.Take(1).FirstOrDefault();
 ```
-Final T-SQL query will be made of only query against TempAddress temp table regardless of how many expressions are in TempTableContainer.
+Final T-SQL query will be made of only query against TempAddress temp table regardless of how many expressions are in `TempTableContainer`. No killing performances with creating and loading data in not being used tables.
 
 ## Known issues
 
