@@ -112,6 +112,8 @@ EF6TempTableKit supports some features like reusing existing table within the sa
 
 Before brief explanation of how EF6TempTableKit does his work keep in mind that **EF6TempTableKit doesn't affect EF6 default behaviour at all**. So, how it works? It uses EF6 ability to intercept a generated query before it hits a DB. But, before that, it does some digging through the internal/hidden EF6 properties and fields to get needed metadata (e.g. column order) and raw query. Using those informations it builds DML and DDL queries. When code execution goes through the attached `EF6TempTableKitQueryInterceptor` interceptor, previously attached queries are being attached at the begining of the intercepted query.
 
+![Final T-SQL](EF6TempTableKit-T-SQL.png)
+
 This code represents importance of an order in which expressions are attached. Expressions with no or little dependencies are coming first, those with dependencies are coming afterward.
 
 ```csharp
@@ -129,9 +131,7 @@ This code represents importance of an order in which expressions are attached. E
     
     var tempAddress = context.TempAddresses.Take(1).FirstOrDefault();
 ```
-Final T-SQL query will be made of only query against TempAddress temp table regardless of how many expressions are in TempTableContainer. 
-
-![Final T-SQL](EF6TempTableKit-T-SQL.png)
+Final T-SQL query will be made of only query against TempAddress temp table regardless of how many expressions are in TempTableContainer.
 
 ## Known issues
 
