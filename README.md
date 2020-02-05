@@ -17,7 +17,7 @@ Keep in mind: You are still writing LINQ-to-Entities to insert records in a "tem
 ## What is changed in version 2.0.0
 
 Version 2.0.0 has some improvements such as:
-- support for multiple temporary tables
+- support for multiple mutually interconnected temporary tables
 - columns order in a nonclustered index
 - injecting into final query only needed DDL and DML queries and their related dependencies
 - more tests in solution
