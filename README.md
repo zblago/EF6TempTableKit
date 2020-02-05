@@ -25,7 +25,7 @@ Version 2.0.0 has some improvements such as:
 ## Getting Started
 
 Follow these steps:
-1. Install Nuget package (Install-Package EF6TempTableKit -Version 2.0.0)
+1. Install Nuget package (`Install-Package EF6TempTableKit -Version 2.0.0`)
 2. Implement `IDbContextWithTempTable` within your context. What does that mean? Add a public property and initialize it via constructor or auto-property initializer
 ```csharp
   public TempTableContainer TempTableContainer { get; set; } = new TempTableContainer();
