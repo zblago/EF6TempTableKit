@@ -114,7 +114,8 @@ Before brief explanation of how EF6TempTableKit does his work keep in mind that 
 
 ![Final T-SQL](EF6TempTableKit-T-SQL.png)
 
-This code represents importance of an order in which expressions are attached. Expressions with no or little dependencies are coming first, those with dependencies are coming afterward.
+
+This code below represents importance of an order in which expressions are attached. Expressions with no or little dependencies are coming first, those with dependencies are coming afterward.
 
 ```csharp
     ....
