@@ -1,4 +1,4 @@
-# EF6TempTableKit
+# EF6TempTableKit - version 2.0.0
 EF6TempTableKit is a library that helps you utilize temp tables in your Entity Framework 6 context mapped to Microsoft SQL Server database.
 
 [![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/zblago/ef6temptablekit)](https://github.com/zblago/EF6TempTableKit/releases) 
@@ -15,6 +15,11 @@ In some cases, when you write LINQ-to-Entities(L2E) queries, you would like to h
 Keep in mind: You are still writing LINQ-to-Entities to insert records in a "temporary" entity.
 
 ## What is changed in version 2.0.0
+
+- load table from another table
+- nonclustered index columns ordering
+- clear temp table container
+- more tests
 
 ## Getting Started
 
@@ -94,20 +99,23 @@ EF6TempTableKit supports some features like reusing existing table under the sam
 | Extension       | Description |
 | --------------- |-------------|
 | `WithTempTableExpression` | Extension that accepts an expression being translated into T-SQL query that has a logic for inserting records in temp table. `WithTempTableExpression<T>(this System.Data.Entity.DbContext dbContexWithTempTable, IQueryable<ITempTable> expression, bool reuseExisting = false)` supports reusing existing temp table under the same [SPID](https://docs.microsoft.com/en-us/sql/t-sql/functions/spid-transact-sql?view=sql-server-ver15). If you set `reuseExisting` flag on `true`, generated T-SQL will check whether temp table already exists or not. That means, if you run mutliple queries under the same connection, you can reuse created temp table as temp table is scoped in SPID in which is created |
+| `ReinitializeTempTableContainer` | description |
 
 | Attribute       | Description |
 | --------------- |-------------|
 | `ClusteredIndex` | Associate this attribute with a field(s) you want in clustered index. |
-| `NonClusteredIndex("nameOfIndex")` | Associate this attribute with a field(s) you want in non-clustered index. Number of non-clustered index is limited by SQL Server. If you want more columns under the same non-clustered index, just add a same name. Currently, order of columns in index is not supported |
+| `NonClusteredIndex("indexName, [orderNo = 0]")` | Associate this attribute with a field(s) you want in non-clustered index. Number of non-clustered index is limited by SQL Server. If you want more columns under the same non-clustered index, just add a same name. You can set order of the columns by using `orderNo` parameter. |
 | `TempFieldTypeAttribute` | Use this attribute to define field data type in a SQL Server manner. E.g. `([TempFieldTypeAttribute("varchar(200)")])`. |
 
 ## How it works
 
-Before brief explanation of how EF6TempTableKit does his work keep in mind that **EF6TempTableKit doesn't affect EF6 default behaviour at all**. So, how it works? It uses EF6 ability to intercept a generated query before it hits a DB. But, before that, it does some digging through the internal/hidden EF6 properties and fields to get needed metadata (e.g. column order) and raw query. Using those informations it builds DML and DDL queries. When code execution goes through the attached `EF6TempTableKitQueryInterceptor` interceptor, previously generated query is being attached at the begining of the existing query.
+Before brief explanation of how EF6TempTableKit does his work keep in mind that **EF6TempTableKit doesn't affect EF6 default behaviour at all**. So, how it works? It uses EF6 ability to intercept a generated query before it hits a DB. But, before that, it does some digging through the internal/hidden EF6 properties and fields to get needed metadata (e.g. column order) and raw query. Using those informations it builds DML and DDL queries. When code execution goes through the attached `EF6TempTableKitQueryInterceptor` interceptor, previously attached queries are being attached at the begining of the intercepted query.
+
+Describe here how it works with multiple temporary tables mutually connected (keep order...)
 
 ![Final T-SQL](EF6TempTableKit-T-SQL.png)
 
-## Problems
+## Known issues
 
 EF6TempTableKit has been implemented on enterprise project which has VS solution with more than 15 projects, where base context is inherited on multiple levels, where DBContext has DbConfiguration in a different project, etc... <br/>In such a bit complicated scenario, ony one exception occured that was not explicity related to E6TempTableKit. It was about how to apply custom configuration on your `DbContext`.<br/>So, If you get exception like this:<br/>
 
