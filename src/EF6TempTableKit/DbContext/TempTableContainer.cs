@@ -16,6 +16,6 @@ namespace EF6TempTableKit.DbContext
         /// Key is node. 
         /// Value are children - at the top is an item that has dependencies on the items below. Last item has no any dependencies.
         /// </summary>
-        internal IDictionary<string, HashSet<string>> TempOnTempDependencies { get; set; }
+        public IDictionary<string, HashSet<string>> TempOnTempDependencies { get; set; }
     }
 }
