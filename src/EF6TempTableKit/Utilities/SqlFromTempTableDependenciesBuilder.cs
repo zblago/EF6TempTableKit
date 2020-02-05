@@ -8,7 +8,6 @@ namespace EF6TempTableKit.Utilities
 {
     /// <summary>
     /// Queries attached on a context are stored in a queue(FIFO) data structure. Why? Because last attached query typically has dependencies on previously attached queries.
-    /// Furthermore, every iteration element (key - table name, value - query objext) has dependencies on some other temp tables stored in flatten list (TempOnTempDependencies) sorted from those who have a lot of dependencies to those with one or zero dependencies.
     /// </summary>
     internal sealed class SqlFromTempTableDependenciesBuilder
     {

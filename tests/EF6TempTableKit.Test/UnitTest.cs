@@ -291,6 +291,18 @@ namespace EF6TempTableKit.Test
         [Fact]
         public void ReinitializeTempTableContainer()
         {
+            var wantedResult = new Dictionary<int, string>()
+            {
+                { 1, "1970 Napa Ct." },
+                { 2, "9833 Mt. Dias Blv." },
+                { 3, "7484 Roundtree Drive" },
+                { 4, "9539 Glenside Dr" },
+                { 5, "1226 Shoe St." },
+                { 6, "1399 Firestone Drive" }
+            };
+
+            var result = new Dictionary<int, string>();
+
             using (var context = new AdventureWorksCodeFirst())
             {
                 for (var i = 0; i < 6; i++)
@@ -308,10 +320,15 @@ namespace EF6TempTableKit.Test
                             .TempAddresses.Join(context.Addresses,
                             (a) => a.Id,
                             (aa) => aa.AddressID,
-                            (at, a) => new { Id = at.Id }).Single();
+                            (at, a) => new { Id = at.Id, AddressLine1 = a.AddressLine1 }).Single();
 
-                    Assert.NotNull(address);
+                    result.Add(address.Id, address.AddressLine1);
                 }
+            }
+
+            for (var i = 0; i < 6; i++)
+            {
+                Assert.Equal(wantedResult[i + 1], result[i + 1]);
             }
         }
     }
