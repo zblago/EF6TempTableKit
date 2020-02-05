@@ -18,7 +18,7 @@ Keep in mind: You are still writing LINQ-to-Entities to insert records in a "tem
 
 Version 2.0.0 has some improvements such as:
 - support for multiple temporary tables
-- columns order in nonclustered index
+- columns order in a nonclustered index
 - injecting into final query only needed DDL and DML queries and their related dependencies
 - more tests in solution
 
@@ -99,7 +99,7 @@ EF6TempTableKit supports some features like reusing existing table within the sa
 
 | Extension       | Description |
 | --------------- |-------------|
-| `WithTempTableExpression` | Extension that accepts an expression being translated into T-SQL query that has a logic for inserting records in temp table. `WithTempTableExpression<T>(this System.Data.Entity.DbContext dbContexWithTempTable, IQueryable<ITempTable> expression, bool reuseExisting = false)` supports reusing existing temp table within the same [SPID](https://docs.microsoft.com/en-us/sql/t-sql/functions/spid-transact-sql?view=sql-server-ver15). If you set `reuseExisting` flag on `true`, generated T-SQL will check whether temp table already exists or not. That means, if you run mutliple queries within the same connection, you can reuse created temp table as temp table is scoped in SPID in which is created. You can attach an expression that requires for its creation some other expression. In that case, you have to take care of an order in which expressions are being been attached in a way that first are coming expressions that have a little or no dependencies to those that have some dependencies on previously attached expressions.|
+| `WithTempTableExpression` | Extension that accepts an expression being translated into T-SQL query that has a logic for inserting records in temp table. `WithTempTableExpression<T>(this System.Data.Entity.DbContext dbContexWithTempTable, IQueryable<ITempTable> expression, bool reuseExisting = false)` supports reusing existing temp table within the same [SPID](https://docs.microsoft.com/en-us/sql/t-sql/functions/spid-transact-sql?view=sql-server-ver15). If you set `reuseExisting` flag on `true`, generated T-SQL will check whether temp table already exists or not. That means, if you run mutliple queries within the same connection, you can reuse created temp table as temp table is scoped in SPID in which is created. You can attach an expression that requires for its creation some other expression. In that case, you have to take care of an order in which expressions are being been attached in a way that first are coming expressions that have a little or no dependencies to those that have dependencies on previously attached expressions.|
 | `ReinitializeTempTableContainer` | clears out attached expressions. When you run your query in a loop, second iteration will throw an exception `Can't override query for temp table {tempTableName} as it is already attached to the context."`. In that case and for every subsuqent call ensure that temp tables will be generated again with new data specific for that iteration. |
 
 | Attribute       | Description |
@@ -112,8 +112,24 @@ EF6TempTableKit supports some features like reusing existing table within the sa
 
 Before brief explanation of how EF6TempTableKit does his work keep in mind that **EF6TempTableKit doesn't affect EF6 default behaviour at all**. So, how it works? It uses EF6 ability to intercept a generated query before it hits a DB. But, before that, it does some digging through the internal/hidden EF6 properties and fields to get needed metadata (e.g. column order) and raw query. Using those informations it builds DML and DDL queries. When code execution goes through the attached `EF6TempTableKitQueryInterceptor` interceptor, previously attached queries are being attached at the begining of the intercepted query.
 
+If your code looks like (from unit tests in solution)
+
 ```csharp
+    ....
+    context.WithTempTableExpression<AdventureWorksCodeFirst>(queryModel.TempOfficeTypeQuery);
+    context.WithTempTableExpression<AdventureWorksCodeFirst>(queryModel.TempAddressQuery);
+    context.WithTempTableExpression<AdventureWorksCodeFirst>(queryModel.TempManufacturerQuery);
+    context.WithTempTableExpression<AdventureWorksCodeFirst>(queryModel.TempPartTypeQuery);
+    context.WithTempTableExpression<AdventureWorksCodeFirst>(queryModel.TempPartQuery);
+    context.WithTempTableExpression<AdventureWorksCodeFirst>(queryModel.TempChairQuery);
+    context.WithTempTableExpression<AdventureWorksCodeFirst>(queryModel.TempRoomQuery);
+    context.WithTempTableExpression<AdventureWorksCodeFirst>(queryModel.TempPersonQuery);
+    context.WithTempTableExpression<AdventureWorksCodeFirst>(queryModel.TempDepartmentQuery);
+    context.WithTempTableExpression<AdventureWorksCodeFirst>(queryModel.TempOfficeQuery);
+    
+    var tempAddress = context.TempAddresses.Take(1).FirstOrDefault();
 ```
+final T-SQL query will be made of only query against TempAddress temp table regardless of how many expressions are in TempTableContainer.
 
 ![Final T-SQL](EF6TempTableKit-T-SQL.png)
 
