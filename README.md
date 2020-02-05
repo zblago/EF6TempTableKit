@@ -131,7 +131,7 @@ The code below represents importance of an order in which expressions are attach
     
     var tempAddress = context.TempAddresses.Take(1).FirstOrDefault();
 ```
-Final T-SQL query will be made of only query against TempAddress temp table regardless of how many expressions are in `TempTableContainer`. No killing performances with creating and loading data in not being used tables.
+Final T-SQL query will be made of only query against TempAddress temp table regardless of how many expressions are in `TempTableContainer`. No killing performances by creating and loading data in not being used tables.
 
 ## Known issues
 
