@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace EF6TempTableKit.Extensions
 {
-    public static class IQueryableExtensions
+    internal static class IQueryableExtensions
     {
         /// <summary>
         /// For an Entity Framework IQueryable, returns the SQL with inlined Parameters.

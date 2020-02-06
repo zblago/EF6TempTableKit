@@ -5,14 +5,14 @@ using System.Text;
 
 namespace EF6TempTableKit.SqlCommands
 {
-    public sealed class SqlInsertCommandBuilder : IDrop, ICreate, IAddClusteredIndex, IAddNonClusteredIndexes, IInsertQuery, IExecute
+    internal sealed class SqlInsertCommandBuilder : IDrop, ICreate, IAddClusteredIndex, IAddNonClusteredIndexes, IInsertQuery, IExecute
     {
         private readonly string _tempTableName;
         private readonly string _tempTableExist;
 
         public StringBuilder _queryBuilder;
 
-        private SqlInsertCommandBuilder(string tempTableName)
+        internal SqlInsertCommandBuilder(string tempTableName)
         {
             _tempTableName = tempTableName;
             _tempTableExist = $"tempTable{ _tempTableName}Created";

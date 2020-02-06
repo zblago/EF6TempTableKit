@@ -10,7 +10,7 @@ namespace EF6TempTableKit.Test
     public class UnitTest
     {
         [Fact]
-        public void TestGetAddress()
+        public void GetAddress()
         {
             using (var context = new AdventureWorksCodeFirst())
             {
@@ -31,7 +31,7 @@ namespace EF6TempTableKit.Test
         /// Expected message: SqlException: 'aliastempAddressMultipleId' has fewer columns than were specified in the column list.
         /// </summary>
         [Fact]
-        public void TestGetAddressMultipleId()
+        public void GetAddressMultipleId()
         {
             Assert.Throws<System.Data.Entity.Core.EntityCommandExecutionException>(() =>
             {
@@ -113,7 +113,7 @@ namespace EF6TempTableKit.Test
             }
         }
 
-        [Fact(DisplayName = "Reuse temp table using flag (reuseExisting = true")]
+        [Fact(DisplayName = "Reuse temp table using flag (reuseExisting = true)")]
         public void ReuseSameTempTableWithUsingFlag()
         {
             using (var context = new AdventureWorksCodeFirst())
@@ -285,6 +285,50 @@ namespace EF6TempTableKit.Test
 
                 var productList = productsQuery.ToList();
                 Assert.NotEmpty(productList);
+            }
+        }
+
+        [Fact]
+        public void ReinitializeTempTableContainer()
+        {
+            var wantedResult = new Dictionary<int, string>()
+            {
+                { 1, "1970 Napa Ct." },
+                { 2, "9833 Mt. Dias Blv." },
+                { 3, "7484 Roundtree Drive" },
+                { 4, "9539 Glenside Dr" },
+                { 5, "1226 Shoe St." },
+                { 6, "1399 Firestone Drive" }
+            };
+
+            var result = new Dictionary<int, string>();
+
+            using (var context = new AdventureWorksCodeFirst())
+            {
+                for (var i = 0; i < 6; i++)
+                {
+                    var tempAddressQuery = context.Addresses.Select(a => new AddressTempTableDto
+                    {
+                        Id = a.AddressID,
+                        Name = a.AddressLine1
+                    }).OrderBy(ta => ta.Id).Skip(i).Take(1);
+
+                    context.ReinitializeTempTableContainer();
+
+                    var address = context
+                            .WithTempTableExpression<AdventureWorksCodeFirst>(tempAddressQuery)
+                            .TempAddresses.Join(context.Addresses,
+                            (a) => a.Id,
+                            (aa) => aa.AddressID,
+                            (at, a) => new { Id = at.Id, AddressLine1 = a.AddressLine1 }).Single();
+
+                    result.Add(address.Id, address.AddressLine1);
+                }
+            }
+
+            for (var i = 0; i < 6; i++)
+            {
+                Assert.Equal(wantedResult[i + 1], result[i + 1]);
             }
         }
     }

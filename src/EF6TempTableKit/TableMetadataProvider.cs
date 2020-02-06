@@ -44,11 +44,11 @@ namespace EF6TempTableKit
 
         public IReadOnlyDictionary<string, string[]> GetNonClusteredIndexesWithColumns(Type baseType)
         {
-            var propsWithnonClusteredAttributes = baseType
+            var propsWithNonClusteredAttributes = baseType
                 .GetProperties()
                 .Where(p => p.CustomAttributes.Any(ca => ca.AttributeType == typeof(Attributes.NonClusteredIndexAttribute)));
 
-            var listOfIndexes = propsWithnonClusteredAttributes
+            var listOfIndexes = propsWithNonClusteredAttributes
                 .SelectMany(p => p.GetCustomAttributes(typeof(Attributes.NonClusteredIndexAttribute), true)
                         .Select(a => (a as Attributes.NonClusteredIndexAttribute).Name))
                 .Distinct();
@@ -59,13 +59,18 @@ namespace EF6TempTableKit
             {
                 var properytNames = baseType.GetProperties()
                     .Where(p =>
-                        (p.GetCustomAttributes(typeof(Attributes.NonClusteredIndexAttribute), true) 
+                        (p.GetCustomAttributes(typeof(Attributes.NonClusteredIndexAttribute), true)
                             as IEnumerable<Attributes.NonClusteredIndexAttribute>)
                         .Any(nona => nona.Name == indexName))
-                    .Select(p => p.Name)
-                    .ToArray();
+                    .Select(p => new
+                    {
+                        Name = p.Name,
+                        Attributes = p.GetCustomAttributes(typeof(Attributes.NonClusteredIndexAttribute), true)
+                    }).ToArray();
 
-                indexWithFields.Add(indexName, properytNames);
+                var propertyNamesSortedByOrderNo = properytNames.OrderBy(p => (p.Attributes[0] as Attributes.NonClusteredIndexAttribute).OrderNo);
+
+                indexWithFields.Add(indexName, propertyNamesSortedByOrderNo.Select(p => p.Name).ToArray());
             }
 
             return (IReadOnlyDictionary<string, string[]>) indexWithFields;

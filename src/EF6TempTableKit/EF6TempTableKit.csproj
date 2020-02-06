@@ -56,9 +56,9 @@
     <Compile Include="DbContext\EF6TempTableKitQueryInterceptor.cs" />
     <Compile Include="DbContext\TempTableContainer.cs" />
     <Compile Include="Extensions\DbContextExtensions.cs" />
+    <Compile Include="Extensions\HashSetExtensions.cs" />
     <Compile Include="Extensions\IQueryableExtensions.cs" />
     <Compile Include="Extensions\ObjectQueryExtensions.cs" />
-    <Compile Include="Extensions\StringBuilder.cs" />
     <Compile Include="ITempTable.cs" />
     <Compile Include="Query.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -70,9 +70,12 @@
     <Compile Include="SqlCommands\Interfaces\IInsertQuery.cs" />
     <Compile Include="SqlCommands\SqlInsertCommandBuilder.cs" />
     <Compile Include="TableMetadataProvider.cs" />
+    <Compile Include="Utilities\SqlFromTempTableDependenciesBuilder.cs" />
+    <Compile Include="Utilities\TempTableDependencyManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
