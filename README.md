@@ -206,6 +206,8 @@ You might find this library useful for you. However, this library is not tested 
 
 <a href="https://www.buymeacoffee.com/ZnPcX6D" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: 41px !important;width: 174px !important;box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;"></a>
 
+
+<a href="https://www.buymeacoffee.com/ZnPcX6D" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" style="height: 51px !important;width: 217px !important;" ></a>
 ## Authors
 
 [**Zoran Blagojevic**](https://www.linkedin.com/in/zoran-blagojevic/)
