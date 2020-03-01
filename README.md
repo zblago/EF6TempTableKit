@@ -170,7 +170,11 @@ Projects listed below are built under [.NET Framework 4.6](https://www.microsoft
 - EF6TempTableKit.Test.Web
 
 ## Final word
+I was very motivated to finish up this project. I have proven to myself that I can do this after regular work hours, playing with the kids, etc... At the end, I spent almost 3 months coding this extension, including documentation, tests, articles.
+
 You might find this library useful for you. However, this library is not tested for insert, delete and update scenarios. It's on you to test whether it works or not.
+
+<a href="https://www.buymeacoffee.com/ZnPcX6D" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: 41px !important;width: 174px !important;box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;" ></a>
 
 ## Authors
 
