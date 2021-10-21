@@ -97,7 +97,6 @@ namespace EF6TempTableKit.Extensions
         static bool IsNullableValueType<T>(T obj)
         {
             //https://stackoverflow.com/questions/374651/how-to-check-if-an-object-is-nullable
-
             if (obj == null) return true;
             Type type = typeof(T);
             return type.IsValueType && Nullable.GetUnderlyingType(type) != null;
