@@ -24,7 +24,7 @@ namespace EF6TempTableKit.Extensions
 
             var result = objectQuery.ToTraceString();
 
-            var paramsReversed = objectQuery.Parameters.Reverse();//revers params order to avoid replacement of @__p__1 with e.i. '1' in @__p__11 as '1'1
+            var paramsReversed = objectQuery.Parameters.Reverse();//reverse params order to avoid replacement of @p__linq__1 (with let's say value of '1') in @p__linq__11 as '1'1
             foreach (var parameter in paramsReversed)
             {
                 object value = "";
@@ -36,7 +36,10 @@ namespace EF6TempTableKit.Extensions
                 {
                     value = GetBoolStringValue(parameter.Value);
                 }
-                else if (!numericTypes.Contains(parameter.ParameterType) && IsNullableValueType(parameter.ParameterType))
+                else if (!numericTypes.Contains(parameter.ParameterType)
+                        && parameter.Value == null
+                        || (parameter.ParameterType.IsValueType && Nullable.GetUnderlyingType(parameter.ParameterType) != null)
+                        )
                 {
                     if (parameter.ParameterType == typeof(DateTime?))
                     {
@@ -46,11 +49,13 @@ namespace EF6TempTableKit.Extensions
                     {
                         value = parameter.Value != null ? GetBoolStringValue(parameter.Value) : "NULL";
                     }
-                    else {
+                    else
+                    {
                         value = parameter.Value != null ? parameter.Value.ToString() : "NULL";
                     }
                 }
-                else if (numericTypes.Contains(parameter.ParameterType)) {
+                else if (numericTypes.Contains(parameter.ParameterType))
+                {
                     value = parameter.Value.ToString();
                 }
                 else if (parameter.ParameterType.IsEnum && numericTypes.Contains(Enum.GetUnderlyingType(parameter.ParameterType)))
@@ -59,7 +64,7 @@ namespace EF6TempTableKit.Extensions
                     object underlyingValue = Convert.ChangeType(parameter.Value, underlyingType);
                     value = underlyingValue.ToString();
                 }
-               else 
+                else 
                 {
                     value = ReplaceWithQuotes(parameter.Value);
                 }
@@ -92,14 +97,6 @@ namespace EF6TempTableKit.Extensions
                 return "0";
             }
             return value.ToString().ToLower() == "false" ? "0" : "1";
-        }
-
-        static bool IsNullableValueType<T>(T obj)
-        {
-            //https://stackoverflow.com/questions/374651/how-to-check-if-an-object-is-nullable
-            if (obj == null) return true;
-            Type type = typeof(T);
-            return type.IsValueType && Nullable.GetUnderlyingType(type) != null;
         }
     }
 }

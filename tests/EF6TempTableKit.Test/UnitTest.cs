@@ -1,6 +1,8 @@
 ﻿using EF6TempTableKit.Extensions;
 using EF6TempTableKit.Test.CodeFirst;
 using EF6TempTableKit.Test.TempTables;
+using EF6TempTableKit.Test.TempTables.Dependencies;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;
@@ -329,6 +331,119 @@ namespace EF6TempTableKit.Test
             for (var i = 0; i < 6; i++)
             {
                 Assert.Equal(wantedResult[i + 1], result[i + 1]);
+            }
+        }
+
+        [Fact]
+        public void WhereClauseWithMoreThan10Parameters_CompiledAndExecutedSuccesfully() {
+            var p0 = "test";
+            var p1 = "test";
+            var p2 = "test";
+            var p3 = "test";
+            var p4 = "test";
+            var p5 = "test";
+            var p6 = "test";
+            var p7 = "test";
+            var p8 = "test";
+            var p9 = "test";
+            var p10 = "test";
+            var p11 = 1;
+            var p12 = DateTime.Now;
+            var falseParam13 = false;
+            var p14 = 1;
+            System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
+
+            using (var context = new AdventureWorksCodeFirst()) {
+
+                var departmentQuery = context.Departments
+                                            .Where(x =>
+                                                    x.Name == p0 ||
+                                                    x.Name == p1 ||
+                                                    x.Name == p2 ||
+                                                    x.Name == p3 &&
+                                                    x.Name == p4 ||
+                                                    x.Name == p5 &&
+                                                    x.Name == p6 ||
+                                                    (x.Name == p7 ||
+                                                    x.Name == p8 &&
+                                                    x.Name == p9 )||
+                                                    x.Name == p10 ||
+                                                    x.DepartmentID < p11 || 
+                                                    x.ModifiedDate > p12 && 
+                                                    true == falseParam13 && 
+                                                    x.DepartmentID < p14
+                                        ).Select(x => new DepartmentTempTableDto() {
+                                            Name = x.Name
+                                        });
+
+                var temp = context.WithTempTableExpression<AdventureWorksCodeFirst>(departmentQuery, false).TempDepartments;
+                var result = temp.ToList();
+                Assert.True(!result.Any());
+            }
+        }
+
+        [Fact]
+        public void WhereClauseWithBooleanParameter_CompiledAndExecutedSuccesfully()
+        {
+            var boolParameter = false;
+
+            using (var context = new AdventureWorksCodeFirst())
+            {
+
+                var departmentQuery = context.Departments
+                                            .Where(x => true == boolParameter)
+                                            .Select(x => new DepartmentTempTableDto()
+                                            {
+                                                Name = x.Name
+                                            });
+
+                var temp = context.WithTempTableExpression<AdventureWorksCodeFirst>(departmentQuery, false).TempDepartments;
+                var result = temp.ToList();
+                Assert.True(!result.Any());
+            }
+
+        }
+
+        [Fact]
+        public void WhereClauseWithDateTimeParameter_CompiledAndExecutedSuccesfully()
+        {
+            var dateTimeNowParam = DateTime.Now;
+            var yesterday = DateTime.Now.AddDays(-1);
+
+            using (var context = new AdventureWorksCodeFirst())
+            {
+
+                var departmentQuery = context.Departments
+                                            .Where(x => yesterday == dateTimeNowParam)
+                                            .Select(x => new DepartmentTempTableDto()
+                                            {
+                                                Name = x.Name
+                                            });
+
+                var temp = context.WithTempTableExpression<AdventureWorksCodeFirst>(departmentQuery, false).TempDepartments;
+                var result = temp.ToList();
+                Assert.True(!result.Any());
+            }
+        }
+       
+         [Fact]
+        public void WhereClauseWithDateTimeParameter_ExactValue__CompiledAndExecutedSuccesfully()
+        {
+            var modifiedDateParam = new DateTime(2008, 4, 30, 0, 0, 0, 0); //value in database
+            System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
+            using (var context = new AdventureWorksCodeFirst())
+            {
+
+                var departmentQuery = context.Departments
+                                            .Where(x => x.ModifiedDate == modifiedDateParam)
+                                            .Select(x => new DepartmentTempTableDto()
+                                            {
+                                                Name = x.Name
+                                            });
+
+                var temp = context.WithTempTableExpression<AdventureWorksCodeFirst>(departmentQuery, false).TempDepartments;
+                var result = temp.ToList();
+                Assert.True(result.Any());
             }
         }
     }
