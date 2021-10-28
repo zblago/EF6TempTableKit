@@ -159,7 +159,7 @@ FROM[dbo].[#tempDepartment] AS [Extent1]
     WHERE 1 = @p__linq__0',N'@p__linq__0 bit',@p__linq__0=1  -- <== HERE, PARAMS ARE NOT INJECTED
 
                  * */
-                var temp = context.WithTempTableExpression<AdventureWorksCodeFirst>(departmentQuery, false, replaceParamsWithValues: false).TempDepartments.Select(x => x);
+                var temp = context.WithTempTableExpression<AdventureWorksCodeFirst>(departmentQuery, false, replaceParamsWithValues: false).TempDepartments;
 
                 var trueBool = true;
                 var query = from tempDepartment in temp
