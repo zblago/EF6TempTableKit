@@ -18,7 +18,7 @@ namespace EF6TempTableKit.Test
         [Fact]
         public void WhereClauseWithMoreThan10Parameters_CompiledAndExecutedSuccesfully()
         {
-            var p0 = "test";
+            var p0 = "dsfgsdf gsdfg sdfg sdfg sdfgsdfg sdfg";
             var p1 = "test";
             var p2 = "test";
             var p3 = "test";
@@ -63,12 +63,8 @@ namespace EF6TempTableKit.Test
 
                 var temp = context.WithTempTableExpression<AdventureWorksCodeFirst>(departmentQuery, false).TempDepartments;
 
-                var prodId = 0;
-                var q = from t in temp
-                        join department in departmentQuery on t.Name equals department.Name
-                        where department.DepartmentId < prodId
-                        select department;
-                var result = q.ToList();
+               
+                var result = temp.ToList();
                 Assert.True(!result.Any());
             }
         }
