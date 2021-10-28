@@ -16,8 +16,9 @@ namespace EF6TempTableKit.Extensions
         /// <param name="dbContexWithTempTable"></param>
         /// <param name="expression"></param>
         /// <param name="reuseExisting"></param>
+        ///  /// <param name="replaceParamsWithValues"></param>
         /// <returns></returns>
-        public static T WithTempTableExpression<T>(this System.Data.Entity.DbContext dbContexWithTempTable, IQueryable<ITempTable> expression, bool reuseExisting = false)
+        public static T WithTempTableExpression<T>(this System.Data.Entity.DbContext dbContexWithTempTable, IQueryable<ITempTable> expression, bool reuseExisting = false, bool replaceParamsWithValues = true)
             where T : class
         {
             var contextWithTempTable = (IDbContextWithTempTable)dbContexWithTempTable;
@@ -31,7 +32,7 @@ namespace EF6TempTableKit.Extensions
             var clusteredIndexesWithFields = tableMetadataProvider.GetClusteredIndexColumns(tempTableType);
             var nonClusteredIndexesWithFields = tableMetadataProvider.GetNonClusteredIndexesWithColumns(tempTableType);
 
-            var sqlSelectQuery = expression.ToTraceQuery();
+            var sqlSelectQuery = expression.ToTraceQuery(replaceParamsWithValues);
             var objectQuery = expression.GetObjectQuery();
             var fieldsWithPositions = objectQuery.GetQueryPropertyPositions();
 
