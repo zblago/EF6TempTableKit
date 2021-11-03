@@ -42,40 +42,29 @@ namespace EF6TempTableKit.Extensions
         public static ObjectQuery<T> GetQueryFromQueryable<T>(IQueryable<T> query)
         {
             var internalQueryField = query.GetType().GetFields(System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).Where(f => f.Name.Equals("_internalQuery")).FirstOrDefault();
-            //If query is wrapped with LinqKit extensions
+            var internalQuery = new object();
+
+            //If query is wrapped with LinqKit extensions we have to get InnerQuery and after that InternalQuery from it.
             if (internalQueryField == null)
             {
-                var x = query.GetType()
-                    .BaseType
-                    .GetFields(System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
-                    .Where(f => f.Name.Equals("_inner"));
-
-                internalQueryField = query.GetType()
-                    .BaseType
-                    .GetFields(System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
-                    .Where(f => f.Name.Equals("_inner"))
-                    .FirstOrDefault();
-
-                //internalQueryField =
-                //    query.GetType()
-                //    .GetProperties(System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
-                //    .Where(p => p.Name.Equals("InternalQuery"))
-                //    .FirstOrDefault();
-
-                var internalQuery = internalQueryField.GetValue(query).GetType().GetProperties(System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).Where(p => p.Name.Equals("InternalQuery")).FirstOrDefault();
-                var objectQueryField = internalQuery.GetType().GetFields(System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).Where(f => f.Name.Equals("_objectQuery")).FirstOrDefault();
-                var objectQueryValue = objectQueryField.GetValue(internalQuery);
-
-                return (dynamic)objectQueryValue;
+                var innerQuery = query.GetType()
+                    .GetProperties(System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
+                    .FirstOrDefault(f => f.Name.Equals("InnerQuery"))
+                    .GetValue(query);
+                internalQuery = innerQuery.GetType()
+                    .GetProperties(System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
+                    .FirstOrDefault(f => f.Name.Equals("InternalQuery"))
+                    .GetValue(innerQuery);
             }
             else
             {
-                var internalQuery = internalQueryField.GetValue(query);
-                var objectQueryField = internalQuery.GetType().GetFields(System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).Where(f => f.Name.Equals("_objectQuery")).FirstOrDefault();
-                var objectQueryValue = objectQueryField.GetValue(internalQuery);
-
-                return (dynamic)objectQueryValue;
+                internalQuery = internalQueryField.GetValue(query);
             }
+
+            var objectQueryField = internalQuery.GetType().GetFields(System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).Where(f => f.Name.Equals("_objectQuery")).FirstOrDefault();
+            var objectQueryValue = objectQueryField.GetValue(internalQuery);
+
+            return (dynamic)objectQueryValue;
         }
     }
 }
