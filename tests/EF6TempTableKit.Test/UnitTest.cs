@@ -1,6 +1,7 @@
 ﻿using EF6TempTableKit.Extensions;
 using EF6TempTableKit.Test.CodeFirst;
 using EF6TempTableKit.Test.TempTables;
+using LinqKit;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;
@@ -53,6 +54,26 @@ namespace EF6TempTableKit.Test
                             (at, a) => new { Id = at.Id }).ToList();
                 }
             });
+        }
+
+        [Fact]
+        public void GetDataUsingLinqKit()
+        {
+            using (var context = new AdventureWorksCodeFirst())
+            {
+                var tempAddressQuery = context.Addresses.AsExpandable().Select(a => new AddressTempTableDto { Id = a.AddressID, Name = a.AddressLine1 });
+
+                var addressList = context
+                        .WithTempTableExpression<AdventureWorksCodeFirst>(tempAddressQuery)
+                        .TempAddresses.Join(context.Addresses,
+                        (a) => a.Id,
+                        (aa) => aa.AddressID,
+                        (at, a) => new { Id = at.Id })
+                        .AsExpandable()
+                        .ToList();
+
+                Assert.NotEmpty(addressList);
+            }
         }
 
         /// <summary>
