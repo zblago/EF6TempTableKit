@@ -110,6 +110,8 @@
     <Compile Include="DbContextConfiguration\CustomDbContextConfiguration.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="QueryModel.cs" />
+    <Compile Include="TempTables\CustomerTempTable.cs" />
+    <Compile Include="TempTables\ProductTempTable.cs" />
     <Compile Include="TempTables\Dependencies\OfficeTypeTempTable.cs" />
     <Compile Include="TempTables\Dependencies\DepartmentTempTable.cs" />
     <Compile Include="TempTables\Dependencies\PartTypeTempTable.cs" />
