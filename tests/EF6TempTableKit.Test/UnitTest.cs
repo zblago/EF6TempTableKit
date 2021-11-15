@@ -1,6 +1,8 @@
 ﻿using EF6TempTableKit.Extensions;
 using EF6TempTableKit.Test.CodeFirst;
 using EF6TempTableKit.Test.TempTables;
+using EF6TempTableKit.Test.TempTables.Dependencies;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;
@@ -329,6 +331,50 @@ namespace EF6TempTableKit.Test
             for (var i = 0; i < 6; i++)
             {
                 Assert.Equal(wantedResult[i + 1], result[i + 1]);
+            }
+        }
+
+        [Fact]
+        public void WhereClauseWithMoreThan10Parameters_ConditionIsNeverMet_CompiledAndExecutedSuccesfully()
+        {
+            var p0 = "test";
+            var p1 = "test";
+            var p2 = "test";
+            var p3 = "test";
+            var p4 = "test";
+            var p5 = "test";
+            var p6 = "test";
+            var p7 = "test";
+            var p8 = "test";
+            var p9 = "test";
+            var p10 = "test";
+            var falseParam = false;
+
+            using (var context = new AdventureWorksCodeFirst())
+            {
+
+                var departmentQuery = context.Departments
+                                            .Where(x =>
+                                                    x.Name == p0 &&
+                                                    x.Name == p1 ||
+                                                    x.Name == p2 ||
+                                                    x.Name == p3 &&
+                                                    x.Name == p4 ||
+                                                    x.Name == p5 &&
+                                                    x.Name == p6 ||
+                                                    x.Name == p7 ||
+                                                    x.Name == p8 &&
+                                                    x.Name == p9 ||
+                                                    x.Name == p10 ||
+                                                    true == falseParam
+                                        ).Select(x => new DepartmentTempTableDto()
+                                        {
+                                            Name = x.Name
+                                        });
+
+                var temp = context.WithTempTableExpression<AdventureWorksCodeFirst>(departmentQuery, false).TempDepartments;
+                var result = temp.ToList();
+                Assert.True(!result.Any());
             }
         }
     }
