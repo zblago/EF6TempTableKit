@@ -107,9 +107,16 @@ namespace EF6TempTableKit.SqlCommands
             return this;
         }
 
-        public IExecute AddInsertQuery(IReadOnlyDictionary<string, int> fieldsWithPositions, string sqlSelectQuery)
+        public IExecute AddInsertQuery(IReadOnlyDictionary<string, int> fieldsWithTypes, string sqlSelectQuery)
         {
-            BuildInsertQuery(fieldsWithPositions, sqlSelectQuery, 0);
+            BuildInsertQuery(fieldsWithTypes, sqlSelectQuery, 0);
+
+            return this;
+        }
+
+        public IExecute AddInsertQuery(IReadOnlyDictionary<string, string> fieldsWithTypes, IEnumerable<ITempTable> list) 
+        {
+            BuildInsertQuery(fieldsWithTypes, list, 0);
 
             return this;
         }
@@ -123,6 +130,11 @@ namespace EF6TempTableKit.SqlCommands
 
             _queryBuilder.AppendLine("END");
 
+            return this;
+        }
+
+        public IExecute AddInsertQueryIfCreated(IReadOnlyDictionary<string, string> fieldsWithPositions, IEnumerable<ITempTable> list) 
+        {
             return this;
         }
 
@@ -156,11 +168,11 @@ namespace EF6TempTableKit.SqlCommands
             _queryBuilder.AppendLine($"{repeatedTabs})");
         }
 
-        private void BuildInsertQuery(IReadOnlyDictionary<string, int> fieldsWithPositions, string sqlSelectQuery, byte tabsCount)
+        private void BuildInsertQuery(IReadOnlyDictionary<string, int> fieldsWithTypes, string sqlSelectQuery, byte tabsCount)
         {
             var repeatedTabs = new string('\t', tabsCount);
 
-            var fieldsWithPositionsSorted = fieldsWithPositions.OrderBy(f => f.Value);
+            var fieldsWithPositionsSorted = fieldsWithTypes.OrderBy(f => f.Value);
             var isFirstColumnGreaterThanZero = fieldsWithPositionsSorted.First().Value > 0; 
 
             var selectedColumns = string.Join(", ", fieldsWithPositionsSorted.Select(f => f.Key).ToArray());
@@ -171,6 +183,22 @@ namespace EF6TempTableKit.SqlCommands
 
             _queryBuilder.AppendLine($"{repeatedTabs}SELECT { selectedColumnsInTopSelectClause } FROM");
             _queryBuilder.AppendLine($"{repeatedTabs}({sqlSelectQuery}) AS alias{_tempTableName.Replace("#", "")} ({ selectedColumnsInSubSelectClause })");
+        }
+
+        private void BuildInsertQuery(IReadOnlyDictionary<string, string> fieldsWithTypes, IEnumerable<ITempTable> list, byte tabsCount)
+        {
+            var repeatedTabs = new string('\t', tabsCount);
+
+            var columns = list.First().GetType().GetProperties().Select((x, i) => new { Key = i, Value = x.Name });
+            var selectedColumns = string.Join(", ", columns.Select(x => x.Value).ToArray());
+            _queryBuilder.AppendLine($"{repeatedTabs}INSERT INTO {_tempTableName}({ selectedColumns }) ");
+
+            _queryBuilder.AppendLine(
+                string.Join(",", list
+                    .ToList()
+                    .Select(x => 
+                    $"VALUES({string.Join(",", x.GetType().GetProperties().OrderBy(o => columns.Select(c => c.Value).ToList().IndexOf(o.Name)).Select(property => property.GetValue(x, null)))})\n")
+                    .ToArray()));
         }
 
         #endregion

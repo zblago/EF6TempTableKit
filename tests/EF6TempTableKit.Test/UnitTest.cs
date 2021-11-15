@@ -88,6 +88,45 @@ namespace EF6TempTableKit.Test
             }
         }
 
+        [Fact(DisplayName = "Load data from memory")]
+        public void LoadDataFromMemory()
+        {
+            var carList = new List<string>
+            {
+                { "Ford"},
+                { "Mercedes"},
+                { "BMW"}
+            };
+
+            using (var context = new AdventureWorksCodeFirst())
+            {
+                var tempCarList = carList.Select(a => new AddressTempTableDto { Id = 1, Name = a });
+
+                context.WithTempTableExpression<AdventureWorksCodeFirst>(tempCarList.ToList());
+
+                var tempAddressQuery = context.Addresses.Select(a => new AddressTempTableDto
+                {
+                    Id = a.AddressID,
+                    Name = a.AddressLine1
+                });
+
+                var addressList = context
+                        .WithTempTableExpression<AdventureWorksCodeFirst>(tempAddressQuery)
+                        .TempAddresses.Join(context.Addresses,
+                        (a) => a.Id,
+                        (aa) => aa.AddressID,
+                        (at, a) => new { Id = at.Id }).ToList();
+                Assert.NotEmpty(addressList);
+
+                var shipToAddress = context
+                        .TempAddresses.Join(context.SalesOrderHeaders, //WithTempTableExpression() not needed; temp table is already created.
+                            (a) => a.Id,
+                            (soh) => soh.ShipToAddressID,
+                            (soh, a) => new { Id = soh.Id }).ToList();
+                Assert.NotEmpty(shipToAddress);
+            }
+        }
+
         [Fact(DisplayName = "Don't reuse temp table (reuseExisting = false")]
         public void DonReuseSameTempTable()
         {
