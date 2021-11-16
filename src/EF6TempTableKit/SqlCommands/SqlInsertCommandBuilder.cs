@@ -1,4 +1,6 @@
-﻿using EF6TempTableKit.SqlCommands.Interfaces;
+﻿using EF6TempTableKit.Extensions;
+using EF6TempTableKit.SqlCommands.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -133,8 +135,15 @@ namespace EF6TempTableKit.SqlCommands
             return this;
         }
 
-        public IExecute AddInsertQueryIfCreated(IReadOnlyDictionary<string, string> fieldsWithPositions, IEnumerable<ITempTable> list) 
+        public IExecute AddInsertQueryIfCreated(IReadOnlyDictionary<string, string> fieldsWithTypes, IEnumerable<ITempTable> list) 
         {
+            _queryBuilder.AppendLine($"IF @{_tempTableExist} = 1");
+            _queryBuilder.AppendLine($"BEGIN");
+
+            BuildInsertQuery(fieldsWithTypes, list, 2);
+
+            _queryBuilder.AppendLine("END");
+
             return this;
         }
 
@@ -193,12 +202,18 @@ namespace EF6TempTableKit.SqlCommands
             var selectedColumns = string.Join(", ", columns.Select(x => x.Value).ToArray());
             _queryBuilder.AppendLine($"{repeatedTabs}INSERT INTO {_tempTableName}({ selectedColumns }) ");
 
-            _queryBuilder.AppendLine(
+            _queryBuilder.AppendLine($@"VALUES {Environment.NewLine}{
                 string.Join(",", list
                     .ToList()
-                    .Select(x => 
-                    $"VALUES({string.Join(",", x.GetType().GetProperties().OrderBy(o => columns.Select(c => c.Value).ToList().IndexOf(o.Name)).Select(property => property.GetValue(x, null)))})\n")
-                    .ToArray()));
+                    .Select(x =>
+                    $@"({
+                        string.Join(",",
+                        x.GetType().GetProperties()
+                        .OrderBy(o => columns.Select(c => c.Value)
+                        .ToList().IndexOf(o.Name))
+                        .Select(property => property.GetSqlValue(x)))
+                        }){Environment.NewLine}")
+                    .ToArray()) }");
         }
 
         #endregion

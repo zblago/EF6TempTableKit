@@ -55,10 +55,14 @@
     <Compile Include="DbContext\IDbContextWithTempTable.cs" />
     <Compile Include="DbContext\EF6TempTableKitQueryInterceptor.cs" />
     <Compile Include="DbContext\TempTableContainer.cs" />
+    <Compile Include="Enums\QueryType.cs" />
+    <Compile Include="Exceptions\EF6TempTableGenericException.cs" />
     <Compile Include="Extensions\DbContextExtensions.cs" />
     <Compile Include="Extensions\HashSetExtensions.cs" />
     <Compile Include="Extensions\IQueryableExtensions.cs" />
+    <Compile Include="Extensions\PropertyExtensions.cs" />
     <Compile Include="Extensions\ObjectQueryExtensions.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="ITempTable.cs" />
     <Compile Include="Query.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
