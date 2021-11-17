@@ -12,7 +12,7 @@ namespace EF6TempTableKit.Attributes
 
         public FuncFormatAttribute(Type type)
         {
-            if (!type.GetInterfaces().Any(x => x == typeof(ICustomFuncFormatter<,>)))
+            if (!type.GetInterfaces().Any(x => x.GetGenericTypeDefinition() == typeof(ICustomFuncFormatter<,>)))
             {
                 throw new EF6TempTableKitGenericException($"EF6TempTableKit: Only { nameof(ICustomFuncFormatter<object, object>) } is allowed.");
             }
