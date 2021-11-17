@@ -200,13 +200,7 @@ namespace EF6TempTableKit.SqlCommands
             var repeatedTabs = new string('\t', tabsCount);
 
             var columns = list.First().GetType().GetProperties().Select((x, i) => new { Key = i, Value = x.Name });
-            var customStringFormatters = list.First().GetType()
-                .GetProperties()
-                .Select(x => new
-                {
-                    x.Name,
-                    StringFormatAttribute = x.GetCustomAttributes(typeof(StringFormatAttribute), true).Union(x.GetCustomAttributes(typeof(FuncFormatAttribute), true).ToList())
-                }).ToDictionary(x => x.Name, x => (Attribute[])x.StringFormatAttribute);
+            var customFormatters = GetCustomFormatters(list);
 
             var selectedColumns = string.Join(", ", columns.Select(x => x.Value).ToArray());
             _queryBuilder.AppendLine($"{repeatedTabs}INSERT INTO {_tempTableName}({ selectedColumns }) ");
@@ -220,9 +214,35 @@ namespace EF6TempTableKit.SqlCommands
                         x.GetType().GetProperties()
                         .OrderBy(o => columns.Select(c => c.Value)
                         .ToList().IndexOf(o.Name))
-                        .Select(property => property.GetSqlValue(x, customStringFormatters)))
+                        .Select(property => property.GetSqlValue(x, customFormatters)))
                         }){Environment.NewLine}")
                     .ToArray()) }");
+        }
+
+        private static Dictionary<string, Attribute[]> GetCustomFormatters(IEnumerable<ITempTable> list)
+        {
+            var customStringFormatters = list.First().GetType()
+                .GetProperties()
+                .Select(x => new
+                {
+                    x.Name,
+                    StringFormatAttribute = (Attribute[])x.GetCustomAttributes(typeof(StringFormatAttribute), true)
+                });
+            var customFuncFormatters = list.First().GetType()
+                .GetProperties()
+                .Select(x => new
+                {
+                    x.Name,
+                    StringFormatAttribute = (Attribute[])x.GetCustomAttributes(typeof(FuncFormatAttribute), true)
+                });
+
+            var allCustomFormatters = customStringFormatters
+                .Union(customFuncFormatters)
+                .GroupBy(x => x.Name)
+                .Select(x => new { Name = x.Key, Attributes = x.SelectMany(xx => xx.StringFormatAttribute).ToArray() })
+                .ToDictionary(x => x.Name, x => x.Attributes);
+
+            return allCustomFormatters;
         }
 
         #endregion

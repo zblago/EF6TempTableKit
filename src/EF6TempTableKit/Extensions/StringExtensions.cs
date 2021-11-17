@@ -2,7 +2,7 @@
 {
     public static class StringExtensions
     {
-        public static object WrapWithSingleQuotes(this object text) 
+        public static object WrapWithSingleQuotes(this string text) 
         {
             return $"'{text}'";
         }
