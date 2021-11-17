@@ -1,4 +1,5 @@
-﻿using EF6TempTableKit.Extensions;
+﻿using EF6TempTableKit.Attributes;
+using EF6TempTableKit.Extensions;
 using EF6TempTableKit.SqlCommands.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -199,6 +200,14 @@ namespace EF6TempTableKit.SqlCommands
             var repeatedTabs = new string('\t', tabsCount);
 
             var columns = list.First().GetType().GetProperties().Select((x, i) => new { Key = i, Value = x.Name });
+            var customStringFormatters = list.First().GetType()
+                .GetProperties()
+                .Select(x => new
+                {
+                    x.Name,
+                    StringFormatAttribute = x.GetCustomAttributes(typeof(StringFormatAttribute), true).Union(x.GetCustomAttributes(typeof(FuncFormatAttribute), true).ToList())
+                }).ToDictionary(x => x.Name, x => (Attribute[])x.StringFormatAttribute);
+
             var selectedColumns = string.Join(", ", columns.Select(x => x.Value).ToArray());
             _queryBuilder.AppendLine($"{repeatedTabs}INSERT INTO {_tempTableName}({ selectedColumns }) ");
 
@@ -211,7 +220,7 @@ namespace EF6TempTableKit.SqlCommands
                         x.GetType().GetProperties()
                         .OrderBy(o => columns.Select(c => c.Value)
                         .ToList().IndexOf(o.Name))
-                        .Select(property => property.GetSqlValue(x)))
+                        .Select(property => property.GetSqlValue(x, customStringFormatters)))
                         }){Environment.NewLine}")
                     .ToArray()) }");
         }

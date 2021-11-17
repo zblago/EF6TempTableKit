@@ -1,69 +1,60 @@
 ﻿using EF6TempTableKit.Exceptions;
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 
 namespace EF6TempTableKit.Extensions
 {
     internal static class PropertyExtensions
     {
-        public static object GetSqlValue(this PropertyInfo prop, object obj)
+        public static object GetSqlValue(this PropertyInfo prop, object obj, IDictionary<string, Attribute[]> customFormatter)
         {
-            var value = prop.GetValue(obj, null);
+            var hasStringCustomFormatter = customFormatter[prop.Name]?.Length > 0;
+            var hasFuncCustomFormatter = customFormatter[prop.Name]?.Length > 0;
 
-            var intType = typeof(int);
+
+            var value = prop.GetValue(obj, null);
 
             if (prop.PropertyType == typeof(bool))
             {
-            }
-            else if (prop.PropertyType == typeof(byte))
-            {
-            }
-            else if (prop.PropertyType == typeof(sbyte))
-            {
-            }
-            else if (prop.PropertyType == typeof(char))
-            {
-            }
-            else if (prop.PropertyType == typeof(decimal))
-            {
-            }
-            else if (prop.PropertyType == typeof(double))
-            {
-            }
-            else if (prop.PropertyType == typeof(float))
-            {
-            }
-            else if (prop.PropertyType == typeof(int))
-            {
-            }
-            else if (prop.PropertyType == typeof(uint))
-            {
-            }
-            else if (prop.PropertyType == typeof(long))
-            {
-            }
-            else if (prop.PropertyType == typeof(ulong))
-            {
-            }
-            else if (prop.PropertyType == typeof(short))
-            {
-            }
-            else if (prop.PropertyType == typeof(ushort))
-            {
+                value = (bool)value ? 1 : 0;
             }
             else if (prop.PropertyType == typeof(string))
             {
-                value = value.SurroundWithSingleQuotes();
+                value = value.WrapWithSingleQuotes();
             }
             else if (prop.PropertyType == typeof(DateTime))
             {
-            }
-            else
-            {
-                throw new EF6TempTableGenericException("EF6TempTableKit: Not supported data type.");
+                value = ((DateTime)value).ToString("yyyy-MM-dd HH:mm:ss.fff").WrapWithSingleQuotes();
             }
 
             return value;
+        }
+
+        private static object DefaultFormatValue(PropertyInfo prop, object obj) 
+        {
+            var value = prop.GetValue(obj, null);
+
+            if (prop.PropertyType == typeof(bool))
+            {
+                value = (bool)value ? 1 : 0;
+            }
+            else if (prop.PropertyType == typeof(string))
+            {
+                value = value.WrapWithSingleQuotes();
+            }
+            else if (prop.PropertyType == typeof(DateTime))
+            {
+                value = ((DateTime)value).ToString("yyyy-MM-dd HH:mm:ss.fff").WrapWithSingleQuotes();
+            }
+
+            return value;
+
+        }
+
+        private static string CustomStringFormatValue(PropertyInfo prop, object obj) 
+        {
+            return null;
         }
     }
 }

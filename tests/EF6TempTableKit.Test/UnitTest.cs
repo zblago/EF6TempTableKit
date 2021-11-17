@@ -1,6 +1,7 @@
 ﻿using EF6TempTableKit.Extensions;
 using EF6TempTableKit.Test.CodeFirst;
 using EF6TempTableKit.Test.TempTables;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;
@@ -100,7 +101,7 @@ namespace EF6TempTableKit.Test
 
             using (var context = new AdventureWorksCodeFirst())
             {
-                var tempCarList = carList.Select(a => new AddressTempTableDto { Id = 1, Name = a });
+                var tempCarList = carList.Select(a => new AddressTempTableDto { Id = 1, Name = a, DateOfBirth = DateTime.Now, IsActive = true });
 
                 context.WithTempTableExpression<AdventureWorksCodeFirst>(tempCarList.ToList());
 
