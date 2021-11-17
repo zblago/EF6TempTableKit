@@ -1,5 +1,6 @@
 ﻿using EF6TempTableKit.Attributes;
 using EF6TempTableKit.Exceptions;
+using EF6TempTableKit.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,26 +16,34 @@ namespace EF6TempTableKit.Extensions
             var hasFuncCustomFormatter = customFormatter[prop.Name]?.Length > 0 && customFormatter[prop.Name].ToList().Any(x => x.GetType() == typeof(FuncFormatAttribute));
 
             if (hasStringCustomFormatter && hasFuncCustomFormatter)
-                throw new EF6TempTableGenericException("EF6TempTableKit: Field can't have associated both StringFormatAttribute and FuncFormatAttribute custom format attributes.");
+                throw new EF6TempTableKitGenericException("EF6TempTableKit: Field can't have associated both StringFormatAttribute and FuncFormatAttribute custom format attributes.");
+
+            var value = prop.GetValue(obj, null);
 
             if (hasStringCustomFormatter)
             {
-                return null;
+                var format = ((StringFormatAttribute)customFormatter[prop.Name].First()).Format;
+                var formatProvider = ((StringFormatAttribute)customFormatter[prop.Name].First()).FormatProvider;
+
+                return formatProvider == null 
+                    ? CustomStringFormatValue(value, format) 
+                    : CustomStringFormatValue(formatProvider, value, format);
             }
             else if (hasFuncCustomFormatter)
             {
+                var customFuncFormatter = Activator.CreateInstance(((FuncFormatAttribute)customFormatter[prop.Name].First()).Type);
+                //var method = customFuncFormatter.("MyMethodTakingT");
+
                 return null;
             }
             else
             {
-                return DefaultFormatValue(prop, obj);
+                return DefaultFormatValue(value, prop);
             }
         }
 
-        private static object DefaultFormatValue(PropertyInfo prop, object obj) 
+        private static object DefaultFormatValue(object value, PropertyInfo prop) 
         {
-            var value = prop.GetValue(obj, null);
-
             if (prop.PropertyType == typeof(bool))
             {
                 value = (bool)value ? 1 : 0;
@@ -51,9 +60,14 @@ namespace EF6TempTableKit.Extensions
             return value;
         }
 
-        private static string CustomStringFormatValue(PropertyInfo prop, object obj) 
+        private static string CustomStringFormatValue(object value, string format)
         {
-            return null;
+            return string.Format(format, value);
+        }
+
+        private static string CustomStringFormatValue(IFormatProvider provider, object value, string format)
+        {
+            return string.Format(provider, format, value);
         }
     }
 }

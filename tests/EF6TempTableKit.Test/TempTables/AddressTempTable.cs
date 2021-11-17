@@ -1,4 +1,5 @@
 ﻿using EF6TempTableKit.Attributes;
+using EF6TempTableKit.Test.CustomFormatter;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -7,11 +8,6 @@ namespace EF6TempTableKit.Test.TempTables
     [Table("#tempAddress")]
     public class AddressTempTable : ITempTable
     {
-        public string retStr()
-        {
-            return "";
-        }
-
         [ClusteredIndex]
         [NonClusteredIndex("first")]
         [NonClusteredIndex("second")]
@@ -21,6 +17,7 @@ namespace EF6TempTableKit.Test.TempTables
         [NonClusteredIndex("third")]
         [NonClusteredIndex("second")]
         [TempFieldTypeAttribute("varchar(200)")]
+        [FuncFormatAttribute(typeof(StringCustomFormatter))]
         public string Name { get; set; }
 
 
@@ -37,11 +34,5 @@ namespace EF6TempTableKit.Test.TempTables
     [NotMapped]
     public class AddressTempTableDto : AddressTempTable
     {
-    }
-
-
-    public class T
-    {
-        public T(Func<object> t) { }
     }
 }

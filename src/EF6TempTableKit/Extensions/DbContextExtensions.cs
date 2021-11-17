@@ -1,10 +1,11 @@
-﻿using System;
+﻿
 using System.Linq;
 using EF6TempTableKit.DbContext;
 using EF6TempTableKit.SqlCommands;
 using EF6TempTableKit.Utilities;
 using System.Collections.Generic;
 using EF6TempTableKit.Exceptions;
+using EF6TempTableKit.Interfaces;
 
 namespace EF6TempTableKit.Extensions
 {
@@ -120,12 +121,12 @@ namespace EF6TempTableKit.Extensions
         {
             if (contextWithTempTable.TempTableContainer == null)
             {
-                throw new EF6TempTableGenericException($"EF6TempTableKit: Object of type TempTableContainer is not instantiated. Please, make an instance in your DbContext.");
+                throw new EF6TempTableKitGenericException($"EF6TempTableKit: Object of type TempTableContainer is not instantiated. Please, make an instance in your DbContext.");
             }
 
             if (contextWithTempTable.TempTableContainer.TempSqlQueriesList.GroupBy(x => x.Value.QueryType).Any(x => x.Count(i => i.Key == tempTableName) > 1))
             {
-                throw new EF6TempTableGenericException($"EF6TempTableKit: Can't override query for temp table {tempTableName} as it is already attached to the context.");
+                throw new EF6TempTableKitGenericException($"EF6TempTableKit: Can't override query for temp table {tempTableName} as it is already attached to the context.");
             }
         }
 

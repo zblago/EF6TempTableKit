@@ -1,29 +1,23 @@
-﻿using System;
-using System.Linq.Expressions;
+﻿using EF6TempTableKit.Exceptions;
+using EF6TempTableKit.Interfaces;
+using System;
+using System.Linq;
 
 namespace EF6TempTableKit.Attributes
 {
     [AttributeUsage(AttributeTargets.Property)]
     public class FuncFormatAttribute : Attribute
     {
-        public FuncPointer Func { get; private set; }
+        public Type Type { get; private set;}
 
-        public string FieldType { get; private set; }
-
-        public FuncFormatAttribute(string s)
+        public FuncFormatAttribute(Type type)
         {
-            //Func = func;
-        }
-    }
+            if (!type.GetInterfaces().Any(x => x == typeof(ICustomFuncFormatter<,>)))
+            {
+                throw new EF6TempTableKitGenericException($"EF6TempTableKit: Only { nameof(ICustomFuncFormatter<object, object>) } is allowed.");
+            }
 
-
-    public class FuncPointer 
-    {
-        public Func<string> Formatter { get; private set; }
-
-        public FuncPointer() 
-        {
-            //Formatter = formatter;
+            this.Type = type;
         }
     }
 }
