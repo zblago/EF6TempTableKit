@@ -12,6 +12,7 @@ namespace EF6TempTableKit.Test.TempTables
         [NonClusteredIndex("first")]
         [NonClusteredIndex("second")]
         [TempFieldTypeAttribute("int")]
+        [FuncFormatAttribute(typeof(StringCustomFormatter))]
         public int Id { get; set; }
 
         [NonClusteredIndex("third")]
@@ -27,7 +28,6 @@ namespace EF6TempTableKit.Test.TempTables
         public DateTime DateOfBirth { get; set; }
 
         [TempFieldTypeAttribute("bit")]
-        [StringFormat("sss")]
         public bool IsActive { get; set; }
     }
 

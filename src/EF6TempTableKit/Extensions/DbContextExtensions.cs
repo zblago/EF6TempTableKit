@@ -98,7 +98,7 @@ namespace EF6TempTableKit.Extensions
                     .Create(fieldsWithTypes)
                     .AddClusteredIndex(clusteredIndexesWithFields)
                     .AddNonClusteredIndexes(nonClusteredIndexesWithFields)
-                    .AddInsertQuery(fieldsWithTypes, list)
+                    .AddInsertQuery(list)
                     .Execute();
             }
             else
@@ -107,7 +107,7 @@ namespace EF6TempTableKit.Extensions
                     .CreateIfNotExists(fieldsWithTypes)
                     .AddClusteredIndex(clusteredIndexesWithFields)
                     .AddNonClusteredIndexes(nonClusteredIndexesWithFields)
-                    .AddInsertQueryIfCreated(fieldsWithTypes, list)
+                    .AddInsertQueryIfCreated(list)
                     .Execute();
             }
 

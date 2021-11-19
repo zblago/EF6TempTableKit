@@ -65,6 +65,7 @@
     <Compile Include="Extensions\PropertyExtensions.cs" />
     <Compile Include="Extensions\ObjectQueryExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="FormatterProperties.cs" />
     <Compile Include="Interfaces\ICustomFuncFormatter.cs" />
     <Compile Include="Interfaces\ITempTable.cs" />
     <Compile Include="Query.cs" />

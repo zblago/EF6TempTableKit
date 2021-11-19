@@ -36,9 +36,39 @@ namespace EF6TempTableKit.Extensions
                 PropertyInfo info  = instance.GetType().GetProperty(nameof(ICustomFuncFormatter<object, object>.Formatter));
                 object yourField = info.GetValue(instance);
                 MethodInfo method = yourField.GetType().GetMethod(nameof(MethodBase.Invoke));
-                var x1 = method.Invoke(yourField, new object []{ "ideš" });
 
-                return null;
+                return method.Invoke(yourField, new object []{ value });
+            }
+            else
+            {
+                return DefaultFormatValue(value, prop);
+            }
+        }
+
+        public static object GetSqlValue(this PropertyInfo prop, object obj, IDictionary<string, FormatterProperties[]> customFormatter)
+        {
+            var hasStringCustomFormatter = customFormatter[prop.Name]?.Length > 0 && customFormatter[prop.Name].ToList().Any(x => x.StringFormatAttribute != null);
+            var hasFuncCustomFormatter = customFormatter[prop.Name]?.Length > 0 && customFormatter[prop.Name].ToList().Any(x => x.MethodInfo != null && x.Field != null);
+
+            if (hasStringCustomFormatter && hasFuncCustomFormatter)
+                throw new EF6TempTableKitGenericException("EF6TempTableKit: Field can't have associated both StringFormatAttribute and FuncFormatAttribute custom format attributes.");
+
+            var value = prop.GetValue(obj, null);
+
+            if (hasStringCustomFormatter)
+            {
+                var format = customFormatter[prop.Name].First().StringFormatAttribute.Format;
+                var formatProvider = customFormatter[prop.Name].First().StringFormatAttribute.FormatProvider;
+
+                return formatProvider == null
+                    ? CustomStringFormatValue(value, format)
+                    : CustomStringFormatValue(formatProvider, value, format);
+            }
+            else if (hasFuncCustomFormatter)
+            {
+                var funcDetails = customFormatter[prop.Name].First();
+
+                return funcDetails.MethodInfo.Invoke(funcDetails.Field, new object[] { value });
             }
             else
             {

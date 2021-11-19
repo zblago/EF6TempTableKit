@@ -1,9 +1,11 @@
 ﻿using EF6TempTableKit.Attributes;
 using EF6TempTableKit.Extensions;
+using EF6TempTableKit.Interfaces;
 using EF6TempTableKit.SqlCommands.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 
 namespace EF6TempTableKit.SqlCommands
@@ -117,9 +119,9 @@ namespace EF6TempTableKit.SqlCommands
             return this;
         }
 
-        public IExecute AddInsertQuery(IReadOnlyDictionary<string, string> fieldsWithTypes, IEnumerable<ITempTable> list) 
+        public IExecute AddInsertQuery(IEnumerable<ITempTable> list) 
         {
-            BuildInsertQuery(fieldsWithTypes, list, 0);
+            BuildInsertQuery(list, 0);
 
             return this;
         }
@@ -136,12 +138,12 @@ namespace EF6TempTableKit.SqlCommands
             return this;
         }
 
-        public IExecute AddInsertQueryIfCreated(IReadOnlyDictionary<string, string> fieldsWithTypes, IEnumerable<ITempTable> list) 
+        public IExecute AddInsertQueryIfCreated(IEnumerable<ITempTable> list) 
         {
             _queryBuilder.AppendLine($"IF @{_tempTableExist} = 1");
             _queryBuilder.AppendLine($"BEGIN");
 
-            BuildInsertQuery(fieldsWithTypes, list, 2);
+            BuildInsertQuery(list, 2);
 
             _queryBuilder.AppendLine("END");
 
@@ -195,12 +197,12 @@ namespace EF6TempTableKit.SqlCommands
             _queryBuilder.AppendLine($"{repeatedTabs}({sqlSelectQuery}) AS alias{_tempTableName.Replace("#", "")} ({ selectedColumnsInSubSelectClause })");
         }
 
-        private void BuildInsertQuery(IReadOnlyDictionary<string, string> fieldsWithTypes, IEnumerable<ITempTable> list, byte tabsCount)
+        private void BuildInsertQuery(IEnumerable<ITempTable> list, byte tabsCount)
         {
             var repeatedTabs = new string('\t', tabsCount);
 
             var columns = list.First().GetType().GetProperties().Select((x, i) => new { Key = i, Value = x.Name });
-            var customFormatters = GetCustomFormatters(list);
+            var customFormatters = GetCustomFormatters(list.First());
 
             var selectedColumns = string.Join(", ", columns.Select(x => x.Value).ToArray());
             _queryBuilder.AppendLine($"{repeatedTabs}INSERT INTO {_tempTableName}({ selectedColumns }) ");
@@ -219,30 +221,67 @@ namespace EF6TempTableKit.SqlCommands
                     .ToArray()) }");
         }
 
-        private static Dictionary<string, Attribute[]> GetCustomFormatters(IEnumerable<ITempTable> list)
+        private static IDictionary<string, FormatterProperties[]> GetCustomFormatters(ITempTable item)
         {
-            var customStringFormatters = list.First().GetType()
-                .GetProperties()
-                .Select(x => new
-                {
-                    x.Name,
-                    StringFormatAttribute = (Attribute[])x.GetCustomAttributes(typeof(StringFormatAttribute), true)
-                });
-            var customFuncFormatters = list.First().GetType()
-                .GetProperties()
-                .Select(x => new
-                {
-                    x.Name,
-                    StringFormatAttribute = (Attribute[])x.GetCustomAttributes(typeof(FuncFormatAttribute), true)
+            var firstItemProperties = item.GetType().GetProperties();
+
+            var defaultFormmatter = firstItemProperties
+                .Where(x => !x.GetCustomAttributes(typeof(StringFormatAttribute), true).Any()
+                    && !x.GetCustomAttributes(typeof(FuncFormatAttribute), true).Any())
+                .Select(x => new FormatterInfo
+                { 
+                    Name = x.Name
                 });
 
-            var allCustomFormatters = customStringFormatters
+            var customStringFormatters = firstItemProperties
+                .Where(x => x.GetCustomAttributes(typeof(StringFormatAttribute), true).Any())
+                .Select(x => new FormatterInfo
+                {
+                    Name = x.Name,
+                    FormatterProperties = new FormatterProperties[] { 
+                        new FormatterProperties 
+                        { 
+                            StringFormatAttribute = (StringFormatAttribute)x.GetCustomAttribute(typeof(StringFormatAttribute), true) 
+                        }
+                    }
+                });
+
+            var customFuncFormatters = firstItemProperties
+                .Where(x => x.GetCustomAttributes(typeof(FuncFormatAttribute), true).Any())
+                .Select(x =>
+                {
+                    Type storeType = ((FuncFormatAttribute)x.GetCustomAttribute(typeof(FuncFormatAttribute), true))?.Type;
+                    var instance = Activator.CreateInstance(storeType);
+                    PropertyInfo info = instance.GetType().GetProperty(nameof(ICustomFuncFormatter<object, object>.Formatter));
+                    object field = info.GetValue(instance);
+                    MethodInfo method = field.GetType().GetMethod(nameof(MethodBase.Invoke));
+
+                    return new FormatterInfo
+                    {
+                        Name = x.Name,
+                        FormatterProperties = new FormatterProperties[]
+                        {
+                            new FormatterProperties
+                            {
+                                Field = field,
+                                MethodInfo = method
+                            }
+                        }
+                    };
+                });
+
+            return defaultFormmatter
+                .Union(customStringFormatters)
                 .Union(customFuncFormatters)
                 .GroupBy(x => x.Name)
-                .Select(x => new { Name = x.Key, Attributes = x.SelectMany(xx => xx.StringFormatAttribute).ToArray() })
-                .ToDictionary(x => x.Name, x => x.Attributes);
-
-            return allCustomFormatters;
+                .Select(x => new FormatterInfo
+                {
+                    Name = x.Key,
+                    FormatterProperties = x.Any(fp => fp.FormatterProperties != null && fp.FormatterProperties.Length > 0) 
+                        ? x.SelectMany(xx => xx.FormatterProperties).ToArray()
+                        : null
+                })
+                .ToDictionary(x => x.Name, x => x.FormatterProperties);
         }
 
         #endregion

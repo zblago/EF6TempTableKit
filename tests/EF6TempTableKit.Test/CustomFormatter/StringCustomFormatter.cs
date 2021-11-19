@@ -5,6 +5,6 @@ namespace EF6TempTableKit.Test.CustomFormatter
 {
     public class StringCustomFormatter : ICustomFuncFormatter<string, string>
     {
-        public Func<string, string> Formatter => (x) => x + "kita";
+        public Func<string, string> Formatter => (x) => "'" + x + "1" + "'";
     }
 }
