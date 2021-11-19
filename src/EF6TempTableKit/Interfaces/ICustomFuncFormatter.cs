@@ -2,7 +2,7 @@
 
 namespace EF6TempTableKit.Interfaces
 {
-    interface ICustomFuncFormatter<in T, out Y>
+    interface ICustomFuncFormatter<T, Y>
     {
         Func<T, Y> Formatter { get; }
     }

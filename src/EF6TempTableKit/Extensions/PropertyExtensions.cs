@@ -31,8 +31,12 @@ namespace EF6TempTableKit.Extensions
             }
             else if (hasFuncCustomFormatter)
             {
-                var customFuncFormatter = Activator.CreateInstance(((FuncFormatAttribute)customFormatter[prop.Name].First()).Type);
-                //var method = customFuncFormatter.("MyMethodTakingT");
+                Type storeType = ((FuncFormatAttribute)customFormatter[prop.Name].First()).Type;
+                var instance = Activator.CreateInstance(storeType);
+                PropertyInfo info  = instance.GetType().GetProperty(nameof(ICustomFuncFormatter<object, object>.Formatter));
+                object yourField = info.GetValue(instance);
+                MethodInfo method = yourField.GetType().GetMethod(nameof(MethodBase.Invoke));
+                var x1 = method.Invoke(yourField, new object []{ "ideš" });
 
                 return null;
             }
