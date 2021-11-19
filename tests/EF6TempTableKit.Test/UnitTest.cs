@@ -101,9 +101,9 @@ namespace EF6TempTableKit.Test
 
             using (var context = new AdventureWorksCodeFirst())
             {
-                var tempCarList = carList.Select(a => new AddressTempTableDto { Id = 1, Name = a, DateOfBirth = DateTime.Now, IsActive = true });
+                //var tempCarList = carList.Select(a => new AddressTempTableDto { Id = 1, Name = a, DateOfBirth = DateTime.Now, IsActive = true });
 
-                context.WithTempTableExpression<AdventureWorksCodeFirst>(tempCarList.ToList());
+                //context.WithTempTableExpression<AdventureWorksCodeFirst>(tempCarList.ToList());
 
                 var tempAddressQuery = context.Addresses.Select(a => new AddressTempTableDto
                 {

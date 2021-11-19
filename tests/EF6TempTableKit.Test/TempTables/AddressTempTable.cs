@@ -12,23 +12,23 @@ namespace EF6TempTableKit.Test.TempTables
         [NonClusteredIndex("first")]
         [NonClusteredIndex("second")]
         [TempFieldTypeAttribute("int")]
-        [FuncFormatAttribute(typeof(StringCustomFormatter))]
+        //[FuncFormatAttribute(typeof(StringCustomFormatter))]
         public int Id { get; set; }
 
         [NonClusteredIndex("third")]
         [NonClusteredIndex("second")]
         [TempFieldTypeAttribute("varchar(200)")]
-        [FuncFormatAttribute(typeof(StringCustomFormatter))]
+        //[FuncFormatAttribute(typeof(StringCustomFormatter))]
         public string Name { get; set; }
 
 
-        [NonClusteredIndex("third")]
-        [NonClusteredIndex("second")]
-        [TempFieldTypeAttribute("datetime")]
-        public DateTime DateOfBirth { get; set; }
+        //[NonClusteredIndex("third")]
+        //[NonClusteredIndex("second")]
+        //[TempFieldTypeAttribute("datetime")]
+        //public DateTime DateOfBirth { get; set; }
 
-        [TempFieldTypeAttribute("bit")]
-        public bool IsActive { get; set; }
+        //[TempFieldTypeAttribute("bit")]
+        //public bool IsActive { get; set; }
     }
 
     [NotMapped]
