@@ -55,5 +55,34 @@ namespace EF6TempTableKit.Test
                 }
             });
         }
+
+        [Fact]
+        public void LoadFromMemoryAndDatabase()
+        {
+            using (var context = new AdventureWorksCodeFirst())
+            {
+                var maxId = context.Addresses.Max(x => x.AddressID);
+                var addressMemory = _addressList.Select((x, i) => new AddressTempTableTwoDataSourcesDto
+                {
+                    Id = maxId + i,
+                    Name = x
+                });
+
+                var tempAddressQuery = context.Addresses.Select(a => new AddressTempTableTwoDataSourcesDto { 
+                    Id = a.AddressID, 
+                    Name = a.AddressLine1 
+                });
+
+                var data = context
+                        .WithTempTableExpression<AdventureWorksCodeFirst>(addressMemory)
+                        .WithTempTableExpression<AdventureWorksCodeFirst>(tempAddressQuery, true)
+                        .TempAddressesTwoDataSources.Join(context.Addresses,
+                        (a) => a.Id,
+                        (aa) => aa.AddressID,
+                        (at, a) => new { Id = at.Id }).ToList();
+
+                Assert.NotEmpty(data);
+            }
+        }
     }
 }

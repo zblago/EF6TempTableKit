@@ -111,6 +111,7 @@
     <Compile Include="DbContextConfiguration\CustomDbContextConfiguration.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="QueryModel.cs" />
+    <Compile Include="TempTables\AddressTempTableMultipleId.cs" />
     <Compile Include="TempTables\AddressTempTableWrongAttribute.cs" />
     <Compile Include="TempTables\Dependencies\OfficeTypeTempTable.cs" />
     <Compile Include="TempTables\Dependencies\DepartmentTempTable.cs" />
@@ -120,7 +121,7 @@
     <Compile Include="TempTables\Dependencies\RoomTempTable.cs" />
     <Compile Include="TempTables\Dependencies\ChairTempTable.cs" />
     <Compile Include="TempTables\Dependencies\OfficeTempTable.cs" />
-    <Compile Include="TempTables\AddressTempTableMultipleId.cs" />
+    <Compile Include="TempTables\AddressTempTableTwoDataSourcesTempTable.cs" />
     <Compile Include="TempTables\Dependencies\PersonTempTable.cs" />
     <Compile Include="TempTables\ProductCategoryCountTempTable.cs" />
     <Compile Include="TempTables\ProductSubCategoryTempTable.cs" />

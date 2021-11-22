@@ -1,10 +1,11 @@
-﻿﻿using EF6TempTableKit.Attributes;
+﻿using EF6TempTableKit.Attributes;
+using EF6TempTableKit.Test.CustomFormatter;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EF6TempTableKit.Test.TempTables
 {
-    [Table("#tempAddressMultipleId")]
-    public class AddressTempTableMultipleId : ITempTable
+    [Table("#tempAddressTempTableTwoDataSources")]
+    public class AddressTempTableTwoDataSourcesTempTable : ITempTable
     {
         [ClusteredIndex]
         [NonClusteredIndex("first")]
@@ -18,11 +19,12 @@ namespace EF6TempTableKit.Test.TempTables
         [NonClusteredIndex("third")]
         [NonClusteredIndex("second")]
         [TempFieldTypeAttribute("varchar(200)")]
+        [FuncFormatAttribute(typeof(StringCustomFormatter))]
         public string Name { get; set; }
     }
 
     [NotMapped]
-    public class AddressTempTableMultipleIdDto : AddressTempTableMultipleId
+    public class AddressTempTableTwoDataSourcesDto : AddressTempTableTwoDataSourcesTempTable
     {
     }
 }
