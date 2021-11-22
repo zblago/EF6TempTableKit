@@ -35,7 +35,7 @@ namespace EF6TempTableKit.Test
         }
 
         [Fact]
-        public void ThrowExceptionWrongFormmaterIsSpecified()
+        public void ThrowExceptionWrongFormmaterSignatureIsSpecified()
         {
             Assert.Throws<EF6TempTableKitGenericException>(() =>
             {
