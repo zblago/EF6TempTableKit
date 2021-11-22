@@ -69,7 +69,7 @@ namespace EF6TempTableKit.Extensions
         }
 
         /// <summary>
-        /// Use it to attach LINQ query being used to load data into temporary table.
+        /// Use it to attach LINQ query built upon memory data.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="dbContexWithTempTable"></param>
@@ -81,7 +81,7 @@ namespace EF6TempTableKit.Extensions
         {
             var tableMetadataProvider = new TableMetadataProvider();
             var contextWithTempTable = (IDbContextWithTempTable)dbContexWithTempTable;
-            var tempTableType = list.GetType().GetProperty("Item").PropertyType;
+            var tempTableType = list.First().GetType();
             var tempTableName = tableMetadataProvider.GetTableNameFromBaseType(tempTableType);
 
             Validate(contextWithTempTable, tempTableName);

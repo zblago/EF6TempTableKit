@@ -103,12 +103,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CustomFormatter\WrongIntCustomFormatter.cs" />
+    <Compile Include="CustomFormatter\IntCustomFormatter.cs" />
     <Compile Include="CustomFormatter\IStringCustomFormatter.cs" />
     <Compile Include="CustomFormatter\StringCustomFormatter.cs" />
     <Compile Include="DbContextConfiguration\AdventureWorkQueryInterceptor.cs" />
     <Compile Include="DbContextConfiguration\CustomDbContextConfiguration.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="QueryModel.cs" />
+    <Compile Include="TempTables\AddressTempTableWrongAttribute.cs" />
     <Compile Include="TempTables\Dependencies\OfficeTypeTempTable.cs" />
     <Compile Include="TempTables\Dependencies\DepartmentTempTable.cs" />
     <Compile Include="TempTables\Dependencies\PartTypeTempTable.cs" />
@@ -122,6 +125,8 @@
     <Compile Include="TempTables\ProductCategoryCountTempTable.cs" />
     <Compile Include="TempTables\ProductSubCategoryTempTable.cs" />
     <Compile Include="TempTables\ProductCategoryTempTable.cs" />
+    <Compile Include="TempTables\SalesOrderHeaderTempTable.cs" />
+    <Compile Include="UnitTestMemoryData.cs" />
     <Compile Include="UnitTest.cs" />
     <Compile Include="CodeFirst\Address.cs" />
     <Compile Include="CodeFirst\AddressType.cs" />
