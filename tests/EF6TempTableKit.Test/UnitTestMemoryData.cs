@@ -120,7 +120,7 @@ namespace EF6TempTableKit.Test
                 {
                     Id = maxId + i + 1 + addressesInMemory.Count(),
                     Name = x
-                }), true);
+                }));
 
                 totalCount = totalCountQuery.TempAddressesTwoDataSources.Count();
                 Assert.Equal(addressesInMemory.Count() + totalAddressesInDb + updatedAddressList.Count(), totalCount);

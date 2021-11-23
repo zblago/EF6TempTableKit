@@ -6,7 +6,5 @@ namespace EF6TempTableKit.SqlCommands.Interfaces
     {
         IExecute AddInsertQuery(IReadOnlyDictionary<string, int> fieldsWithTypes, string sqlSelectQuery);
         IExecute AddInsertQuery(IEnumerable<ITempTable> list);
-        IExecute AddInsertQueryIfCreated(IReadOnlyDictionary<string, int> fieldsWithTypes, string sqlSelectQuery);
-        IExecute AddInsertQueryIfCreated(IEnumerable<ITempTable> list);
     }
 }

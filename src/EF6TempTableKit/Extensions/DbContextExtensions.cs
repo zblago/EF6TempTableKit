@@ -17,62 +17,45 @@ namespace EF6TempTableKit.Extensions
         /// <param name="expression"></param>
         /// <param name="reuseExisting"></param>
         /// <returns></returns>
-        public static T WithTempTableExpression<T>(this System.Data.Entity.DbContext dbContexWithTempTable, IQueryable<ITempTable> expression, bool reuseExisting = false)
+        public static T WithTempTableExpression<T>(this System.Data.Entity.DbContext dbContexWithTempTable, IQueryable<ITempTable> expression)
             where T : class
         {
             var contextWithTempTable = (IDbContextWithTempTable)dbContexWithTempTable;
             var tableMetadataProvider = new TableMetadataProvider();
             var tempTableType = expression.ElementType.BaseType;
             var tempTableName = tableMetadataProvider.GetTableNameFromBaseType(tempTableType);
+            var hasAttachedDDLStatement = contextWithTempTable.TempTableContainer.TempSqlQueriesList.Any(x => x.Key == tempTableName);
 
-            Validate(contextWithTempTable, tempTableName);
+            if (!hasAttachedDDLStatement)
+            {
+                Validate(contextWithTempTable, tempTableName);
+            }
 
             var fieldsWithTypes = tableMetadataProvider.GetFieldsWithTypes(tempTableType);
             var clusteredIndexesWithFields = tableMetadataProvider.GetClusteredIndexColumns(tempTableType);
             var nonClusteredIndexesWithFields = tableMetadataProvider.GetNonClusteredIndexesWithColumns(tempTableType);
-            var hasAttachedDDLStatement = contextWithTempTable.TempTableContainer.TempSqlQueriesList.Any(x => x.Key == tempTableName);
 
             var sqlSelectQuery = expression.ToTraceQuery();
             var objectQuery = expression.GetObjectQuery();
             var fieldsWithPositions = objectQuery.GetQueryPropertyPositions();
 
             var sqlAllCommandsQuery = "";
-            if (!reuseExisting)
+
+            if (hasAttachedDDLStatement)
             {
-                if (hasAttachedDDLStatement)
-                {
-                    sqlAllCommandsQuery = SqlInsertCommandBuilder.Continue(tempTableName)
-                        .AddInsertQuery(fieldsWithPositions, sqlSelectQuery)
-                        .Execute();
-                }
-                else
-                {
-                    sqlAllCommandsQuery = SqlInsertCommandBuilder.Begin(tempTableName)
-                        .DropIfExists()
-                        .Create(fieldsWithTypes)
-                        .AddClusteredIndex(clusteredIndexesWithFields)
-                        .AddNonClusteredIndexes(nonClusteredIndexesWithFields)
-                        .AddInsertQuery(fieldsWithPositions, sqlSelectQuery)
-                        .Execute();
-                }
+                sqlAllCommandsQuery = SqlInsertCommandBuilder.Continue(tempTableName)
+                    .AddInsertQuery(fieldsWithPositions, sqlSelectQuery)
+                    .Execute();
             }
             else
             {
-                if (hasAttachedDDLStatement)
-                {
-                    sqlAllCommandsQuery = SqlInsertCommandBuilder.Continue(tempTableName)
-                        .AddInsertQuery(fieldsWithPositions, sqlSelectQuery)
-                        .Execute();
-                }
-                else
-                {
-                    sqlAllCommandsQuery = SqlInsertCommandBuilder.Begin(tempTableName)
-                        .CreateIfNotExists(fieldsWithTypes)
-                        .AddClusteredIndex(clusteredIndexesWithFields)
-                        .AddNonClusteredIndexes(nonClusteredIndexesWithFields)
-                        .AddInsertQueryIfCreated(fieldsWithPositions, sqlSelectQuery)
-                        .Execute();
-                }
+                sqlAllCommandsQuery = SqlInsertCommandBuilder.Begin(tempTableName)
+                    .DropIfExists()
+                    .Create(fieldsWithTypes)
+                    .AddClusteredIndex(clusteredIndexesWithFields)
+                    .AddNonClusteredIndexes(nonClusteredIndexesWithFields)
+                    .AddInsertQuery(fieldsWithPositions, sqlSelectQuery)
+                    .Execute();
             }
 
             var tempTableDependencyManager = new TempTableDependencyManager(sqlSelectQuery, objectQuery, contextWithTempTable.TempTableContainer);
@@ -83,10 +66,7 @@ namespace EF6TempTableKit.Extensions
                 .Enqueue(new KeyValuePair<string, Query>(tempTableName, new Query
                 {
                     QueryString = sqlAllCommandsQuery,
-                    ReuseExisting = reuseExisting,
-                    QueryType = Enums.QueryType.DB,
-                    IsDataAppend = hasAttachedDDLStatement,
-                    IsExecuted = false
+                    IsDataAppend = hasAttachedDDLStatement
                 }));
 
             return dbContexWithTempTable as T;
@@ -100,58 +80,41 @@ namespace EF6TempTableKit.Extensions
         /// <param name="list"></param>
         /// <param name="reuseExisting"></param>
         /// <returns></returns>
-        public static T WithTempTableExpression<T>(this System.Data.Entity.DbContext dbContexWithTempTable, IEnumerable<ITempTable> list, bool reuseExisting = false)
+        public static T WithTempTableExpression<T>(this System.Data.Entity.DbContext dbContexWithTempTable, IEnumerable<ITempTable> list)
             where T : class
         {
             var tableMetadataProvider = new TableMetadataProvider();
             var contextWithTempTable = (IDbContextWithTempTable)dbContexWithTempTable;
             var tempTableType = list.First().GetType();
             var tempTableName = tableMetadataProvider.GetTableNameFromBaseType(tempTableType);
+            var hasAttachedDDLStatement = contextWithTempTable.TempTableContainer.TempSqlQueriesList.Any(x => x.Key == tempTableName);
 
-            Validate(contextWithTempTable, tempTableName);
+            if (!hasAttachedDDLStatement)
+            {
+                Validate(contextWithTempTable, tempTableName);
+            }
 
             var fieldsWithTypes = tableMetadataProvider.GetFieldsWithTypes(tempTableType);
             var clusteredIndexesWithFields = tableMetadataProvider.GetClusteredIndexColumns(tempTableType);
             var nonClusteredIndexesWithFields = tableMetadataProvider.GetNonClusteredIndexesWithColumns(tempTableType);
-            var hasAttachedDDLStatement = contextWithTempTable.TempTableContainer.TempSqlQueriesList.Any(x => x.Key == tempTableName);
 
             var sqlAllCommandsQuery = "";
-            if (!reuseExisting)
+
+            if (hasAttachedDDLStatement)
             {
-                if (hasAttachedDDLStatement)
-                {
-                    sqlAllCommandsQuery = SqlInsertCommandBuilder.Continue(tempTableName)
-                        .AddInsertQuery(list)
-                        .Execute();
-                }
-                else
-                {
-                    sqlAllCommandsQuery = SqlInsertCommandBuilder.Begin(tempTableName)
-                        .DropIfExists()
-                        .Create(fieldsWithTypes)
-                        .AddClusteredIndex(clusteredIndexesWithFields)
-                        .AddNonClusteredIndexes(nonClusteredIndexesWithFields)
-                        .AddInsertQuery(list)
-                        .Execute();
-                }
+                sqlAllCommandsQuery = SqlInsertCommandBuilder.Continue(tempTableName)
+                    .AddInsertQuery(list)
+                    .Execute();
             }
             else
             {
-                if (hasAttachedDDLStatement)
-                {
-                    sqlAllCommandsQuery = SqlInsertCommandBuilder.Continue(tempTableName)
-                        .AddInsertQuery(list)
-                        .Execute();
-                }
-                else
-                {
-                    sqlAllCommandsQuery = SqlInsertCommandBuilder.Begin(tempTableName)
-                        .CreateIfNotExists(fieldsWithTypes)
-                        .AddClusteredIndex(clusteredIndexesWithFields)
-                        .AddNonClusteredIndexes(nonClusteredIndexesWithFields)
-                        .AddInsertQueryIfCreated(list)
-                        .Execute();
-                }
+                sqlAllCommandsQuery = SqlInsertCommandBuilder.Begin(tempTableName)
+                    .DropIfExists()
+                    .Create(fieldsWithTypes)
+                    .AddClusteredIndex(clusteredIndexesWithFields)
+                    .AddNonClusteredIndexes(nonClusteredIndexesWithFields)
+                    .AddInsertQuery(list)
+                    .Execute();
             }
 
             contextWithTempTable.TempTableContainer
@@ -159,14 +122,12 @@ namespace EF6TempTableKit.Extensions
                 .Enqueue(new KeyValuePair<string, Query>(tempTableName, new Query
                 {
                     QueryString = sqlAllCommandsQuery,
-                    ReuseExisting = reuseExisting,
-                    QueryType = Enums.QueryType.InMemory,
-                    IsDataAppend = hasAttachedDDLStatement,
-                    IsExecuted = false
+                    IsDataAppend = hasAttachedDDLStatement
                 }));
 
             return dbContexWithTempTable as T;
         }
+
         private static void Validate(IDbContextWithTempTable contextWithTempTable, string tempTableName)
         {
             if (contextWithTempTable.TempTableContainer == null)
@@ -174,7 +135,7 @@ namespace EF6TempTableKit.Extensions
                 throw new EF6TempTableKitGenericException($"EF6TempTableKit: Object of type TempTableContainer is not instantiated. Please, make an instance in your DbContext.");
             }
 
-            if (contextWithTempTable.TempTableContainer.TempSqlQueriesList.GroupBy(x => x.Value.QueryType).Any(x => x.Count(i => i.Key == tempTableName) > 1))
+            if (contextWithTempTable.TempTableContainer.TempSqlQueriesList.Any(t => t.Key == tempTableName))
             {
                 throw new EF6TempTableKitGenericException($"EF6TempTableKit: Can't override query for temp table {tempTableName} as it is already attached to the context.");
             }

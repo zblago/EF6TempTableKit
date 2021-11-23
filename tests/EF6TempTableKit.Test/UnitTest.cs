@@ -90,7 +90,7 @@ namespace EF6TempTableKit.Test
         }
 
         [Fact(DisplayName = "Don't reuse temp table (reuseExisting = false")]
-        public void DonReuseSameTempTable()
+        public void DontReuseSameTempTable()
         {
             using (var context = new AdventureWorksCodeFirst())
             {
@@ -126,7 +126,7 @@ namespace EF6TempTableKit.Test
                 });
 
                 IQueryable<int> joinAddressQuery = context
-                        .WithTempTableExpression<AdventureWorksCodeFirst>(tempAddressQuery, true)
+                        .WithTempTableExpression<AdventureWorksCodeFirst>(tempAddressQuery)
                         .TempAddresses.Join(context.Addresses,
                         (a) => a.Id,
 
@@ -176,7 +176,7 @@ namespace EF6TempTableKit.Test
                         );
 
                 var productsQuery = context
-                        .WithTempTableExpression<AdventureWorksCodeFirst>(productsCountCategoryQuery, true)
+                        .WithTempTableExpression<AdventureWorksCodeFirst>(productsCountCategoryQuery)
                         .WorkOrders
                         .Join(context.Products,
                             (wo) => wo.ProductID,
