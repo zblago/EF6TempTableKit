@@ -61,7 +61,7 @@ namespace EF6TempTableKit.Extensions
                 if (hasAttachedDDLStatement)
                 {
                     sqlAllCommandsQuery = SqlInsertCommandBuilder.Continue(tempTableName)
-                        .AddInsertQueryIfCreated(fieldsWithPositions, sqlSelectQuery)
+                        .AddInsertQuery(fieldsWithPositions, sqlSelectQuery)
                         .Execute();
                 }
                 else
@@ -80,7 +80,14 @@ namespace EF6TempTableKit.Extensions
 
             contextWithTempTable.TempTableContainer
                 .TempSqlQueriesList
-                .Enqueue(new KeyValuePair<string, Query>(tempTableName, new Query { QueryString = sqlAllCommandsQuery, ReuseExisting = reuseExisting, QueryType = Enums.QueryType.DB }));
+                .Enqueue(new KeyValuePair<string, Query>(tempTableName, new Query
+                {
+                    QueryString = sqlAllCommandsQuery,
+                    ReuseExisting = reuseExisting,
+                    QueryType = Enums.QueryType.DB,
+                    IsDataAppend = hasAttachedDDLStatement,
+                    IsExecuted = false
+                }));
 
             return dbContexWithTempTable as T;
         }
@@ -106,12 +113,12 @@ namespace EF6TempTableKit.Extensions
             var fieldsWithTypes = tableMetadataProvider.GetFieldsWithTypes(tempTableType);
             var clusteredIndexesWithFields = tableMetadataProvider.GetClusteredIndexColumns(tempTableType);
             var nonClusteredIndexesWithFields = tableMetadataProvider.GetNonClusteredIndexesWithColumns(tempTableType);
-            var hasAttachedDDLStatements = contextWithTempTable.TempTableContainer.TempSqlQueriesList.Any(x => x.Key == tempTableName);
+            var hasAttachedDDLStatement = contextWithTempTable.TempTableContainer.TempSqlQueriesList.Any(x => x.Key == tempTableName);
 
             var sqlAllCommandsQuery = "";
             if (!reuseExisting)
             {
-                if (hasAttachedDDLStatements)
+                if (hasAttachedDDLStatement)
                 {
                     sqlAllCommandsQuery = SqlInsertCommandBuilder.Continue(tempTableName)
                         .AddInsertQuery(list)
@@ -130,10 +137,10 @@ namespace EF6TempTableKit.Extensions
             }
             else
             {
-                if (hasAttachedDDLStatements)
+                if (hasAttachedDDLStatement)
                 {
                     sqlAllCommandsQuery = SqlInsertCommandBuilder.Continue(tempTableName)
-                        .AddInsertQueryIfCreated(list)
+                        .AddInsertQuery(list)
                         .Execute();
                 }
                 else
@@ -149,7 +156,14 @@ namespace EF6TempTableKit.Extensions
 
             contextWithTempTable.TempTableContainer
                 .TempSqlQueriesList
-                .Enqueue(new KeyValuePair<string, Query>(tempTableName, new Query { QueryString = sqlAllCommandsQuery, ReuseExisting = reuseExisting, QueryType = Enums.QueryType.InMemory }));
+                .Enqueue(new KeyValuePair<string, Query>(tempTableName, new Query
+                {
+                    QueryString = sqlAllCommandsQuery,
+                    ReuseExisting = reuseExisting,
+                    QueryType = Enums.QueryType.InMemory,
+                    IsDataAppend = hasAttachedDDLStatement,
+                    IsExecuted = false
+                }));
 
             return dbContexWithTempTable as T;
         }

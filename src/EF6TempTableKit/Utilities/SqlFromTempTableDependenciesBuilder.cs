@@ -38,8 +38,7 @@ namespace EF6TempTableKit.Utilities
             {
                 var tempTableName = tempSqlQuery.Key;
                 var tempTableNameWithBrackets = $"[{tempTableName}]";
-                var isTempTableAlreadyAttached = _alreadyAttachedTempTableQuery.Contains(new KeyValuePair<string, QueryType>(tempTableName, tempSqlQuery.Value.QueryType));
-                if (!isTempTableAlreadyAttached && interceptedComandText.Contains(tempTableNameWithBrackets))
+                if (!tempSqlQuery.Value.IsExecuted && interceptedComandText.Contains(tempTableNameWithBrackets))
                 {
                     var hasTempTableDependencies = _tempOnTempDependencies.ContainsKey(tempTableName);
                     if (hasTempTableDependencies)
@@ -47,26 +46,29 @@ namespace EF6TempTableKit.Utilities
                         foreach (var tempTableDependency in _tempOnTempDependencies[tempTableName])
                         {
                             var query = _tempSqlQueriesList.Single(t => t.Key == tempTableDependency).Value;
-                            AppendIfNotAlreadyAttached(sqlStringBuilder, query.QueryString, tempTableDependency, query.QueryType);
+                            if (!query.IsExecuted)
+                            {
+                                AppendCommand(sqlStringBuilder, query.QueryString, tempTableDependency, query.QueryType);
+                                query.IsExecuted = true;
+                            }
                         }
                     }
-                    AppendIfNotAlreadyAttached(sqlStringBuilder, tempSqlQuery.Value.QueryString, tempTableName, tempSqlQuery.Value.QueryType);
+                    if (!tempSqlQuery.Value.IsExecuted)
+                    {
+                        AppendCommand(sqlStringBuilder, tempSqlQuery.Value.QueryString, tempTableName, tempSqlQuery.Value.QueryType);
+                        tempSqlQuery.Value.IsExecuted = true;
+                    }
                 }
             }
 
             return sqlStringBuilder.ToString();
         }
 
-        private void AppendIfNotAlreadyAttached(StringBuilder sqlStringBuilder, string sqlStringToAppend, string tempTableName, QueryType queryType)
+        private void AppendCommand(StringBuilder sqlStringBuilder, string sqlStringToAppend, string tempTableName, QueryType queryType)
         {
-            var isTempTableAlreadyAttached = _alreadyAttachedTempTableQuery.Contains(new KeyValuePair<string, QueryType>(tempTableName, queryType));
-            if (!isTempTableAlreadyAttached)
-            {
-                var selectCommandTextFormat = "\n{0}\n{1}\n{2}\n";
-
-                sqlStringBuilder.AppendFormat(selectCommandTextFormat, _generatedByEf6TempTableKitStartMsg, sqlStringToAppend, _generatedByEf6TempTableKitEndMsg);
-                _alreadyAttachedTempTableQuery.Add(new KeyValuePair<string, QueryType>(tempTableName, queryType));
-            }
+            var selectCommandTextFormat = "\n{0}\n{1}\n{2}\n";
+            sqlStringBuilder.AppendFormat(selectCommandTextFormat, _generatedByEf6TempTableKitStartMsg, sqlStringToAppend, _generatedByEf6TempTableKitEndMsg);
+            _alreadyAttachedTempTableQuery.Add(new KeyValuePair<string, QueryType>(tempTableName, queryType));
         }
     }
 }
