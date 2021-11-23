@@ -68,7 +68,7 @@ namespace EF6TempTableKit.Test
                     Name = x
                 });
 
-                var tempAddressQuery = context.Addresses.Select(a => new AddressTempTableTwoDataSourcesDto { 
+                var tempAddressQuery = context.Addresses.Select(a => new AddressTempTableTwoDataSourcesDto {
                     Id = a.AddressID, 
                     Name = a.AddressLine1 
                 });

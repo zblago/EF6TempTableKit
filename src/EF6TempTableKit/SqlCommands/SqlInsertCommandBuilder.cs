@@ -26,6 +26,8 @@ namespace EF6TempTableKit.SqlCommands
         }
 
         public static IDrop Begin(string tableName) => new SqlInsertCommandBuilder(tableName);
+        
+        public static IInsertQuery Continue(string tableName) => new SqlInsertCommandBuilder(tableName);
 
         public ICreate DropIfExists()
         {

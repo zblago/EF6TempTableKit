@@ -1,11 +1,9 @@
-﻿
-using System.Linq;
+﻿using System.Linq;
 using EF6TempTableKit.DbContext;
 using EF6TempTableKit.SqlCommands;
 using EF6TempTableKit.Utilities;
 using System.Collections.Generic;
 using EF6TempTableKit.Exceptions;
-using EF6TempTableKit.Interfaces;
 
 namespace EF6TempTableKit.Extensions
 {
@@ -32,6 +30,7 @@ namespace EF6TempTableKit.Extensions
             var fieldsWithTypes = tableMetadataProvider.GetFieldsWithTypes(tempTableType);
             var clusteredIndexesWithFields = tableMetadataProvider.GetClusteredIndexColumns(tempTableType);
             var nonClusteredIndexesWithFields = tableMetadataProvider.GetNonClusteredIndexesWithColumns(tempTableType);
+            var hasAttachedDDLStatement = contextWithTempTable.TempTableContainer.TempSqlQueriesList.Any(x => x.Key == tempTableName);
 
             var sqlSelectQuery = expression.ToTraceQuery();
             var objectQuery = expression.GetObjectQuery();
@@ -40,22 +39,40 @@ namespace EF6TempTableKit.Extensions
             var sqlAllCommandsQuery = "";
             if (!reuseExisting)
             {
-                sqlAllCommandsQuery = SqlInsertCommandBuilder.Begin(tempTableName)
-                    .DropIfExists()
-                    .Create(fieldsWithTypes)
-                    .AddClusteredIndex(clusteredIndexesWithFields)
-                    .AddNonClusteredIndexes(nonClusteredIndexesWithFields)
-                    .AddInsertQuery(fieldsWithPositions, sqlSelectQuery)
-                    .Execute();
+                if (hasAttachedDDLStatement)
+                {
+                    sqlAllCommandsQuery = SqlInsertCommandBuilder.Continue(tempTableName)
+                        .AddInsertQuery(fieldsWithPositions, sqlSelectQuery)
+                        .Execute();
+                }
+                else
+                {
+                    sqlAllCommandsQuery = SqlInsertCommandBuilder.Begin(tempTableName)
+                        .DropIfExists()
+                        .Create(fieldsWithTypes)
+                        .AddClusteredIndex(clusteredIndexesWithFields)
+                        .AddNonClusteredIndexes(nonClusteredIndexesWithFields)
+                        .AddInsertQuery(fieldsWithPositions, sqlSelectQuery)
+                        .Execute();
+                }
             }
             else
             {
-                sqlAllCommandsQuery = SqlInsertCommandBuilder.Begin(tempTableName)
-                    .CreateIfNotExists(fieldsWithTypes)
-                    .AddClusteredIndex(clusteredIndexesWithFields)
-                    .AddNonClusteredIndexes(nonClusteredIndexesWithFields)
-                    .AddInsertQueryIfCreated(fieldsWithPositions, sqlSelectQuery)
-                    .Execute();
+                if (hasAttachedDDLStatement)
+                {
+                    sqlAllCommandsQuery = SqlInsertCommandBuilder.Continue(tempTableName)
+                        .AddInsertQueryIfCreated(fieldsWithPositions, sqlSelectQuery)
+                        .Execute();
+                }
+                else
+                {
+                    sqlAllCommandsQuery = SqlInsertCommandBuilder.Begin(tempTableName)
+                        .CreateIfNotExists(fieldsWithTypes)
+                        .AddClusteredIndex(clusteredIndexesWithFields)
+                        .AddNonClusteredIndexes(nonClusteredIndexesWithFields)
+                        .AddInsertQueryIfCreated(fieldsWithPositions, sqlSelectQuery)
+                        .Execute();
+                }
             }
 
             var tempTableDependencyManager = new TempTableDependencyManager(sqlSelectQuery, objectQuery, contextWithTempTable.TempTableContainer);
@@ -89,26 +106,45 @@ namespace EF6TempTableKit.Extensions
             var fieldsWithTypes = tableMetadataProvider.GetFieldsWithTypes(tempTableType);
             var clusteredIndexesWithFields = tableMetadataProvider.GetClusteredIndexColumns(tempTableType);
             var nonClusteredIndexesWithFields = tableMetadataProvider.GetNonClusteredIndexesWithColumns(tempTableType);
+            var hasAttachedDDLStatements = contextWithTempTable.TempTableContainer.TempSqlQueriesList.Any(x => x.Key == tempTableName);
 
             var sqlAllCommandsQuery = "";
             if (!reuseExisting)
             {
-                sqlAllCommandsQuery = SqlInsertCommandBuilder.Begin(tempTableName)
-                    .DropIfExists()
-                    .Create(fieldsWithTypes)
-                    .AddClusteredIndex(clusteredIndexesWithFields)
-                    .AddNonClusteredIndexes(nonClusteredIndexesWithFields)
-                    .AddInsertQuery(list)
-                    .Execute();
+                if (hasAttachedDDLStatements)
+                {
+                    sqlAllCommandsQuery = SqlInsertCommandBuilder.Continue(tempTableName)
+                        .AddInsertQuery(list)
+                        .Execute();
+                }
+                else
+                {
+                    sqlAllCommandsQuery = SqlInsertCommandBuilder.Begin(tempTableName)
+                        .DropIfExists()
+                        .Create(fieldsWithTypes)
+                        .AddClusteredIndex(clusteredIndexesWithFields)
+                        .AddNonClusteredIndexes(nonClusteredIndexesWithFields)
+                        .AddInsertQuery(list)
+                        .Execute();
+                }
             }
             else
             {
-                sqlAllCommandsQuery = SqlInsertCommandBuilder.Begin(tempTableName)
-                    .CreateIfNotExists(fieldsWithTypes)
-                    .AddClusteredIndex(clusteredIndexesWithFields)
-                    .AddNonClusteredIndexes(nonClusteredIndexesWithFields)
-                    .AddInsertQueryIfCreated(list)
-                    .Execute();
+                if (hasAttachedDDLStatements)
+                {
+                    sqlAllCommandsQuery = SqlInsertCommandBuilder.Continue(tempTableName)
+                        .AddInsertQueryIfCreated(list)
+                        .Execute();
+                }
+                else
+                {
+                    sqlAllCommandsQuery = SqlInsertCommandBuilder.Begin(tempTableName)
+                        .CreateIfNotExists(fieldsWithTypes)
+                        .AddClusteredIndex(clusteredIndexesWithFields)
+                        .AddNonClusteredIndexes(nonClusteredIndexesWithFields)
+                        .AddInsertQueryIfCreated(list)
+                        .Execute();
+                }
             }
 
             contextWithTempTable.TempTableContainer
