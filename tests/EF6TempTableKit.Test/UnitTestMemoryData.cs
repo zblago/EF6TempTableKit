@@ -62,6 +62,7 @@ namespace EF6TempTableKit.Test
             using (var context = new AdventureWorksCodeFirst())
             {
                 var maxId = context.Addresses.Max(x => x.AddressID);
+                var totalAddressesInDb = context.Addresses.Count();
                 var addressMemory = _addressList.Select((x, i) => new AddressTempTableTwoDataSourcesDto
                 {
                     Id = maxId + i,
@@ -73,15 +74,12 @@ namespace EF6TempTableKit.Test
                     Name = a.AddressLine1 
                 });
 
-                var data = context
+                var totalCount = context
                         .WithTempTableExpression<AdventureWorksCodeFirst>(addressMemory)
-                        .WithTempTableExpression<AdventureWorksCodeFirst>(tempAddressQuery, true)
-                        .TempAddressesTwoDataSources.Join(context.Addresses,
-                        (a) => a.Id,
-                        (aa) => aa.AddressID,
-                        (at, a) => new { Id = at.Id }).ToList();
+                        .WithTempTableExpression<AdventureWorksCodeFirst>(tempAddressQuery)
+                        .TempAddressesTwoDataSources.Count();
 
-                Assert.NotEmpty(data);
+                Assert.Equal(addressMemory.Count() + totalAddressesInDb, totalCount);
             }
         }
     }
