@@ -84,7 +84,7 @@ namespace EF6TempTableKit.Test
         }
 
         [Fact]
-        public void LoadFromMemoryAndDatabaseReuseExisting()
+        public void LoadFromMemoryAndDatabaseAppendData()
         {
             using (var context = new AdventureWorksCodeFirst())
             {

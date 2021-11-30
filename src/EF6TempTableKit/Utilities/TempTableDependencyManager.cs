@@ -49,14 +49,14 @@ namespace EF6TempTableKit.Utilities
                     .TempOnTempDependencies
                     .Add(new KeyValuePair<string, HashSet<string>>(newTempTableName, new HashSet<string>()));
 
-                var childrenDependecies = new List<string>();
+                var childrenDependencies = new List<string>();
                 foreach (var item in alreadyAttachedTempTablesFromQuery)
                 {
                     if (_tempTableContainer.TempOnTempDependencies.ContainsKey(item))
                     {
-                        childrenDependecies.AddRange(_tempTableContainer.TempOnTempDependencies[item]);
-                        childrenDependecies.Add(item);
-                        childrenDependecies.ForEach(cd => _tempTableContainer.TempOnTempDependencies[newTempTableName].AddIfNotExists(cd));
+                        childrenDependencies.AddRange(_tempTableContainer.TempOnTempDependencies[item]);
+                        childrenDependencies.Add(item);
+                        childrenDependencies.ForEach(cd => _tempTableContainer.TempOnTempDependencies[newTempTableName].AddIfNotExists(cd));
                     }
                     else
                     {

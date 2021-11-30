@@ -15,7 +15,6 @@ namespace EF6TempTableKit.Extensions
         /// <typeparam name="T"></typeparam>
         /// <param name="dbContexWithTempTable"></param>
         /// <param name="expression"></param>
-        /// <param name="reuseExisting"></param>
         /// <returns></returns>
         public static T WithTempTableExpression<T>(this System.Data.Entity.DbContext dbContexWithTempTable, IQueryable<ITempTable> expression)
             where T : class
@@ -75,7 +74,6 @@ namespace EF6TempTableKit.Extensions
         /// <typeparam name="T"></typeparam>
         /// <param name="dbContexWithTempTable"></param>
         /// <param name="list"></param>
-        /// <param name="reuseExisting"></param>
         /// <returns></returns>
         public static T WithTempTableExpression<T>(this System.Data.Entity.DbContext dbContexWithTempTable, IEnumerable<ITempTable> list)
             where T : class
