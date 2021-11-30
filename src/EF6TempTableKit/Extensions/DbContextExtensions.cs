@@ -26,10 +26,7 @@ namespace EF6TempTableKit.Extensions
             var tempTableName = tableMetadataProvider.GetTableNameFromBaseType(tempTableType);
             var hasAttachedDDLStatement = contextWithTempTable.TempTableContainer.TempSqlQueriesList.Any(x => x.Key == tempTableName);
 
-            if (!hasAttachedDDLStatement)
-            {
-                Validate(contextWithTempTable, tempTableName);
-            }
+            Validate(contextWithTempTable, tempTableName);
 
             var fieldsWithTypes = tableMetadataProvider.GetFieldsWithTypes(tempTableType);
             var clusteredIndexesWithFields = tableMetadataProvider.GetClusteredIndexColumns(tempTableType);
@@ -89,10 +86,7 @@ namespace EF6TempTableKit.Extensions
             var tempTableName = tableMetadataProvider.GetTableNameFromBaseType(tempTableType);
             var hasAttachedDDLStatement = contextWithTempTable.TempTableContainer.TempSqlQueriesList.Any(x => x.Key == tempTableName);
 
-            if (!hasAttachedDDLStatement)
-            {
-                Validate(contextWithTempTable, tempTableName);
-            }
+            Validate(contextWithTempTable, tempTableName);
 
             var fieldsWithTypes = tableMetadataProvider.GetFieldsWithTypes(tempTableType);
             var clusteredIndexesWithFields = tableMetadataProvider.GetClusteredIndexColumns(tempTableType);
@@ -133,11 +127,6 @@ namespace EF6TempTableKit.Extensions
             if (contextWithTempTable.TempTableContainer == null)
             {
                 throw new EF6TempTableKitGenericException($"EF6TempTableKit: Object of type TempTableContainer is not instantiated. Please, make an instance in your DbContext.");
-            }
-
-            if (contextWithTempTable.TempTableContainer.TempSqlQueriesList.Any(t => t.Key == tempTableName))
-            {
-                throw new EF6TempTableKitGenericException($"EF6TempTableKit: Can't override query for temp table {tempTableName} as it is already attached to the context.");
             }
         }
 
