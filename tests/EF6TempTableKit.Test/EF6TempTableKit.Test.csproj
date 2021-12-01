@@ -103,16 +103,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CustomFormatter\WrongIntCustomFormatter.cs" />
+    <Compile Include="CustomFormatter\BitCustomFormatter.cs" />
     <Compile Include="CustomFormatter\IntCustomFormatter.cs" />
     <Compile Include="CustomFormatter\IStringCustomFormatter.cs" />
     <Compile Include="CustomFormatter\StringCustomFormatter.cs" />
+    <Compile Include="CustomFormatter\WrongIntCustomFormatter.cs" />
     <Compile Include="DbContextConfiguration\AdventureWorkQueryInterceptor.cs" />
     <Compile Include="DbContextConfiguration\CustomDbContextConfiguration.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="QueryModel.cs" />
     <Compile Include="TempTables\AddressTempTableMultipleId.cs" />
     <Compile Include="TempTables\AddressTempTableWrongAttribute.cs" />
+    <Compile Include="TempTables\AllDataTypesTempTable.cs" />
     <Compile Include="TempTables\Dependencies\OfficeTypeTempTable.cs" />
     <Compile Include="TempTables\Dependencies\DepartmentTempTable.cs" />
     <Compile Include="TempTables\Dependencies\PartTypeTempTable.cs" />

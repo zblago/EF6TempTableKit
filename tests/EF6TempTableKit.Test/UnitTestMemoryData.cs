@@ -2,6 +2,7 @@
 using EF6TempTableKit.Extensions;
 using EF6TempTableKit.Test.CodeFirst;
 using EF6TempTableKit.Test.TempTables;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;
@@ -124,6 +125,52 @@ namespace EF6TempTableKit.Test
 
                 totalCount = totalCountQuery.TempAddressesTwoDataSources.Count();
                 Assert.Equal(addressesInMemory.Count() + totalAddressesInDb + updatedAddressList.Count(), totalCount);
+            }
+        }
+
+        [Fact]
+        public void MapNetToSqlDataTypes()
+        {
+            using (var context = new AdventureWorksCodeFirst())
+            {
+                var allDataTypesList = new List<AllDataTypesDto> 
+                { 
+                    new AllDataTypesDto
+                    { 
+                        Bigint = Int64.MaxValue,
+                        Binary = new byte[] { 0x45, 0x46},
+                        Bit = true,
+                        Date = DateTime.Today,
+                        Datetime = DateTime.Today,
+                        Datetime2 = DateTime.Today,
+                        Datetimeoffset = DateTimeOffset.UtcNow.Date,
+                        Decimal = Decimal.MaxValue,
+                        Varbinary_Max = new byte[] { 0x4B, 0x49, 0x54, 0x41 },
+                        Float = double.MaxValue
+                    }
+                };
+
+                //var totalCount = context
+                //        .WithTempTableExpression<AdventureWorksCodeFirst>(allDataTypesList)
+                //        .AllDataTypesTempTable.Count();
+
+                var allDataTypeItemFromDb = context
+                        .WithTempTableExpression<AdventureWorksCodeFirst>(allDataTypesList)
+                        .AllDataTypesTempTable.First();
+
+                var allDataTypeItemFromMemory = allDataTypesList.First();
+
+                //Assert.True(totalCount > 0);
+                Assert.Equal(allDataTypeItemFromDb.Bigint, allDataTypeItemFromMemory.Bigint);
+                Assert.Equal(allDataTypeItemFromDb.Binary, allDataTypeItemFromMemory.Binary);
+                Assert.Equal(allDataTypeItemFromDb.Bit, allDataTypeItemFromMemory.Bit);
+                Assert.Equal(allDataTypeItemFromDb.Date, allDataTypeItemFromMemory.Date);
+                Assert.Equal(allDataTypeItemFromDb.Datetime, allDataTypeItemFromMemory.Datetime);
+                Assert.Equal(allDataTypeItemFromDb.Datetime2, allDataTypeItemFromMemory.Datetime2);
+                Assert.Equal(allDataTypeItemFromDb.Datetimeoffset.Date, allDataTypeItemFromMemory.Datetimeoffset.Date);
+                Assert.Equal(allDataTypeItemFromDb.Decimal, allDataTypeItemFromMemory.Decimal);
+                Assert.Equal(allDataTypeItemFromDb.Varbinary_Max, allDataTypeItemFromMemory.Varbinary_Max);
+                Assert.Equal(allDataTypeItemFromDb.Float, allDataTypeItemFromMemory.Float);
             }
         }
     }
