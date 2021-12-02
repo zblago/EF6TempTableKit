@@ -30,6 +30,7 @@ namespace EF6TempTableKit.Test.TempTables
         public DateTime Datetime { get; set; }
 
         [TempFieldTypeAttribute("datetime2")]
+        [StringFormat("'{0:yyyy-MM-dd HH:mm:ss.fffffff}'")]
         public DateTime Datetime2 { get; set; }
 
         [TempFieldTypeAttribute("datetimeoffset")]
@@ -47,13 +48,14 @@ namespace EF6TempTableKit.Test.TempTables
         [StringFormatAttribute("{0:r}")] //Because ToString() is rounding double.MaxValue (https://stackoverflow.com/questions/40562199/double-maxvalue-to-string-is-unconverted-back)
         public double Float { get; set; }
 
-        /*
         [TempFieldTypeAttribute("image")]
+        [FuncFormatAttribute(typeof(BitCustomFormatter))]
         public byte[] Image { get; set; }
 
         [TempFieldTypeAttribute("int")]
         public Int32 Int { get; set; }
 
+        /*
         [TempFieldTypeAttribute("nchar")]
         public String Nchar { get; set; }
 

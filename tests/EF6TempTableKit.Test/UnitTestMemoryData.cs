@@ -138,15 +138,17 @@ namespace EF6TempTableKit.Test
                     new AllDataTypesDto
                     { 
                         Bigint = Int64.MaxValue,
-                        Binary = new byte[] { 0x45, 0x46},
+                        Binary = new byte[] { 0x45, 0x46 },
                         Bit = true,
-                        Date = DateTime.Today,
-                        Datetime = DateTime.Today,
-                        Datetime2 = DateTime.Today,
+                        Date = DateTime.MaxValue.Date,
+                        Datetime = DateTime.MaxValue.AddMilliseconds(-2), //Time range	00:00:00 through 23:59:59.997 https://docs.microsoft.com/en-us/sql/t-sql/data-types/datetime-transact-sql?view=sql-server-ver15
+                        Datetime2 = DateTime.MaxValue,
                         Datetimeoffset = DateTimeOffset.UtcNow.Date,
                         Decimal = Decimal.MaxValue,
                         Varbinary_Max = new byte[] { 0x4B, 0x49, 0x54, 0x41 },
-                        Float = double.MaxValue
+                        Float = double.MaxValue,
+                        Image = new byte[] { 0x45, 0x46 },
+                        Int = int.MaxValue
                     }
                 };
 
@@ -165,12 +167,14 @@ namespace EF6TempTableKit.Test
                 Assert.Equal(allDataTypeItemFromDb.Binary, allDataTypeItemFromMemory.Binary);
                 Assert.Equal(allDataTypeItemFromDb.Bit, allDataTypeItemFromMemory.Bit);
                 Assert.Equal(allDataTypeItemFromDb.Date, allDataTypeItemFromMemory.Date);
-                Assert.Equal(allDataTypeItemFromDb.Datetime, allDataTypeItemFromMemory.Datetime);
-                Assert.Equal(allDataTypeItemFromDb.Datetime2, allDataTypeItemFromMemory.Datetime2);
+                Assert.Equal(allDataTypeItemFromDb.Datetime.ToString("yyyy-MM-dd HH:mm:ss.fff"), allDataTypeItemFromMemory.Datetime.ToString("yyyy-MM-dd HH:mm:ss.fff"));
+                Assert.Equal(allDataTypeItemFromDb.Datetime2.ToString("yyyy-MM-dd HH:mm:ss.fffffff"), allDataTypeItemFromMemory.Datetime2.ToString("yyyy-MM-dd HH:mm:ss.fffffff"));
                 Assert.Equal(allDataTypeItemFromDb.Datetimeoffset.Date, allDataTypeItemFromMemory.Datetimeoffset.Date);
                 Assert.Equal(allDataTypeItemFromDb.Decimal, allDataTypeItemFromMemory.Decimal);
                 Assert.Equal(allDataTypeItemFromDb.Varbinary_Max, allDataTypeItemFromMemory.Varbinary_Max);
                 Assert.Equal(allDataTypeItemFromDb.Float, allDataTypeItemFromMemory.Float);
+                Assert.Equal(allDataTypeItemFromDb.Image, allDataTypeItemFromMemory.Image);
+                Assert.Equal(allDataTypeItemFromDb.Int, allDataTypeItemFromMemory.Int);
             }
         }
     }
