@@ -55,26 +55,27 @@ namespace EF6TempTableKit.Test.TempTables
         [TempFieldTypeAttribute("int")]
         public Int32 Int { get; set; }
 
-        /*
-        [TempFieldTypeAttribute("nchar")]
+        [TempFieldTypeAttribute("nchar(15)")]
         public String Nchar { get; set; }
 
         [TempFieldTypeAttribute("ntext")]
         public String Ntext { get; set; }
 
-        [TempFieldTypeAttribute("numeric")]
+        [TempFieldTypeAttribute("numeric(38, 0)")]
         public Decimal Numeric { get; set; }
 
-        [TempFieldTypeAttribute("nvarchar")]
+        [TempFieldTypeAttribute("nvarchar(15)")]
         public String Nvarchar { get; set; }
 
-        [TempFieldTypeAttribute("Real")]
+        [TempFieldTypeAttribute("real")]
+        [StringFormatAttribute("{0:r}")] //Because ToString() is rounding single.MaxValue (https://stackoverflow.com/questions/40562199/double-maxvalue-to-string-is-unconverted-back)
         public Single Real { get; set; }
 
-        [TempFieldTypeAttribute("rowversion")]
-        public byte[] Rowversion { get; set; }
+        //[TempFieldTypeAttribute("rowversion")]
+        //public byte[] Rowversion { get; set; } //Automatically generated value, can't be inserted, only read.
 
         [TempFieldTypeAttribute("smalldatetime")]
+        [StringFormat("'{0:yyyy-MM-dd HH:mm:ss}'")]
         public DateTime Smalldatetime { get; set; }
 
         [TempFieldTypeAttribute("smallint")]
@@ -87,8 +88,9 @@ namespace EF6TempTableKit.Test.TempTables
         public String Text { get; set; }
 
         [TempFieldTypeAttribute("Time")]
+        [StringFormat("'{0:hh\\:mm\\:ss\\.fff}'")]
         public TimeSpan Time { get; set; }
-
+        /*
         [TempFieldTypeAttribute("timestamp")]
         public byte[] Timestamp { get; set; }
 

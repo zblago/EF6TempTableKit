@@ -11,6 +11,8 @@ namespace EF6TempTableKit.Test
 {
     public class UnitTestMemoryData
     {
+        private const decimal SMALL_MONEY_MAX = 214748.3647M;
+
         private IList<string> _addressList = new List<string>{ "1970 Napa Ct.", "9833 Mt. Dias Blv.", "7484 Roundtree Drive" };
 
         [Fact]
@@ -131,6 +133,7 @@ namespace EF6TempTableKit.Test
         [Fact]
         public void MapNetToSqlDataTypes()
         {
+
             using (var context = new AdventureWorksCodeFirst())
             {
                 var allDataTypesList = new List<AllDataTypesDto> 
@@ -141,14 +144,24 @@ namespace EF6TempTableKit.Test
                         Binary = new byte[] { 0x45, 0x46 },
                         Bit = true,
                         Date = DateTime.MaxValue.Date,
-                        Datetime = DateTime.MaxValue.AddMilliseconds(-2), //Time range	00:00:00 through 23:59:59.997 https://docs.microsoft.com/en-us/sql/t-sql/data-types/datetime-transact-sql?view=sql-server-ver15
+                        Datetime = DateTime.MaxValue.AddMilliseconds(-2), //Time range:	00:00:00 through 23:59:59.997 https://docs.microsoft.com/en-us/sql/t-sql/data-types/datetime-transact-sql?view=sql-server-ver15
                         Datetime2 = DateTime.MaxValue,
                         Datetimeoffset = DateTimeOffset.UtcNow.Date,
                         Decimal = Decimal.MaxValue,
                         Varbinary_Max = new byte[] { 0x4B, 0x49, 0x54, 0x41 },
                         Float = double.MaxValue,
                         Image = new byte[] { 0x45, 0x46 },
-                        Int = int.MaxValue
+                        Int = int.MaxValue,
+                        Nchar = "Ef6TempTableKit",
+                        Ntext = "Ef6TempTableKit",
+                        Numeric = Decimal.MaxValue,
+                        Nvarchar = "Ef6TempTableKit",
+                        Real = Single.MaxValue,
+                        Smalldatetime = new DateTime(2079, 6, 5, 23, 59, 0),
+                        Smallint = Int16.MaxValue,
+                        Smallmoney = SMALL_MONEY_MAX,
+                        Text = "Ef6TempTableKit",
+                        Time = new TimeSpan(0, 4, 54, 56, 234)
                     }
                 };
 
@@ -175,6 +188,16 @@ namespace EF6TempTableKit.Test
                 Assert.Equal(allDataTypeItemFromDb.Float, allDataTypeItemFromMemory.Float);
                 Assert.Equal(allDataTypeItemFromDb.Image, allDataTypeItemFromMemory.Image);
                 Assert.Equal(allDataTypeItemFromDb.Int, allDataTypeItemFromMemory.Int);
+                Assert.Equal(allDataTypeItemFromDb.Nchar, allDataTypeItemFromMemory.Nchar);
+                Assert.Equal(allDataTypeItemFromDb.Ntext, allDataTypeItemFromMemory.Ntext);
+                Assert.Equal(allDataTypeItemFromDb.Numeric, allDataTypeItemFromMemory.Numeric);
+                Assert.Equal(allDataTypeItemFromDb.Nvarchar, allDataTypeItemFromMemory.Nvarchar);
+                Assert.Equal(allDataTypeItemFromDb.Real, allDataTypeItemFromMemory.Real);
+                Assert.Equal(allDataTypeItemFromDb.Smalldatetime.ToString("yyyy-MM-dd HH:mm:ss"), allDataTypeItemFromMemory.Smalldatetime.ToString("yyyy-MM-dd HH:mm:ss"));
+                Assert.Equal(allDataTypeItemFromDb.Smallint, allDataTypeItemFromMemory.Smallint);
+                Assert.Equal(allDataTypeItemFromDb.Smallmoney, allDataTypeItemFromMemory.Smallmoney);
+                Assert.Equal(allDataTypeItemFromDb.Text, allDataTypeItemFromMemory.Text);
+                Assert.Equal(allDataTypeItemFromDb.Time, allDataTypeItemFromMemory.Time);
             }
         }
     }
