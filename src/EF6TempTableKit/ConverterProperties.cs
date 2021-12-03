@@ -11,7 +11,7 @@ namespace EF6TempTableKit
 
     internal class ConverterProperties
     {
-        public StringConvertAttribute StringConvertAttribute { get; set; }
+        public StringConverterAttribute StringConvertAttribute { get; set; }
         public object Field { get; set; }
         public MethodInfo MethodInfo { get; set; }
     }

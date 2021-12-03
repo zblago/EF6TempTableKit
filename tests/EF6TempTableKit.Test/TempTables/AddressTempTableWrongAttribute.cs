@@ -12,7 +12,7 @@ namespace EF6TempTableKit.Test.TempTables
         [NonClusteredIndex("second")]
         [TempFieldTypeAttribute("int")]
         [CustomConverterAttribute(typeof(IntCustomConverter))]
-        [StringConvert("{0:D}")]
+        [StringConverter("{0:D}")]
         public string Name { get; set; }
     }
 

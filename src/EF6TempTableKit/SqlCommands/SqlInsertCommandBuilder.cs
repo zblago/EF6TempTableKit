@@ -228,7 +228,7 @@ namespace EF6TempTableKit.SqlCommands
             var firstItemProperties = item.GetType().GetProperties();
 
             var defaultConverter = firstItemProperties
-                .Where(x => !x.GetCustomAttributes(typeof(StringConvertAttribute), true).Any()
+                .Where(x => !x.GetCustomAttributes(typeof(StringConverterAttribute), true).Any()
                     && !x.GetCustomAttributes(typeof(CustomConverterAttribute), true).Any())
                 .Select(x => new ConverterInfo
                 { 
@@ -236,14 +236,14 @@ namespace EF6TempTableKit.SqlCommands
                 });
 
             var customStringConverters = firstItemProperties
-                .Where(x => x.GetCustomAttributes(typeof(StringConvertAttribute), true).Any())
+                .Where(x => x.GetCustomAttributes(typeof(StringConverterAttribute), true).Any())
                 .Select(x => new ConverterInfo
                 {
                     Name = x.Name,
                     ConverterProperties = new ConverterProperties[] { 
                         new ConverterProperties 
                         { 
-                            StringConvertAttribute = (StringConvertAttribute)x.GetCustomAttribute(typeof(StringConvertAttribute), true) 
+                            StringConvertAttribute = (StringConverterAttribute)x.GetCustomAttribute(typeof(StringConverterAttribute), true) 
                         }
                     }
                 });

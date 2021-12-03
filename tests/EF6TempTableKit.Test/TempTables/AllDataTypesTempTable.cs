@@ -30,11 +30,11 @@ namespace EF6TempTableKit.Test.TempTables
         public DateTime Datetime { get; set; }
 
         [TempFieldTypeAttribute("datetime2")]
-        [StringConvert("'{0:yyyy-MM-dd HH:mm:ss.fffffff}'")]
+        [StringConverter("'{0:yyyy-MM-dd HH:mm:ss.fffffff}'")]
         public DateTime Datetime2 { get; set; }
 
         [TempFieldTypeAttribute("datetimeoffset")]
-        [StringConvert("'{0:yyyy-MM-dd HH:mm:ss.fff}'")]
+        [StringConverter("'{0:yyyy-MM-dd HH:mm:ss.fff}'")]
         public DateTimeOffset Datetimeoffset { get; set; }
 
         [TempFieldTypeAttribute("decimal(38, 0)")]
@@ -45,7 +45,7 @@ namespace EF6TempTableKit.Test.TempTables
         public byte[] Varbinary_Max { get; set; }
 
         [TempFieldTypeAttribute("float(53)")]
-        [StringConvertAttribute("{0:r}")] //Because ToString() is rounding double.MaxValue (https://stackoverflow.com/questions/40562199/double-maxvalue-to-string-is-unconverted-back)
+        [StringConverterAttribute("{0:r}")] //Because ToString() is rounding double.MaxValue (https://stackoverflow.com/questions/40562199/double-maxvalue-to-string-is-unconverted-back)
         public double Float { get; set; }
 
         [TempFieldTypeAttribute("image")]
@@ -68,14 +68,14 @@ namespace EF6TempTableKit.Test.TempTables
         public String Nvarchar { get; set; }
 
         [TempFieldTypeAttribute("real")]
-        [StringConvertAttribute("{0:r}")] //Because ToString() is rounding single.MaxValue (https://stackoverflow.com/questions/40562199/double-maxvalue-to-string-is-unconverted-back)
+        [StringConverterAttribute("{0:r}")] //Because ToString() is rounding single.MaxValue (https://stackoverflow.com/questions/40562199/double-maxvalue-to-string-is-unconverted-back)
         public Single Real { get; set; }
 
         //[TempFieldTypeAttribute("rowversion")]
         //public byte[] Rowversion { get; set; } //Automatically generated value, can't be inserted, only read.
 
         [TempFieldTypeAttribute("smalldatetime")]
-        [StringConvert("'{0:yyyy-MM-dd HH:mm:ss}'")]
+        [StringConverter("'{0:yyyy-MM-dd HH:mm:ss}'")]
         public DateTime Smalldatetime { get; set; }
 
         [TempFieldTypeAttribute("smallint")]
@@ -88,7 +88,7 @@ namespace EF6TempTableKit.Test.TempTables
         public String Text { get; set; }
 
         [TempFieldTypeAttribute("Time")]
-        [StringConvert("'{0:hh\\:mm\\:ss\\.fff}'")]
+        [StringConverter("'{0:hh\\:mm\\:ss\\.fff}'")]
         public TimeSpan Time { get; set; }
 
         //[TempFieldTypeAttribute("timestamp")]
@@ -98,7 +98,7 @@ namespace EF6TempTableKit.Test.TempTables
         public byte Tinyint { get; set; }
 
         [TempFieldTypeAttribute("uniqueidentifier")]
-        [StringConvert("'{0}'")]
+        [StringConverter("'{0}'")]
         public Guid Uniqueidentifier { get; set; }
 
         [TempFieldTypeAttribute("varbinary(4)")]

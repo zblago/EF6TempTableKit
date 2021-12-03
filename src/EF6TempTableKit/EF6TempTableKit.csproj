@@ -49,7 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Attributes\ClusteredIndexAttribute.cs" />
-    <Compile Include="Attributes\StringConvertAttribute.cs" />
+    <Compile Include="Attributes\StringConverterAttribute.cs" />
     <Compile Include="Attributes\NonClusteredIndexAttribute.cs" />
     <Compile Include="Attributes\CustomConverterAttribute.cs" />
     <Compile Include="Attributes\TempFieldTypeAttribute.cs" />
