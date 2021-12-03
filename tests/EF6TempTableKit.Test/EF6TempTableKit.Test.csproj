@@ -103,11 +103,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CustomFormatter\BitCustomFormatter.cs" />
-    <Compile Include="CustomFormatter\IntCustomFormatter.cs" />
-    <Compile Include="CustomFormatter\IStringCustomFormatter.cs" />
-    <Compile Include="CustomFormatter\StringCustomFormatter.cs" />
-    <Compile Include="CustomFormatter\WrongIntCustomFormatter.cs" />
+    <Compile Include="CustomConverters\BitCustomConverter.cs" />
+    <Compile Include="CustomConverters\IntCustomConverter.cs" />
+    <Compile Include="CustomConverters\StringCustomConverter.cs" />
+    <Compile Include="CustomConverters\WrongIntCustomConverter.cs" />
     <Compile Include="DbContextConfiguration\AdventureWorkQueryInterceptor.cs" />
     <Compile Include="DbContextConfiguration\CustomDbContextConfiguration.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />

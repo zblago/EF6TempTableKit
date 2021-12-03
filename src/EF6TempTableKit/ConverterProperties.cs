@@ -3,15 +3,15 @@ using System.Reflection;
 
 namespace EF6TempTableKit
 {
-    internal class FormatterInfo 
+    internal class ConverterInfo 
     {
         public string Name { get; set; }
-        public FormatterProperties[] FormatterProperties { get; set; }
+        public ConverterProperties[] ConverterProperties { get; set; }
     }
 
-    internal class FormatterProperties
+    internal class ConverterProperties
     {
-        public StringConvertAttribute StringFormatAttribute { get; set; }
+        public StringConvertAttribute StringConvertAttribute { get; set; }
         public object Field { get; set; }
         public MethodInfo MethodInfo { get; set; }
     }

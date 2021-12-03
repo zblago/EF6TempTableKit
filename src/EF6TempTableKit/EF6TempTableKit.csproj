@@ -64,7 +64,7 @@
     <Compile Include="Extensions\PropertyExtensions.cs" />
     <Compile Include="Extensions\ObjectQueryExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
-    <Compile Include="FormatterProperties.cs" />
+    <Compile Include="ConverterProperties.cs" />
     <Compile Include="Interfaces\ICustomConverter.cs" />
     <Compile Include="Interfaces\ITempTable.cs" />
     <Compile Include="Query.cs" />

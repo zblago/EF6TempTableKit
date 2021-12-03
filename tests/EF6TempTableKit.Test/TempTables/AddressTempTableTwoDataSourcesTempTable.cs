@@ -1,5 +1,5 @@
 ﻿using EF6TempTableKit.Attributes;
-using EF6TempTableKit.Test.CustomFormatter;
+using EF6TempTableKit.Test.CustomConverters;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EF6TempTableKit.Test.TempTables
@@ -19,7 +19,7 @@ namespace EF6TempTableKit.Test.TempTables
         [NonClusteredIndex("third")]
         [NonClusteredIndex("second")]
         [TempFieldTypeAttribute("varchar(200)")]
-        [CustomConverterAttribute(typeof(StringCustomFormatter))]
+        [CustomConverterAttribute(typeof(StringCustomConverter))]
         public string Name { get; set; }
     }
 

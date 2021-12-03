@@ -1,11 +1,6 @@
 ﻿using EF6TempTableKit.Attributes;
-using EF6TempTableKit.Test.CustomFormatter;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EF6TempTableKit.Test.TempTables
 {
