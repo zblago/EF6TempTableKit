@@ -229,7 +229,7 @@ namespace EF6TempTableKit.SqlCommands
 
             var defaultFormmatter = firstItemProperties
                 .Where(x => !x.GetCustomAttributes(typeof(StringFormatAttribute), true).Any()
-                    && !x.GetCustomAttributes(typeof(FuncFormatAttribute), true).Any())
+                    && !x.GetCustomAttributes(typeof(CustomConverterAttribute), true).Any())
                 .Select(x => new FormatterInfo
                 { 
                     Name = x.Name
@@ -249,10 +249,10 @@ namespace EF6TempTableKit.SqlCommands
                 });
 
             var customFuncFormatters = firstItemProperties
-                .Where(x => x.GetCustomAttributes(typeof(FuncFormatAttribute), true).Any())
+                .Where(x => x.GetCustomAttributes(typeof(CustomConverterAttribute), true).Any())
                 .Select(x =>
                 {
-                    Type storeType = ((FuncFormatAttribute)x.GetCustomAttribute(typeof(FuncFormatAttribute), true))?.Type;
+                    Type storeType = ((CustomConverterAttribute)x.GetCustomAttribute(typeof(CustomConverterAttribute), true))?.Type;
                     var instance = Activator.CreateInstance(storeType);
                     PropertyInfo info = instance.GetType().GetProperty(nameof(ICustomFuncFormatter<object, object>.Formatter));
                     object field = info.GetValue(instance);

@@ -6,11 +6,11 @@ using System.Linq;
 namespace EF6TempTableKit.Attributes
 {
     [AttributeUsage(AttributeTargets.Property)]
-    public class FuncFormatAttribute : Attribute
+    public class CustomConverterAttribute : Attribute
     {
         public Type Type { get; private set;}
 
-        public FuncFormatAttribute(Type type)
+        public CustomConverterAttribute(Type type)
         {
             if (!type.GetInterfaces().Any(x => x.GetGenericTypeDefinition() == typeof(ICustomFuncFormatter<,>)))
             {

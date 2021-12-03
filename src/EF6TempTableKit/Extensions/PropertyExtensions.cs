@@ -13,10 +13,10 @@ namespace EF6TempTableKit.Extensions
         public static object GetSqlValue(this PropertyInfo prop, object obj, IDictionary<string, Attribute[]> customFormatter)
         {
             var hasStringCustomFormatter = customFormatter[prop.Name]?.Length > 0 && customFormatter[prop.Name].ToList().Any(x => x.GetType() == typeof(StringFormatAttribute));
-            var hasFuncCustomFormatter = customFormatter[prop.Name]?.Length > 0 && customFormatter[prop.Name].ToList().Any(x => x.GetType() == typeof(FuncFormatAttribute));
+            var hasFuncCustomFormatter = customFormatter[prop.Name]?.Length > 0 && customFormatter[prop.Name].ToList().Any(x => x.GetType() == typeof(CustomConverterAttribute));
 
             if (hasStringCustomFormatter && hasFuncCustomFormatter)
-                throw new EF6TempTableKitGenericException("EF6TempTableKit: Field can't have associated both StringFormatAttribute and FuncFormatAttribute custom format attributes.");
+                throw new EF6TempTableKitGenericException("EF6TempTableKit: Field can't have associated both StringFormatAttribute and CustomConverterAttribute custom format attributes.");
 
             var value = prop.GetValue(obj, null);
 
@@ -31,7 +31,7 @@ namespace EF6TempTableKit.Extensions
             }
             else if (hasFuncCustomFormatter)
             {
-                Type storeType = ((FuncFormatAttribute)customFormatter[prop.Name].First()).Type;
+                Type storeType = ((CustomConverterAttribute)customFormatter[prop.Name].First()).Type;
                 var instance = Activator.CreateInstance(storeType);
                 PropertyInfo info  = instance.GetType().GetProperty(nameof(ICustomFuncFormatter<object, object>.Formatter));
                 object yourField = info.GetValue(instance);
@@ -51,7 +51,7 @@ namespace EF6TempTableKit.Extensions
             var hasFuncCustomFormatter = customFormatter[prop.Name]?.Length > 0 && customFormatter[prop.Name].ToList().Any(x => x.MethodInfo != null && x.Field != null);
 
             if (hasStringCustomFormatter && hasFuncCustomFormatter)
-                throw new EF6TempTableKitGenericException("EF6TempTableKit: Field can't have associated both StringFormatAttribute and FuncFormatAttribute custom format attributes.");
+                throw new EF6TempTableKitGenericException("EF6TempTableKit: Field can't have associated both StringFormatAttribute and CustomConverterAttribute custom format attributes.");
 
             var value = prop.GetValue(obj, null);
 

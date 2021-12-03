@@ -17,7 +17,7 @@ namespace EF6TempTableKit.Test.TempTables
         public Int64 Bigint { get; set; }
 
         [TempFieldTypeAttribute("binary(2)")]
-        [FuncFormatAttribute(typeof(BitCustomFormatter))]
+        [CustomConverterAttribute(typeof(BitCustomFormatter))]
         public byte[] Binary { get; set; }
 
         [TempFieldTypeAttribute("bit")]
@@ -41,7 +41,7 @@ namespace EF6TempTableKit.Test.TempTables
         public decimal Decimal { get; set; }
         
         [TempFieldTypeAttribute("varbinary(max)")]
-        [FuncFormatAttribute(typeof(BitCustomFormatter))]
+        [CustomConverterAttribute(typeof(BitCustomFormatter))]
         public byte[] Varbinary_Max { get; set; }
 
         [TempFieldTypeAttribute("float(53)")]
@@ -49,7 +49,7 @@ namespace EF6TempTableKit.Test.TempTables
         public double Float { get; set; }
 
         [TempFieldTypeAttribute("image")]
-        [FuncFormatAttribute(typeof(BitCustomFormatter))]
+        [CustomConverterAttribute(typeof(BitCustomFormatter))]
         public byte[] Image { get; set; }
 
         [TempFieldTypeAttribute("int")]
@@ -102,7 +102,7 @@ namespace EF6TempTableKit.Test.TempTables
         public Guid Uniqueidentifier { get; set; }
 
         [TempFieldTypeAttribute("varbinary(4)")]
-        [FuncFormatAttribute(typeof(BitCustomFormatter))]
+        [CustomConverterAttribute(typeof(BitCustomFormatter))]
         public byte[] Varbinary { get; set; }
 
         [TempFieldTypeAttribute("varchar(50)")]

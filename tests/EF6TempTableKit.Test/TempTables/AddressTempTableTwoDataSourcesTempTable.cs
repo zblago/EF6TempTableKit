@@ -19,7 +19,7 @@ namespace EF6TempTableKit.Test.TempTables
         [NonClusteredIndex("third")]
         [NonClusteredIndex("second")]
         [TempFieldTypeAttribute("varchar(200)")]
-        [FuncFormatAttribute(typeof(StringCustomFormatter))]
+        [CustomConverterAttribute(typeof(StringCustomFormatter))]
         public string Name { get; set; }
     }
 

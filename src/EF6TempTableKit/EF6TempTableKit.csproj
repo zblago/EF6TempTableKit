@@ -51,7 +51,7 @@
     <Compile Include="Attributes\ClusteredIndexAttribute.cs" />
     <Compile Include="Attributes\StringFormatAttribute.cs" />
     <Compile Include="Attributes\NonClusteredIndexAttribute.cs" />
-    <Compile Include="Attributes\FuncFormatAttribute.cs" />
+    <Compile Include="Attributes\CustomConverterAttribute.cs" />
     <Compile Include="Attributes\TempFieldTypeAttribute.cs" />
     <Compile Include="DbContext\EF6TempTableKitDbConfiguration.cs" />
     <Compile Include="DbContext\IDbContextWithTempTable.cs" />
