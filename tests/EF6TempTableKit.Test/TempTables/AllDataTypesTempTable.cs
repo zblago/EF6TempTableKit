@@ -90,22 +90,23 @@ namespace EF6TempTableKit.Test.TempTables
         [TempFieldTypeAttribute("Time")]
         [StringFormat("'{0:hh\\:mm\\:ss\\.fff}'")]
         public TimeSpan Time { get; set; }
-        /*
-        [TempFieldTypeAttribute("timestamp")]
-        public byte[] Timestamp { get; set; }
+
+        //[TempFieldTypeAttribute("timestamp")]
+        //public byte[] Timestamp { get; set; } //Automatically generated value, can't be inserted, only read.
 
         [TempFieldTypeAttribute("tinyint")]
         public byte Tinyint { get; set; }
 
         [TempFieldTypeAttribute("uniqueidentifier")]
+        [StringFormat("'{0}'")]
         public Guid Uniqueidentifier { get; set; }
 
-        [TempFieldTypeAttribute("varbinary(5)")]
+        [TempFieldTypeAttribute("varbinary(4)")]
+        [FuncFormatAttribute(typeof(BitCustomFormatter))]
         public byte[] Varbinary { get; set; }
 
         [TempFieldTypeAttribute("varchar(50)")]
         public String Varchar_50 { get; set; }
-        */
     }
 
     [NotMapped]

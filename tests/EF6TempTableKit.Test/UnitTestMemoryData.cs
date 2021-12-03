@@ -130,10 +130,16 @@ namespace EF6TempTableKit.Test
             }
         }
 
+        /// <summary>
+        /// EF6TempTableKit ensures that each data type is properly converted to the corresponding SQL Server data type (date to date, int to int, ....).
+        /// https://docs.microsoft.com/en-us/sql/connect/ado-net/sql-server-data-type-mappings?view=sql-server-ver15.
+        /// But there are some exceptions when you convert certain types of data yourself.
+        /// Most of the needed converters are here in the UnitTest project.
+        /// Take this as an example and change as per your needs.
+        /// </summary>
         [Fact]
         public void MapNetToSqlDataTypes()
         {
-
             using (var context = new AdventureWorksCodeFirst())
             {
                 var allDataTypesList = new List<AllDataTypesDto> 
@@ -161,13 +167,13 @@ namespace EF6TempTableKit.Test
                         Smallint = Int16.MaxValue,
                         Smallmoney = SMALL_MONEY_MAX,
                         Text = "Ef6TempTableKit",
-                        Time = new TimeSpan(0, 4, 54, 56, 234)
+                        Time = new TimeSpan(0, 4, 54, 56, 234),
+                        Tinyint = byte.MaxValue,
+                        Uniqueidentifier = Guid.NewGuid(),
+                        Varbinary = new byte[] { 0x4B, 0x49, 0x54, 0x41 },
+                        Varchar_50 = "wqS5LQa67cxMReRRFHC5CKptEnCVqieB04mOXbBl5ahk0M3S8j"
                     }
                 };
-
-                //var totalCount = context
-                //        .WithTempTableExpression<AdventureWorksCodeFirst>(allDataTypesList)
-                //        .AllDataTypesTempTable.Count();
 
                 var allDataTypeItemFromDb = context
                         .WithTempTableExpression<AdventureWorksCodeFirst>(allDataTypesList)
@@ -175,7 +181,6 @@ namespace EF6TempTableKit.Test
 
                 var allDataTypeItemFromMemory = allDataTypesList.First();
 
-                //Assert.True(totalCount > 0);
                 Assert.Equal(allDataTypeItemFromDb.Bigint, allDataTypeItemFromMemory.Bigint);
                 Assert.Equal(allDataTypeItemFromDb.Binary, allDataTypeItemFromMemory.Binary);
                 Assert.Equal(allDataTypeItemFromDb.Bit, allDataTypeItemFromMemory.Bit);
@@ -198,6 +203,10 @@ namespace EF6TempTableKit.Test
                 Assert.Equal(allDataTypeItemFromDb.Smallmoney, allDataTypeItemFromMemory.Smallmoney);
                 Assert.Equal(allDataTypeItemFromDb.Text, allDataTypeItemFromMemory.Text);
                 Assert.Equal(allDataTypeItemFromDb.Time, allDataTypeItemFromMemory.Time);
+                Assert.Equal(allDataTypeItemFromDb.Tinyint, allDataTypeItemFromMemory.Tinyint);
+                Assert.Equal(allDataTypeItemFromDb.Uniqueidentifier, allDataTypeItemFromMemory.Uniqueidentifier);
+                Assert.Equal(allDataTypeItemFromDb.Varbinary, allDataTypeItemFromMemory.Varbinary);
+                Assert.Equal(allDataTypeItemFromDb.Varchar_50, allDataTypeItemFromMemory.Varchar_50);
             }
         }
     }
