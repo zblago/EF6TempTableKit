@@ -209,5 +209,49 @@ namespace EF6TempTableKit.Test
                 Assert.Equal(allDataTypeItemFromDb.Varchar_50, allDataTypeItemFromMemory.Varchar_50);
             }
         }
+
+        [Fact]
+        public void Load1000RecordsFromMemory()
+        {
+            var sampleList = new List<AllDataTypesDto>();
+            for (var i = 0; i < 1000; i++) 
+            {
+                sampleList.Add(new AllDataTypesDto
+                {
+                    Bigint = Int64.MaxValue,
+                    Binary = new byte[] { 0x45, 0x46 },
+                    Bit = true,
+                    Date = DateTime.MaxValue.Date,
+                    Datetime = DateTime.MaxValue.AddMilliseconds(-2), //Time range:	00:00:00 through 23:59:59.997 https://docs.microsoft.com/en-us/sql/t-sql/data-types/datetime-transact-sql?view=sql-server-ver15
+                    Datetime2 = DateTime.MaxValue,
+                    Datetimeoffset = DateTimeOffset.UtcNow.Date,
+                    Decimal = Decimal.MaxValue,
+                    Varbinary_Max = new byte[] { 0x4B, 0x49, 0x54, 0x41 },
+                    Float = double.MaxValue,
+                    Image = new byte[] { 0x45, 0x46 },
+                    Int = int.MaxValue,
+                    Nchar = "Ef6TempTableKit",
+                    Ntext = "Ef6TempTableKit",
+                    Numeric = Decimal.MaxValue,
+                    Nvarchar = "Ef6TempTableKit",
+                    Real = Single.MaxValue,
+                    Smalldatetime = new DateTime(2079, 6, 5, 23, 59, 0),
+                    Smallint = Int16.MaxValue,
+                    Smallmoney = SMALL_MONEY_MAX,
+                    Text = "Ef6TempTableKit",
+                    Time = new TimeSpan(0, 4, 54, 56, 234),
+                    Tinyint = byte.MaxValue,
+                    Uniqueidentifier = Guid.NewGuid(),
+                    Varbinary = new byte[] { 0x4B, 0x49, 0x54, 0x41 },
+                    Varchar_50 = "wqS5LQa67cxMReRRFHC5CKptEnCVqieB04mOXbBl5ahk0M3S8j"
+                });
+            }
+
+            using (var context = new AdventureWorksCodeFirst())
+            {
+                var allDataFromDb = context.WithTempTableExpression<AdventureWorksCodeFirst>(sampleList).AllDataTypesTempTable.ToList();
+                Assert.Equal(allDataFromDb.Count, sampleList.Count);
+            };
+        }
     }
 }
