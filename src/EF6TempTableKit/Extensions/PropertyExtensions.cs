@@ -12,7 +12,7 @@ namespace EF6TempTableKit.Extensions
     {
         public static object GetSqlValue(this PropertyInfo prop, object obj, IDictionary<string, Attribute[]> customFormatter)
         {
-            var hasStringCustomFormatter = customFormatter[prop.Name]?.Length > 0 && customFormatter[prop.Name].ToList().Any(x => x.GetType() == typeof(StringFormatAttribute));
+            var hasStringCustomFormatter = customFormatter[prop.Name]?.Length > 0 && customFormatter[prop.Name].ToList().Any(x => x.GetType() == typeof(StringConvertAttribute));
             var hasFuncCustomFormatter = customFormatter[prop.Name]?.Length > 0 && customFormatter[prop.Name].ToList().Any(x => x.GetType() == typeof(CustomConverterAttribute));
 
             if (hasStringCustomFormatter && hasFuncCustomFormatter)
@@ -22,8 +22,8 @@ namespace EF6TempTableKit.Extensions
 
             if (hasStringCustomFormatter)
             {
-                var format = ((StringFormatAttribute)customFormatter[prop.Name].First()).Format;
-                var formatProvider = ((StringFormatAttribute)customFormatter[prop.Name].First()).FormatProvider;
+                var format = ((StringConvertAttribute)customFormatter[prop.Name].First()).Format;
+                var formatProvider = ((StringConvertAttribute)customFormatter[prop.Name].First()).FormatProvider;
 
                 return formatProvider == null 
                     ? CustomStringFormatValue(value, format) 

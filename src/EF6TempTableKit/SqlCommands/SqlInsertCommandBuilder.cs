@@ -228,7 +228,7 @@ namespace EF6TempTableKit.SqlCommands
             var firstItemProperties = item.GetType().GetProperties();
 
             var defaultFormmatter = firstItemProperties
-                .Where(x => !x.GetCustomAttributes(typeof(StringFormatAttribute), true).Any()
+                .Where(x => !x.GetCustomAttributes(typeof(StringConvertAttribute), true).Any()
                     && !x.GetCustomAttributes(typeof(CustomConverterAttribute), true).Any())
                 .Select(x => new FormatterInfo
                 { 
@@ -236,14 +236,14 @@ namespace EF6TempTableKit.SqlCommands
                 });
 
             var customStringFormatters = firstItemProperties
-                .Where(x => x.GetCustomAttributes(typeof(StringFormatAttribute), true).Any())
+                .Where(x => x.GetCustomAttributes(typeof(StringConvertAttribute), true).Any())
                 .Select(x => new FormatterInfo
                 {
                     Name = x.Name,
                     FormatterProperties = new FormatterProperties[] { 
                         new FormatterProperties 
                         { 
-                            StringFormatAttribute = (StringFormatAttribute)x.GetCustomAttribute(typeof(StringFormatAttribute), true) 
+                            StringFormatAttribute = (StringConvertAttribute)x.GetCustomAttribute(typeof(StringConvertAttribute), true) 
                         }
                     }
                 });

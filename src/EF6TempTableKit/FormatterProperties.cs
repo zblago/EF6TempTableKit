@@ -11,7 +11,7 @@ namespace EF6TempTableKit
 
     internal class FormatterProperties
     {
-        public StringFormatAttribute StringFormatAttribute { get; set; }
+        public StringConvertAttribute StringFormatAttribute { get; set; }
         public object Field { get; set; }
         public MethodInfo MethodInfo { get; set; }
     }
