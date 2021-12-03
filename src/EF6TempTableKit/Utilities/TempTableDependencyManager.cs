@@ -16,15 +16,13 @@ namespace EF6TempTableKit.Utilities
     /// </summary>
     internal class TempTableDependencyManager
     {
-        private readonly string _sqlSelectQuery;
         private readonly string[] _tablesUsedInQuery;
         private readonly string[] _tempSqlQueryList;
         private readonly TempTableContainer _tempTableContainer;
         private readonly ObjectQuery _objectQuery;
 
-        internal TempTableDependencyManager(string sqlSelectQuery, ObjectQuery objectQuery, TempTableContainer tempTableContainer)
+        internal TempTableDependencyManager(ObjectQuery objectQuery, TempTableContainer tempTableContainer)
         {
-            _sqlSelectQuery = sqlSelectQuery;
             _objectQuery = objectQuery;
             _tempTableContainer = tempTableContainer;
             _tablesUsedInQuery = GetAllTablesInQuery();
@@ -33,32 +31,32 @@ namespace EF6TempTableKit.Utilities
 
         /// <summary>
         /// Use all tables from attached query and compare with already attached temp tables.
-        /// Get match into a separate collection. Traverse through the first level children as they already have their dependencies.
+        /// Get match into a separate collection. Traverse through the first level children as they already have dependencies.
         /// </summary>
         /// <param name="newTempTableName"></param>
         public void AddDependenciesForTable(string newTempTableName)
         {
             //newTempTableName = key
-            var alreadyAttachedTempTables = _tempSqlQueryList
+            var alreadyAttachedTempTablesFromQuery = _tempSqlQueryList
                 .Where(aaTT => _tablesUsedInQuery.Any(tiQ => tiQ == aaTT))
                 .Select(aaTT => aaTT)
                 .ToArray();
 
-            var alreadyAttachedTempTablesHasChildren = alreadyAttachedTempTables.Length > 0;
-            if (alreadyAttachedTempTablesHasChildren)
+            var hasAlreadyAttachedTempTablesFromQuery = alreadyAttachedTempTablesFromQuery.Length > 0;
+            if (hasAlreadyAttachedTempTablesFromQuery)
             {
                 _tempTableContainer
                     .TempOnTempDependencies
                     .Add(new KeyValuePair<string, HashSet<string>>(newTempTableName, new HashSet<string>()));
 
-                var childrenDependecies = new List<string>();
-                foreach (var item in alreadyAttachedTempTables)
+                var childrenDependencies = new List<string>();
+                foreach (var item in alreadyAttachedTempTablesFromQuery)
                 {
                     if (_tempTableContainer.TempOnTempDependencies.ContainsKey(item))
                     {
-                        childrenDependecies.AddRange(_tempTableContainer.TempOnTempDependencies[item]);
-                        childrenDependecies.Add(item);
-                        childrenDependecies.ForEach(cd => _tempTableContainer.TempOnTempDependencies[newTempTableName].AddIfNotExists(cd));
+                        childrenDependencies.AddRange(_tempTableContainer.TempOnTempDependencies[item]);
+                        childrenDependencies.Add(item);
+                        childrenDependencies.ForEach(cd => _tempTableContainer.TempOnTempDependencies[newTempTableName].AddIfNotExists(cd));
                     }
                     else
                     {

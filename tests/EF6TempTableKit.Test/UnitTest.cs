@@ -58,12 +58,12 @@ namespace EF6TempTableKit.Test
         }
 
         /// <summary>
-        /// In order to reuse the same table table (previously created in some of the top queries) in a second query just join with 
+        /// In order to reuse the same query DDL (previously created in some of the top queries) in a second query just join with 
         /// temp table. 
-        /// Calling again WithTempTableExpression() not needed as temp table already exists.
+        /// Calling again WithTempTableExpression() not needed since DDL is already attached.
         /// </summary>
-        [Fact(DisplayName = "Reuse temp table")]
-        public void ReuseSameTempTable()
+        [Fact]
+        public void ReuseSameAlreadyAttachedQueryOnSubsequentCall()
         {
             using (var context = new AdventureWorksCodeFirst())
             {
@@ -87,58 +87,6 @@ namespace EF6TempTableKit.Test
                             (soh) => soh.ShipToAddressID,
                             (soh, a) => new { Id = soh.Id }).ToList();
                 Assert.NotEmpty(shipToAddress);
-            }
-        }
-
-        [Fact(DisplayName = "Don't reuse temp table (reuseExisting = false")]
-        public void DonReuseSameTempTable()
-        {
-            using (var context = new AdventureWorksCodeFirst())
-            {
-                var tempAddressQuery = context.Addresses.Select(a => new AddressTempTableDto
-                {
-                    Id = a.AddressID,
-                    Name = a.AddressLine1
-                });
-
-                IQueryable<int> joinAddressQuery = context
-                        .WithTempTableExpression<AdventureWorksCodeFirst>(tempAddressQuery)
-                        .TempAddresses.Join(context.Addresses,
-                        (a) => a.Id,
-                        (aa) => aa.AddressID,
-                        (at, a) => at.Id);
-
-                IList<int> addressList = joinAddressQuery.ToList();
-                var addressCount = joinAddressQuery.Count();
-
-                Assert.True(addressCount > 0);
-            }
-        }
-
-        [Fact(DisplayName = "Reuse temp table using flag (reuseExisting = true)")]
-        public void ReuseSameTempTableWithUsingFlag()
-        {
-            using (var context = new AdventureWorksCodeFirst())
-            {
-                var tempAddressQuery = context.Addresses.Select(a => new AddressTempTableDto
-                {
-                    Id = a.AddressID,
-                    Name = a.AddressLine1
-                });
-
-                IQueryable<int> joinAddressQuery = context
-                        .WithTempTableExpression<AdventureWorksCodeFirst>(tempAddressQuery, true)
-                        .TempAddresses.Join(context.Addresses,
-                        (a) => a.Id,
-
-                        (aa) => aa.AddressID,
-                        (at, a) => at.Id);
-
-                IList<int> addressList = joinAddressQuery.ToList();
-                Assert.NotEmpty(addressList);
-
-                var addressCount = joinAddressQuery.Count();
-                Assert.True(addressCount > 0);
             }
         }
 
@@ -177,7 +125,7 @@ namespace EF6TempTableKit.Test
                         );
 
                 var productsQuery = context
-                        .WithTempTableExpression<AdventureWorksCodeFirst>(productsCountCategoryQuery, true)
+                        .WithTempTableExpression<AdventureWorksCodeFirst>(productsCountCategoryQuery)
                         .WorkOrders
                         .Join(context.Products,
                             (wo) => wo.ProductID,
