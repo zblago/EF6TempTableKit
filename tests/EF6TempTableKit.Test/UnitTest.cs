@@ -320,7 +320,7 @@ namespace EF6TempTableKit.Test
                                             Name = x.Name
                                         });
 
-                var temp = context.WithTempTableExpression<AdventureWorksCodeFirst>(departmentQuery, false).TempDepartments;
+                var temp = context.WithTempTableExpression<AdventureWorksCodeFirst>(departmentQuery).TempDepartments;
                 var result = temp.ToList();
                 Assert.True(!result.Any());
             }
