@@ -3,8 +3,8 @@ using System;
 
 namespace EF6TempTableKit.Test.CustomFormatter
 {
-    public class StringCustomFormatter : ICustomFuncFormatter<string, string>
+    public class StringCustomFormatter : ICustomConverter<string, string>
     {
-        public Func<string, string> Formatter => (x) => "'" + x + "1" + "'";
+        public Func<string, string> Converter => (x) => "'" + x + "1" + "'";
     }
 }

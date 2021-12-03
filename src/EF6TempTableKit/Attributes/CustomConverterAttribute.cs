@@ -12,9 +12,9 @@ namespace EF6TempTableKit.Attributes
 
         public CustomConverterAttribute(Type type)
         {
-            if (!type.GetInterfaces().Any(x => x.GetGenericTypeDefinition() == typeof(ICustomFuncFormatter<,>)))
+            if (!type.GetInterfaces().Any(x => x.GetGenericTypeDefinition() == typeof(ICustomConverter<,>)))
             {
-                throw new EF6TempTableKitGenericException($"EF6TempTableKit: Only { nameof(ICustomFuncFormatter<object, object>) } is allowed.");
+                throw new EF6TempTableKitGenericException($"EF6TempTableKit: Only { nameof(ICustomConverter<object, object>) } is allowed.");
             }
 
             this.Type = type;

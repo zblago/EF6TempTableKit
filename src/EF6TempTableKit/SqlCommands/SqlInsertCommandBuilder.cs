@@ -254,7 +254,7 @@ namespace EF6TempTableKit.SqlCommands
                 {
                     Type storeType = ((CustomConverterAttribute)x.GetCustomAttribute(typeof(CustomConverterAttribute), true))?.Type;
                     var instance = Activator.CreateInstance(storeType);
-                    PropertyInfo info = instance.GetType().GetProperty(nameof(ICustomFuncFormatter<object, object>.Formatter));
+                    PropertyInfo info = instance.GetType().GetProperty(nameof(ICustomConverter<object, object>.Converter));
                     object field = info.GetValue(instance);
                     MethodInfo method = field.GetType().GetMethod(nameof(MethodBase.Invoke));
 

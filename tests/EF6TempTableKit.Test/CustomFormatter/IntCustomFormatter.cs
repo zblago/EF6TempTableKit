@@ -3,8 +3,8 @@ using System;
 
 namespace EF6TempTableKit.Test.CustomFormatter
 {
-    public class IntCustomFormatter : ICustomFuncFormatter<int, int>
+    public class IntCustomFormatter : ICustomConverter<int, int>
     {
-        public Func<int, int> Formatter => (x) => x * 100;
+        public Func<int, int> Converter => (x) => x * 100;
     }
 }

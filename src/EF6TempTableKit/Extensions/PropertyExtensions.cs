@@ -33,7 +33,7 @@ namespace EF6TempTableKit.Extensions
             {
                 Type storeType = ((CustomConverterAttribute)customFormatter[prop.Name].First()).Type;
                 var instance = Activator.CreateInstance(storeType);
-                PropertyInfo info  = instance.GetType().GetProperty(nameof(ICustomFuncFormatter<object, object>.Formatter));
+                PropertyInfo info  = instance.GetType().GetProperty(nameof(ICustomConverter<object, object>.Converter));
                 object yourField = info.GetValue(instance);
                 MethodInfo method = yourField.GetType().GetMethod(nameof(MethodBase.Invoke));
 
