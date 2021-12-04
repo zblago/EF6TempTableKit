@@ -206,21 +206,30 @@ namespace EF6TempTableKit.SqlCommands
             var columns = list.First().GetType().GetProperties().Select((x, i) => new { Key = i, Value = x.Name });
             var customConverters = GetCustomConverters(list.First());
 
-            var selectedColumns = string.Join(", ", columns.Select(x => x.Value).ToArray());
-            _queryBuilder.AppendLine($"{repeatedTabs}INSERT INTO {_tempTableName}({ selectedColumns }) ");
+            var count = list.Count();
+            var pageSize = 1000;
+            var totalPageNo = Math.Ceiling((decimal)count / pageSize);
 
-            _queryBuilder.AppendLine($@"VALUES {Environment.NewLine}{
-                string.Join(",", list
-                    .ToList()
-                    .Select(x =>
-                    $@"({
-                        string.Join(",",
-                        x.GetType().GetProperties()
-                        .OrderBy(o => columns.Select(c => c.Value)
-                        .ToList().IndexOf(o.Name))
-                        .Select(property => property.GetSqlValue(x, customConverters)))
-                        }){Environment.NewLine}")
-                    .ToArray()) }");
+            for (var i = 0; i < totalPageNo; i++)
+            {
+                var pageItems = list.Skip(1000 * i).Take(1000);
+
+                var selectedColumns = string.Join(", ", columns.Select(x => x.Value).ToArray());
+                _queryBuilder.AppendLine($"{repeatedTabs}INSERT INTO {_tempTableName}({ selectedColumns }) ");
+
+                _queryBuilder.AppendLine($@"VALUES {Environment.NewLine}{
+                    string.Join(",", pageItems
+                        .ToList()
+                        .Select(x =>
+                        $@"({
+                            string.Join(",",
+                            x.GetType().GetProperties()
+                            .OrderBy(o => columns.Select(c => c.Value)
+                            .ToList().IndexOf(o.Name))
+                            .Select(property => property.GetSqlValue(x, customConverters)))
+                            }){Environment.NewLine}")
+                        .ToArray()) }");
+            }
         }
 
         private static IDictionary<string, ConverterProperties[]> GetCustomConverters(ITempTable item)
