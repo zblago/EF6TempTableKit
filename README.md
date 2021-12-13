@@ -1,5 +1,5 @@
-# EF6TempTableKit - version 2.0.0
-EF6TempTableKit is a library that helps you utilize temp tables in your Entity Framework 6 context mapped to Microsoft SQL Server database.
+# EF6TempTableKit - version 3.0.0
+EF6TempTableKit is a library that enriches Entity Framework 6 by helping you to leverage Microsoft SQL Server temp tables.
 
 [![Build status](https://ci.appveyor.com/api/projects/status/tsdv1s7v897f2mwv?svg=true)](https://ci.appveyor.com/project/zblago/ef6temptablekit)
 [![AppVeyor tests](https://img.shields.io/appveyor/tests/zblago/EF6TempTableKit)](https://ci.appveyor.com/project/zblago/ef6temptablekit/build/tests)
@@ -7,19 +7,18 @@ EF6TempTableKit is a library that helps you utilize temp tables in your Entity F
 
 ## Versions
 1.0.0 - check for details [here](https://github.com/zblago/EF6TempTableKit/tree/EF6TempTableKit_version_1_0_0)
+2.0.0 - check for details [here](https://github.com/zblago/EF6TempTableKit/tree/EF6TempTableKit_version_2_0_0)
 
 ## Overview
 
-In some cases, when you write LINQ-to-Entities(L2E) queries, you would like to have a benefit like temp tables (e.g. create and insert records in temporary tables and later on reusing them as much as you want in a query). By default, EF doesn't support temporary tables and there is a reason why is like that. To overcome this "weakness", introducing EF6TempTableKit in your project, you can add a "temporary" entity as we are used to do it with "permanent" entitiy. In generated T-SQL query, "temporary" entity will be mapped to a temporary table which resides in `tempDb` database and used normally like any other table.<br/>
+We all know how to write LINQ-to-Entities(L2E) queries to fetch data from the database. No T-SQL, only C#. But, in some cases, writing and optimizing LINQ-to-Entities(L2E) queries may be easier and pleasnt if we can use MS SQL Server temporary tables. What does that mean? Imagine yourself declaring and loading data into temp tables as you are used to do with regular EF context entities. By default, EF doesn't support temporary tables and there is a reason why is like that. To overcome this "weakness", by pluging in EF6TempTableKit into your project, you can add a "temporary" entity as we are used to do it with "permanent" entity. In generated T-SQL query, "temporary" entity will be mapped to a temporary table which resides in `tempDb` database and used normally like any other table.<br/>
 Keep in mind: You are still writing LINQ-to-Entities to insert records in a "temporary" entity.
 
-## What is changed in version 2.0.0
+## What is changed in version 3.0.0
 
-Version 2.0.0 has some improvements such as
-- support for multiple mutually interconnected temporary tables
-- columns order in a nonclustered index
-- injecting into final query only needed DDL and DML queries and their related dependencies
-- more tests in solution
+Version 3.0.0 has some bug fixes
+- LinqKit and EF6TempTableKit can work side by side
+- no limit on conditions in final LINQ where clause (previously we're limited to 10, after which it would behave unexpectedly)
 
 ## Getting Started
 
