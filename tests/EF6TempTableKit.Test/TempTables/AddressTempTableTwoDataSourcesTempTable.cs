@@ -4,8 +4,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EF6TempTableKit.Test.TempTables
 {
-    [Table("#tempAddress")]
-    public class AddressTempTable : ITempTable
+    [Table("#tempAddressTempTableTwoDataSources")]
+    public class AddressTempTableTwoDataSourcesTempTable : ITempTable
     {
         [ClusteredIndex]
         [NonClusteredIndex("first")]
@@ -13,14 +13,18 @@ namespace EF6TempTableKit.Test.TempTables
         [TempFieldTypeAttribute("int")]
         public int Id { get; set; }
 
+        [TempFieldTypeAttribute("int")]
+        public int Id2 { get; set; }
+
         [NonClusteredIndex("third")]
         [NonClusteredIndex("second")]
         [TempFieldTypeAttribute("varchar(200)")]
+        [FuncFormatAttribute(typeof(StringCustomFormatter))]
         public string Name { get; set; }
     }
 
     [NotMapped]
-    public class AddressTempTableDto : AddressTempTable
+    public class AddressTempTableTwoDataSourcesDto : AddressTempTableTwoDataSourcesTempTable
     {
     }
 }

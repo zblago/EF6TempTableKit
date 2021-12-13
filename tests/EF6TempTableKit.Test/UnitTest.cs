@@ -2,6 +2,7 @@
 using EF6TempTableKit.Test.CodeFirst;
 using EF6TempTableKit.Test.TempTables;
 using LinqKit;
+using EF6TempTableKit.Test.TempTables.Dependencies;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -121,12 +122,12 @@ namespace EF6TempTableKit.Test
         }
 
         /// <summary>
-        /// In order to reuse the same table table (previously created in some of the top queries) in a second query just join with 
+        /// In order to reuse the same query DDL (previously created in some of the top queries) in a second query just join with 
         /// temp table. 
-        /// Calling again WithTempTableExpression() not needed as temp table already exists.
+        /// Calling again WithTempTableExpression() not needed since DDL is already attached.
         /// </summary>
-        [Fact(DisplayName = "Reuse temp table")]
-        public void ReuseSameTempTable()
+        [Fact]
+        public void ReuseSameAlreadyAttachedQueryOnSubsequentCall()
         {
             using (var context = new AdventureWorksCodeFirst())
             {
@@ -150,58 +151,6 @@ namespace EF6TempTableKit.Test
                             (soh) => soh.ShipToAddressID,
                             (soh, a) => new { Id = soh.Id }).ToList();
                 Assert.NotEmpty(shipToAddress);
-            }
-        }
-
-        [Fact(DisplayName = "Don't reuse temp table (reuseExisting = false")]
-        public void DonReuseSameTempTable()
-        {
-            using (var context = new AdventureWorksCodeFirst())
-            {
-                var tempAddressQuery = context.Addresses.Select(a => new AddressTempTableDto
-                {
-                    Id = a.AddressID,
-                    Name = a.AddressLine1
-                });
-
-                IQueryable<int> joinAddressQuery = context
-                        .WithTempTableExpression<AdventureWorksCodeFirst>(tempAddressQuery)
-                        .TempAddresses.Join(context.Addresses,
-                        (a) => a.Id,
-                        (aa) => aa.AddressID,
-                        (at, a) => at.Id);
-
-                IList<int> addressList = joinAddressQuery.ToList();
-                var addressCount = joinAddressQuery.Count();
-
-                Assert.True(addressCount > 0);
-            }
-        }
-
-        [Fact(DisplayName = "Reuse temp table using flag (reuseExisting = true)")]
-        public void ReuseSameTempTableWithUsingFlag()
-        {
-            using (var context = new AdventureWorksCodeFirst())
-            {
-                var tempAddressQuery = context.Addresses.Select(a => new AddressTempTableDto
-                {
-                    Id = a.AddressID,
-                    Name = a.AddressLine1
-                });
-
-                IQueryable<int> joinAddressQuery = context
-                        .WithTempTableExpression<AdventureWorksCodeFirst>(tempAddressQuery, true)
-                        .TempAddresses.Join(context.Addresses,
-                        (a) => a.Id,
-
-                        (aa) => aa.AddressID,
-                        (at, a) => at.Id);
-
-                IList<int> addressList = joinAddressQuery.ToList();
-                Assert.NotEmpty(addressList);
-
-                var addressCount = joinAddressQuery.Count();
-                Assert.True(addressCount > 0);
             }
         }
 
@@ -240,7 +189,7 @@ namespace EF6TempTableKit.Test
                         );
 
                 var productsQuery = context
-                        .WithTempTableExpression<AdventureWorksCodeFirst>(productsCountCategoryQuery, true)
+                        .WithTempTableExpression<AdventureWorksCodeFirst>(productsCountCategoryQuery)
                         .WorkOrders
                         .Join(context.Products,
                             (wo) => wo.ProductID,
@@ -394,6 +343,50 @@ namespace EF6TempTableKit.Test
             for (var i = 0; i < 6; i++)
             {
                 Assert.Equal(wantedResult[i + 1], result[i + 1]);
+            }
+        }
+
+        [Fact]
+        public void WhereClauseWithMoreThan10Parameters_ConditionIsNeverMet_CompiledAndExecutedSuccesfully()
+        {
+            var p0 = "test";
+            var p1 = "test";
+            var p2 = "test";
+            var p3 = "test";
+            var p4 = "test";
+            var p5 = "test";
+            var p6 = "test";
+            var p7 = "test";
+            var p8 = "test";
+            var p9 = "test";
+            var p10 = "test";
+            var falseParam = false;
+
+            using (var context = new AdventureWorksCodeFirst())
+            {
+
+                var departmentQuery = context.Departments
+                                            .Where(x =>
+                                                    x.Name == p0 &&
+                                                    x.Name == p1 ||
+                                                    x.Name == p2 ||
+                                                    x.Name == p3 &&
+                                                    x.Name == p4 ||
+                                                    x.Name == p5 &&
+                                                    x.Name == p6 ||
+                                                    x.Name == p7 ||
+                                                    x.Name == p8 &&
+                                                    x.Name == p9 ||
+                                                    x.Name == p10 ||
+                                                    true == falseParam
+                                        ).Select(x => new DepartmentTempTableDto()
+                                        {
+                                            Name = x.Name
+                                        });
+
+                var temp = context.WithTempTableExpression<AdventureWorksCodeFirst>(departmentQuery).TempDepartments;
+                var result = temp.ToList();
+                Assert.True(!result.Any());
             }
         }
     }

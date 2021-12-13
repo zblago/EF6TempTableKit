@@ -49,17 +49,24 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Attributes\ClusteredIndexAttribute.cs" />
+    <Compile Include="Attributes\StringFormatAttribute.cs" />
     <Compile Include="Attributes\NonClusteredIndexAttribute.cs" />
+    <Compile Include="Attributes\FuncFormatAttribute.cs" />
     <Compile Include="Attributes\TempFieldTypeAttribute.cs" />
     <Compile Include="DbContext\EF6TempTableKitDbConfiguration.cs" />
     <Compile Include="DbContext\IDbContextWithTempTable.cs" />
     <Compile Include="DbContext\EF6TempTableKitQueryInterceptor.cs" />
     <Compile Include="DbContext\TempTableContainer.cs" />
+    <Compile Include="Exceptions\EF6TempTableKitGenericException.cs" />
     <Compile Include="Extensions\DbContextExtensions.cs" />
     <Compile Include="Extensions\HashSetExtensions.cs" />
     <Compile Include="Extensions\IQueryableExtensions.cs" />
+    <Compile Include="Extensions\PropertyExtensions.cs" />
     <Compile Include="Extensions\ObjectQueryExtensions.cs" />
-    <Compile Include="ITempTable.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="FormatterProperties.cs" />
+    <Compile Include="Interfaces\ICustomFuncFormatter.cs" />
+    <Compile Include="Interfaces\ITempTable.cs" />
     <Compile Include="Query.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SqlCommands\Interfaces\IAddClusteredIndex.cs" />

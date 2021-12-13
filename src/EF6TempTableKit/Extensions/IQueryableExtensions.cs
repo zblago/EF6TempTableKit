@@ -20,7 +20,9 @@ namespace EF6TempTableKit.Extensions
             objectQuery = (dynamic)genMethod.Invoke(null, new object[] { query });
 
             var result = objectQuery.ToTraceString();
-            foreach (var parameter in objectQuery.Parameters)
+
+            var paramsReversed = objectQuery.Parameters.Reverse();//reverse params order to avoid replacement of @p__linq__1 with, let's say value 'Joe' in @p__linq__11 as 'Joe'1 in result variable
+            foreach (var parameter in paramsReversed)
             {
                 if (parameter.Value == null)
                     continue;
