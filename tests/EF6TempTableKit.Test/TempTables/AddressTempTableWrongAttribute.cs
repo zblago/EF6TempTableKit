@@ -1,5 +1,5 @@
 ﻿using EF6TempTableKit.Attributes;
-using EF6TempTableKit.Test.CustomFormatter;
+using EF6TempTableKit.Test.CustomConverters;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EF6TempTableKit.Test.TempTables
@@ -11,8 +11,8 @@ namespace EF6TempTableKit.Test.TempTables
         [NonClusteredIndex("first")]
         [NonClusteredIndex("second")]
         [TempFieldTypeAttribute("int")]
-        [FuncFormatAttribute(typeof(IntCustomFormatter))]
-        [StringFormat("{0:D}")]
+        [CustomConverterAttribute(typeof(IntCustomConverter))]
+        [StringConverter("{0:D}")]
         public string Name { get; set; }
     }
 
@@ -28,7 +28,7 @@ namespace EF6TempTableKit.Test.TempTables
         [NonClusteredIndex("first")]
         [NonClusteredIndex("second")]
         [TempFieldTypeAttribute("int")]
-        [FuncFormatAttribute(typeof(WrongIntCustomFormatter))]
+        [CustomConverterAttribute(typeof(WrongIntCustomConverter))]
         public int Id { get; set; }
 
         [NonClusteredIndex("third")]
@@ -50,7 +50,7 @@ namespace EF6TempTableKit.Test.TempTables
         [NonClusteredIndex("first")]
         [NonClusteredIndex("second")]
         [TempFieldTypeAttribute("int")]
-        [FuncFormatAttribute(typeof(IntCustomFormatter))]
+        [CustomConverterAttribute(typeof(IntCustomConverter))]
         public int Id { get; set; }
 
         [NonClusteredIndex("third")]

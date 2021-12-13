@@ -1,5 +1,5 @@
 using EF6TempTableKit.Attributes;
-using EF6TempTableKit.Test.CustomFormatter;
+using EF6TempTableKit.Test.CustomConverters;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -17,7 +17,7 @@ namespace EF6TempTableKit.Test.TempTables
         public Int64 Bigint { get; set; }
 
         [TempFieldTypeAttribute("binary(2)")]
-        [FuncFormatAttribute(typeof(BitCustomFormatter))]
+        [CustomConverterAttribute(typeof(BitCustomConverter))]
         public byte[] Binary { get; set; }
 
         [TempFieldTypeAttribute("bit")]
@@ -30,26 +30,26 @@ namespace EF6TempTableKit.Test.TempTables
         public DateTime Datetime { get; set; }
 
         [TempFieldTypeAttribute("datetime2")]
-        [StringFormat("'{0:yyyy-MM-dd HH:mm:ss.fffffff}'")]
+        [StringConverter("'{0:yyyy-MM-dd HH:mm:ss.fffffff}'")]
         public DateTime Datetime2 { get; set; }
 
         [TempFieldTypeAttribute("datetimeoffset")]
-        [StringFormat("'{0:yyyy-MM-dd HH:mm:ss.fff}'")]
+        [StringConverter("'{0:yyyy-MM-dd HH:mm:ss.fff}'")]
         public DateTimeOffset Datetimeoffset { get; set; }
 
         [TempFieldTypeAttribute("decimal(38, 0)")]
         public decimal Decimal { get; set; }
         
         [TempFieldTypeAttribute("varbinary(max)")]
-        [FuncFormatAttribute(typeof(BitCustomFormatter))]
+        [CustomConverterAttribute(typeof(BitCustomConverter))]
         public byte[] Varbinary_Max { get; set; }
 
         [TempFieldTypeAttribute("float(53)")]
-        [StringFormatAttribute("{0:r}")] //Because ToString() is rounding double.MaxValue (https://stackoverflow.com/questions/40562199/double-maxvalue-to-string-is-unconverted-back)
+        [StringConverterAttribute("{0:r}")] //Because ToString() is rounding double.MaxValue (https://stackoverflow.com/questions/40562199/double-maxvalue-to-string-is-unconverted-back)
         public double Float { get; set; }
 
         [TempFieldTypeAttribute("image")]
-        [FuncFormatAttribute(typeof(BitCustomFormatter))]
+        [CustomConverterAttribute(typeof(BitCustomConverter))]
         public byte[] Image { get; set; }
 
         [TempFieldTypeAttribute("int")]
@@ -68,14 +68,14 @@ namespace EF6TempTableKit.Test.TempTables
         public String Nvarchar { get; set; }
 
         [TempFieldTypeAttribute("real")]
-        [StringFormatAttribute("{0:r}")] //Because ToString() is rounding single.MaxValue (https://stackoverflow.com/questions/40562199/double-maxvalue-to-string-is-unconverted-back)
+        [StringConverterAttribute("{0:r}")] //Because ToString() is rounding single.MaxValue (https://stackoverflow.com/questions/40562199/double-maxvalue-to-string-is-unconverted-back)
         public Single Real { get; set; }
 
         //[TempFieldTypeAttribute("rowversion")]
         //public byte[] Rowversion { get; set; } //Automatically generated value, can't be inserted, only read.
 
         [TempFieldTypeAttribute("smalldatetime")]
-        [StringFormat("'{0:yyyy-MM-dd HH:mm:ss}'")]
+        [StringConverter("'{0:yyyy-MM-dd HH:mm:ss}'")]
         public DateTime Smalldatetime { get; set; }
 
         [TempFieldTypeAttribute("smallint")]
@@ -88,7 +88,7 @@ namespace EF6TempTableKit.Test.TempTables
         public String Text { get; set; }
 
         [TempFieldTypeAttribute("Time")]
-        [StringFormat("'{0:hh\\:mm\\:ss\\.fff}'")]
+        [StringConverter("'{0:hh\\:mm\\:ss\\.fff}'")]
         public TimeSpan Time { get; set; }
 
         //[TempFieldTypeAttribute("timestamp")]
@@ -98,11 +98,11 @@ namespace EF6TempTableKit.Test.TempTables
         public byte Tinyint { get; set; }
 
         [TempFieldTypeAttribute("uniqueidentifier")]
-        [StringFormat("'{0}'")]
+        [StringConverter("'{0}'")]
         public Guid Uniqueidentifier { get; set; }
 
         [TempFieldTypeAttribute("varbinary(4)")]
-        [FuncFormatAttribute(typeof(BitCustomFormatter))]
+        [CustomConverterAttribute(typeof(BitCustomConverter))]
         public byte[] Varbinary { get; set; }
 
         [TempFieldTypeAttribute("varchar(50)")]

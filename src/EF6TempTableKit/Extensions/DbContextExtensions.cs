@@ -4,6 +4,7 @@ using EF6TempTableKit.SqlCommands;
 using EF6TempTableKit.Utilities;
 using System.Collections.Generic;
 using EF6TempTableKit.Exceptions;
+using System;
 
 namespace EF6TempTableKit.Extensions
 {
@@ -17,6 +18,21 @@ namespace EF6TempTableKit.Extensions
         /// <param name="expression"></param>
         /// <returns></returns>
         public static T WithTempTableExpression<T>(this System.Data.Entity.DbContext dbContexWithTempTable, IQueryable<ITempTable> expression)
+            where T : class
+        {
+            return WithTempTableExpression<T>(dbContexWithTempTable, expression, false);
+        }
+
+        /// <summary>
+        /// Use it to attach LINQ query being used to load data into temporary table.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="dbContexWithTempTable"></param>
+        /// <param name="expression"></param>
+        /// <param name="reuseExisting">Obsolete, don't use it</param>
+        /// <returns></returns>
+        [Obsolete("Use WithTempTableExpression(dbContexWithTempTable, expression)")]
+        public static T WithTempTableExpression<T>(this System.Data.Entity.DbContext dbContexWithTempTable, IQueryable<ITempTable> expression, bool reuseExisting = false)
             where T : class
         {
             var contextWithTempTable = (IDbContextWithTempTable)dbContexWithTempTable;
@@ -76,6 +92,22 @@ namespace EF6TempTableKit.Extensions
         /// <param name="list"></param>
         /// <returns></returns>
         public static T WithTempTableExpression<T>(this System.Data.Entity.DbContext dbContexWithTempTable, IEnumerable<ITempTable> list)
+            where T : class
+        {
+            return WithTempTableExpression<T>(dbContexWithTempTable, list, false);
+        }
+
+
+        /// <summary>
+        /// Use it to attach LINQ query built upon memory data.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="dbContexWithTempTable"></param>
+        /// <param name="list"></param>
+        /// <param name="reuseExisting">Obsolete, don't use it</param>
+        /// <returns></returns>
+        [Obsolete("Use WithTempTableExpression(dbContexWithTempTable, list)")]
+        public static T WithTempTableExpression<T>(this System.Data.Entity.DbContext dbContexWithTempTable, IEnumerable<ITempTable> list, bool reuseExisting = false)
             where T : class
         {
             var tableMetadataProvider = new TableMetadataProvider();

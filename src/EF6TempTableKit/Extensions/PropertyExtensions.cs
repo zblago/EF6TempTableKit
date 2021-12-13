@@ -10,30 +10,30 @@ namespace EF6TempTableKit.Extensions
 {
     internal static class PropertyExtensions
     {
-        public static object GetSqlValue(this PropertyInfo prop, object obj, IDictionary<string, Attribute[]> customFormatter)
+        public static object GetSqlValue(this PropertyInfo prop, object obj, IDictionary<string, Attribute[]> customConverter)
         {
-            var hasStringCustomFormatter = customFormatter[prop.Name]?.Length > 0 && customFormatter[prop.Name].ToList().Any(x => x.GetType() == typeof(StringFormatAttribute));
-            var hasFuncCustomFormatter = customFormatter[prop.Name]?.Length > 0 && customFormatter[prop.Name].ToList().Any(x => x.GetType() == typeof(FuncFormatAttribute));
+            var hasStringCustomConverter = customConverter[prop.Name]?.Length > 0 && customConverter[prop.Name].ToList().Any(x => x.GetType() == typeof(StringConverterAttribute));
+            var hasFuncCustomConverter = customConverter[prop.Name]?.Length > 0 && customConverter[prop.Name].ToList().Any(x => x.GetType() == typeof(CustomConverterAttribute));
 
-            if (hasStringCustomFormatter && hasFuncCustomFormatter)
-                throw new EF6TempTableKitGenericException("EF6TempTableKit: Field can't have associated both StringFormatAttribute and FuncFormatAttribute custom format attributes.");
+            if (hasStringCustomConverter && hasFuncCustomConverter)
+                throw new EF6TempTableKitGenericException("EF6TempTableKit: Field can't have associated both StringConverterAttribute and CustomConverterAttribute custom format attributes.");
 
             var value = prop.GetValue(obj, null);
 
-            if (hasStringCustomFormatter)
+            if (hasStringCustomConverter)
             {
-                var format = ((StringFormatAttribute)customFormatter[prop.Name].First()).Format;
-                var formatProvider = ((StringFormatAttribute)customFormatter[prop.Name].First()).FormatProvider;
+                var format = ((StringConverterAttribute)customConverter[prop.Name].First()).Format;
+                var formatProvider = ((StringConverterAttribute)customConverter[prop.Name].First()).FormatProvider;
 
                 return formatProvider == null 
                     ? CustomStringFormatValue(value, format) 
                     : CustomStringFormatValue(formatProvider, value, format);
             }
-            else if (hasFuncCustomFormatter)
+            else if (hasFuncCustomConverter)
             {
-                Type storeType = ((FuncFormatAttribute)customFormatter[prop.Name].First()).Type;
+                Type storeType = ((CustomConverterAttribute)customConverter[prop.Name].First()).Type;
                 var instance = Activator.CreateInstance(storeType);
-                PropertyInfo info  = instance.GetType().GetProperty(nameof(ICustomFuncFormatter<object, object>.Formatter));
+                PropertyInfo info  = instance.GetType().GetProperty(nameof(ICustomConverter<object, object>.Converter));
                 object yourField = info.GetValue(instance);
                 MethodInfo method = yourField.GetType().GetMethod(nameof(MethodBase.Invoke));
 
@@ -45,28 +45,28 @@ namespace EF6TempTableKit.Extensions
             }
         }
 
-        public static object GetSqlValue(this PropertyInfo prop, object obj, IDictionary<string, FormatterProperties[]> customFormatter)
+        public static object GetSqlValue(this PropertyInfo prop, object obj, IDictionary<string, ConverterProperties[]> customConverter)
         {
-            var hasStringCustomFormatter = customFormatter[prop.Name]?.Length > 0 && customFormatter[prop.Name].ToList().Any(x => x.StringFormatAttribute != null);
-            var hasFuncCustomFormatter = customFormatter[prop.Name]?.Length > 0 && customFormatter[prop.Name].ToList().Any(x => x.MethodInfo != null && x.Field != null);
+            var hasStringCustomConverter = customConverter[prop.Name]?.Length > 0 && customConverter[prop.Name].ToList().Any(x => x.StringConvertAttribute != null);
+            var hasFuncCustomConverter = customConverter[prop.Name]?.Length > 0 && customConverter[prop.Name].ToList().Any(x => x.MethodInfo != null && x.Field != null);
 
-            if (hasStringCustomFormatter && hasFuncCustomFormatter)
-                throw new EF6TempTableKitGenericException("EF6TempTableKit: Field can't have associated both StringFormatAttribute and FuncFormatAttribute custom format attributes.");
+            if (hasStringCustomConverter && hasFuncCustomConverter)
+                throw new EF6TempTableKitGenericException("EF6TempTableKit: Field can't have associated both StringFormatAttribute and CustomConverterAttribute custom format attributes.");
 
             var value = prop.GetValue(obj, null);
 
-            if (hasStringCustomFormatter)
+            if (hasStringCustomConverter)
             {
-                var format = customFormatter[prop.Name].First().StringFormatAttribute.Format;
-                var formatProvider = customFormatter[prop.Name].First().StringFormatAttribute.FormatProvider;
+                var format = customConverter[prop.Name].First().StringConvertAttribute.Format;
+                var formatProvider = customConverter[prop.Name].First().StringConvertAttribute.FormatProvider;
 
                 return formatProvider == null
                     ? CustomStringFormatValue(value, format)
                     : CustomStringFormatValue(formatProvider, value, format);
             }
-            else if (hasFuncCustomFormatter)
+            else if (hasFuncCustomConverter)
             {
-                var funcDetails = customFormatter[prop.Name].First();
+                var funcDetails = customConverter[prop.Name].First();
 
                 return funcDetails.MethodInfo.Invoke(funcDetails.Field, new object[] { value });
             }

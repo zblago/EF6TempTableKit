@@ -258,7 +258,7 @@ namespace EF6TempTableKit.Test
         public void Load1000RecordsFromMemoryAndEntireAddressTableFromDb()
         {
             var sampleList = new List<AllDataTypesDto>();
-            for (var i = 0; i < 1000; i++)
+            for (var i = 0; i < 1001; i++)
             {
                 sampleList.Add(new AllDataTypesDto
                 {
@@ -307,6 +307,55 @@ namespace EF6TempTableKit.Test
                     .AllDataTypesTempTable.ToList();
 
                 Assert.Equal(allDataFromDb.Count, sampleList.Count + addressCount);
+            };
+        }
+
+        [Fact]
+        public void Load500000RecordsFromMemory()
+        {
+            var sampleList = new List<AllDataTypesDto>();
+            for (var i = 0; i < 500000; i++)
+            {
+                sampleList.Add(new AllDataTypesDto
+                {
+                    Bigint = i + 1,
+                    Binary = new byte[] { 0x45, 0x46 },
+                    Bit = true,
+                    Date = DateTime.MaxValue.Date,
+                    Datetime = DateTime.MaxValue.AddMilliseconds(-2), //Time range:	00:00:00 through 23:59:59.997 https://docs.microsoft.com/en-us/sql/t-sql/data-types/datetime-transact-sql?view=sql-server-ver15
+                    Datetime2 = DateTime.MaxValue,
+                    Datetimeoffset = DateTimeOffset.UtcNow.Date,
+                    Decimal = Decimal.MaxValue,
+                    Varbinary_Max = new byte[] { 0x4B, 0x49, 0x54, 0x41 },
+                    Float = double.MaxValue,
+                    Image = new byte[] { 0x45, 0x46 },
+                    Int = int.MaxValue,
+                    Nchar = "Ef6TempTableKit",
+                    Ntext = "Ef6TempTableKit",
+                    Numeric = Decimal.MaxValue,
+                    Nvarchar = "Ef6TempTableKit",
+                    Real = Single.MaxValue,
+                    Smalldatetime = new DateTime(2079, 6, 5, 23, 59, 0),
+                    Smallint = Int16.MaxValue,
+                    Smallmoney = SMALL_MONEY_MAX,
+                    Text = "Ef6TempTableKit",
+                    Time = new TimeSpan(0, 4, 54, 56, 234),
+                    Tinyint = byte.MaxValue,
+                    Uniqueidentifier = Guid.NewGuid(),
+                    Varbinary = new byte[] { 0x4B, 0x49, 0x54, 0x41 },
+                    Varchar_50 = "wqS5LQa67cxMReRRFHC5CKptEnCVqieB04mOXbBl5ahk0M3S8j"
+                });
+            }
+
+            using (var context = new AdventureWorksCodeFirst())
+            {
+                context.Database.CommandTimeout = int.MaxValue;
+                var allDataFromDb = context
+                    .WithTempTableExpression<AdventureWorksCodeFirst>(sampleList)
+                    .AllDataTypesTempTable.ToList();
+
+                Assert.Equal(allDataFromDb.Count, sampleList.Count);
+                Assert.Equal(allDataFromDb.Max(x => x.Bigint), sampleList.Count());
             };
         }
     }

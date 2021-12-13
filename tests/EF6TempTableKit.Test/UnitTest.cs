@@ -3,7 +3,6 @@ using EF6TempTableKit.Test.CodeFirst;
 using EF6TempTableKit.Test.TempTables;
 using LinqKit;
 using EF6TempTableKit.Test.TempTables.Dependencies;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;

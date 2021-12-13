@@ -49,9 +49,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Attributes\ClusteredIndexAttribute.cs" />
-    <Compile Include="Attributes\StringFormatAttribute.cs" />
+    <Compile Include="Attributes\StringConverterAttribute.cs" />
     <Compile Include="Attributes\NonClusteredIndexAttribute.cs" />
-    <Compile Include="Attributes\FuncFormatAttribute.cs" />
+    <Compile Include="Attributes\CustomConverterAttribute.cs" />
     <Compile Include="Attributes\TempFieldTypeAttribute.cs" />
     <Compile Include="DbContext\EF6TempTableKitDbConfiguration.cs" />
     <Compile Include="DbContext\IDbContextWithTempTable.cs" />
@@ -64,8 +64,8 @@
     <Compile Include="Extensions\PropertyExtensions.cs" />
     <Compile Include="Extensions\ObjectQueryExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
-    <Compile Include="FormatterProperties.cs" />
-    <Compile Include="Interfaces\ICustomFuncFormatter.cs" />
+    <Compile Include="ConverterProperties.cs" />
+    <Compile Include="Interfaces\ICustomConverter.cs" />
     <Compile Include="Interfaces\ITempTable.cs" />
     <Compile Include="Query.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

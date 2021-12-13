@@ -204,66 +204,75 @@ namespace EF6TempTableKit.SqlCommands
             var repeatedTabs = new string('\t', tabsCount);
 
             var columns = list.First().GetType().GetProperties().Select((x, i) => new { Key = i, Value = x.Name });
-            var customFormatters = GetCustomFormatters(list.First());
+            var customConverters = GetCustomConverters(list.First());
 
-            var selectedColumns = string.Join(", ", columns.Select(x => x.Value).ToArray());
-            _queryBuilder.AppendLine($"{repeatedTabs}INSERT INTO {_tempTableName}({ selectedColumns }) ");
+            var count = list.Count();
+            var pageSize = 1000; //SQL Server limits INSERT to 1000 rows at once.
+            var totalPageNo = Math.Ceiling((decimal)count / pageSize);
 
-            _queryBuilder.AppendLine($@"VALUES {Environment.NewLine}{
-                string.Join(",", list
-                    .ToList()
-                    .Select(x =>
-                    $@"({
-                        string.Join(",",
-                        x.GetType().GetProperties()
-                        .OrderBy(o => columns.Select(c => c.Value)
-                        .ToList().IndexOf(o.Name))
-                        .Select(property => property.GetSqlValue(x, customFormatters)))
-                        }){Environment.NewLine}")
-                    .ToArray()) }");
+            for (var i = 0; i < totalPageNo; i++)
+            {
+                var pageItems = list.Skip(1000 * i).Take(1000);
+
+                var selectedColumns = string.Join(", ", columns.Select(x => x.Value).ToArray());
+                _queryBuilder.AppendLine($"{repeatedTabs}INSERT INTO {_tempTableName}({ selectedColumns }) ");
+
+                _queryBuilder.AppendLine($@"VALUES {Environment.NewLine}{
+                    string.Join(",", pageItems
+                        .ToList()
+                        .Select(x =>
+                        $@"({
+                            string.Join(",",
+                            x.GetType().GetProperties()
+                            .OrderBy(o => columns.Select(c => c.Value)
+                            .ToList().IndexOf(o.Name))
+                            .Select(property => property.GetSqlValue(x, customConverters)))
+                            }){Environment.NewLine}")
+                        .ToArray()) }");
+            }
         }
 
-        private static IDictionary<string, FormatterProperties[]> GetCustomFormatters(ITempTable item)
+        private static IDictionary<string, ConverterProperties[]> GetCustomConverters(ITempTable item)
         {
             var firstItemProperties = item.GetType().GetProperties();
 
-            var defaultFormmatter = firstItemProperties
-                .Where(x => !x.GetCustomAttributes(typeof(StringFormatAttribute), true).Any()
-                    && !x.GetCustomAttributes(typeof(FuncFormatAttribute), true).Any())
-                .Select(x => new FormatterInfo
+            var defaultConverter = firstItemProperties
+                .Where(x => !x.GetCustomAttributes(typeof(StringConverterAttribute), true).Any()
+                    && !x.GetCustomAttributes(typeof(CustomConverterAttribute), true).Any())
+                .Select(x => new ConverterInfo
                 { 
                     Name = x.Name
                 });
 
-            var customStringFormatters = firstItemProperties
-                .Where(x => x.GetCustomAttributes(typeof(StringFormatAttribute), true).Any())
-                .Select(x => new FormatterInfo
+            var customStringConverters = firstItemProperties
+                .Where(x => x.GetCustomAttributes(typeof(StringConverterAttribute), true).Any())
+                .Select(x => new ConverterInfo
                 {
                     Name = x.Name,
-                    FormatterProperties = new FormatterProperties[] { 
-                        new FormatterProperties 
+                    ConverterProperties = new ConverterProperties[] { 
+                        new ConverterProperties 
                         { 
-                            StringFormatAttribute = (StringFormatAttribute)x.GetCustomAttribute(typeof(StringFormatAttribute), true) 
+                            StringConvertAttribute = (StringConverterAttribute)x.GetCustomAttribute(typeof(StringConverterAttribute), true) 
                         }
                     }
                 });
 
-            var customFuncFormatters = firstItemProperties
-                .Where(x => x.GetCustomAttributes(typeof(FuncFormatAttribute), true).Any())
+            var customFuncConverters = firstItemProperties
+                .Where(x => x.GetCustomAttributes(typeof(CustomConverterAttribute), true).Any())
                 .Select(x =>
                 {
-                    Type storeType = ((FuncFormatAttribute)x.GetCustomAttribute(typeof(FuncFormatAttribute), true))?.Type;
+                    Type storeType = ((CustomConverterAttribute)x.GetCustomAttribute(typeof(CustomConverterAttribute), true))?.Type;
                     var instance = Activator.CreateInstance(storeType);
-                    PropertyInfo info = instance.GetType().GetProperty(nameof(ICustomFuncFormatter<object, object>.Formatter));
+                    PropertyInfo info = instance.GetType().GetProperty(nameof(ICustomConverter<object, object>.Converter));
                     object field = info.GetValue(instance);
                     MethodInfo method = field.GetType().GetMethod(nameof(MethodBase.Invoke));
 
-                    return new FormatterInfo
+                    return new ConverterInfo
                     {
                         Name = x.Name,
-                        FormatterProperties = new FormatterProperties[]
+                        ConverterProperties = new ConverterProperties[]
                         {
-                            new FormatterProperties
+                            new ConverterProperties
                             {
                                 Field = field,
                                 MethodInfo = method
@@ -272,18 +281,18 @@ namespace EF6TempTableKit.SqlCommands
                     };
                 });
 
-            return defaultFormmatter
-                .Union(customStringFormatters)
-                .Union(customFuncFormatters)
+            return defaultConverter
+                .Union(customStringConverters)
+                .Union(customFuncConverters)
                 .GroupBy(x => x.Name)
-                .Select(x => new FormatterInfo
+                .Select(x => new ConverterInfo
                 {
                     Name = x.Key,
-                    FormatterProperties = x.Any(fp => fp.FormatterProperties != null && fp.FormatterProperties.Length > 0) 
-                        ? x.SelectMany(xx => xx.FormatterProperties).ToArray()
+                    ConverterProperties = x.Any(fp => fp.ConverterProperties != null && fp.ConverterProperties.Length > 0) 
+                        ? x.SelectMany(xx => xx.ConverterProperties).ToArray()
                         : null
                 })
-                .ToDictionary(x => x.Name, x => x.FormatterProperties);
+                .ToDictionary(x => x.Name, x => x.ConverterProperties);
         }
 
         #endregion
