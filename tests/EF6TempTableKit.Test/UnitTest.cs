@@ -1,10 +1,12 @@
 ﻿using EF6TempTableKit.Extensions;
 using EF6TempTableKit.Test.CodeFirst;
 using EF6TempTableKit.Test.TempTables;
+using LinqKit;
 using EF6TempTableKit.Test.TempTables.Dependencies;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using Xunit;
 
 namespace EF6TempTableKit.Test
@@ -55,6 +57,68 @@ namespace EF6TempTableKit.Test
                             (at, a) => new { Id = at.Id }).ToList();
                 }
             });
+        }
+
+        [Fact]
+        public void GetDataUsingLinqKit()
+        {
+            using (var context = new AdventureWorksCodeFirst())
+            {
+                var tempAddressQuery = context.Addresses.AsExpandable().Select(a => new AddressTempTableDto { Id = a.AddressID, Name = a.AddressLine1 });
+
+                var addressList = context
+                        .WithTempTableExpression<AdventureWorksCodeFirst>(tempAddressQuery)
+                        .TempAddresses.Join(context.Addresses,
+                        (a) => a.Id,
+                        (aa) => aa.AddressID,
+                        (at, a) => new { Id = at.Id })
+                        .AsExpandable()
+                        .ToList();
+
+                Assert.NotEmpty(addressList);
+            }
+        }
+
+        [Fact]
+        public void GetCustomerDataUsingLinqKitUseCriteria()
+        {
+            Expression<Func<SalesOrderHeader, bool>> criteria1 = p => p.TotalDue > 23153;
+
+            using (var context = new AdventureWorksCodeFirst())
+            {
+                var tempSalesOrderQuery = context.Customers.AsExpandable().Select(a => new CustomerTempTableDto { Id = a.CustomerID });
+
+                var query =
+                  from c in context.WithTempTableExpression<AdventureWorksCodeFirst>(tempSalesOrderQuery).TempCustomers.AsExpandable()
+                  join h in context.Customers on c.Id equals h.CustomerID
+                  where h.SalesOrderHeaders.Any(criteria1.Compile())
+                  select h.Person;
+
+                Assert.NotEmpty(query.ToList());
+            }
+        }
+
+        [Fact]
+        public void GetProductDataUsingLinqKitUseCriteriaAndInvoke()
+        {
+            Expression<Func<Product, bool>> criteria1 = p => p.SafetyStockLevel > 100;
+            Expression<Func<Product, bool>> criteria2 = p => criteria1.Invoke(p) || p.ProductNumber.Contains("a");
+
+            using (var context = new AdventureWorksCodeFirst())
+            {
+                var tempProductQuery = context.Products.AsExpandable().Select(a => new ProductTempTableDto { Id = a.ProductID, Name = a.Name });
+
+                var productList = context
+                        .WithTempTableExpression<AdventureWorksCodeFirst>(tempProductQuery)
+                        .TempProducts.Join(context.Products,
+                        (a) => a.Id,
+                        (aa) => aa.ProductID,
+                        (at, a) => new { Id = at.Id })
+                        .AsExpandable()
+                        .ToList();
+
+                Assert.NotEmpty(productList);
+            }
         }
 
         /// <summary>
