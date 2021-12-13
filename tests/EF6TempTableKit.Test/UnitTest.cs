@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using Xunit;
+using System;
 
 namespace EF6TempTableKit.Test
 {
