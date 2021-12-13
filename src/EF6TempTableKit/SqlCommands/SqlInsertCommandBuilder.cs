@@ -207,7 +207,7 @@ namespace EF6TempTableKit.SqlCommands
             var customConverters = GetCustomConverters(list.First());
 
             var count = list.Count();
-            var pageSize = 1000;
+            var pageSize = 1000; //SQL Server limits INSERT to 1000 rows at once.
             var totalPageNo = Math.Ceiling((decimal)count / pageSize);
 
             for (var i = 0; i < totalPageNo; i++)
