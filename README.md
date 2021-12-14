@@ -27,7 +27,7 @@ Version 3.0.0 has some bug fixes
 
 | Change | Description |
 | --------------- |------------|
-| `reuseExisting` is becoming obsolete| Internally each executed query is followed by `exec sp_reset_connection` making all the queries separated by individual batch which doesn't give you any chance to reuse existing temp table that you already have created under the same database connection. So, this parameter literally does nothing. |
+| `reuseExisting` is becoming obsolete| Internally each executed query is followed by `exec sp_reset_connection` making all the queries scoped within the same same [SPID](https://docs.microsoft.com/en-us/sql/t-sql/functions/spid-transact-sql?view=sql-server-ver15) separated by individual batch which doesn't give you any chance to reuse existing temp table that you already have created within the same database connection. So, this parameter literally does nothing. |
 
 .... and improvements
 
