@@ -1,5 +1,5 @@
 # EF6TempTableKit - version 3.0.0
-EF6TempTableKit is a library that enriches Entity Framework 6 by helping you to leverage Microsoft SQL Server temp tables.
+EF6TempTableKit is a library that enriches Entity Framework 6 by introducing new type of entities which are not natively supported - temporary entities.
 
 [![Build status](https://ci.appveyor.com/api/projects/status/tsdv1s7v897f2mwv?svg=true)](https://ci.appveyor.com/project/zblago/ef6temptablekit)
 [![AppVeyor tests](https://img.shields.io/appveyor/tests/zblago/EF6TempTableKit)](https://ci.appveyor.com/project/zblago/ef6temptablekit/build/tests)
