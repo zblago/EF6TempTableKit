@@ -2,7 +2,7 @@
 
 namespace EF6TempTableKit.Interfaces
 {
-    interface ICustomConverter<T, Y>
+    public interface ICustomConverter<T, Y>
     {
         Func<T, Y> Converter { get; }
     }
