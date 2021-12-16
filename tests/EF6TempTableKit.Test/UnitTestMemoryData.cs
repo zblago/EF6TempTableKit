@@ -4,6 +4,7 @@ using EF6TempTableKit.Test.CodeFirst;
 using EF6TempTableKit.Test.TempTables;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using Xunit;
 
@@ -310,7 +311,7 @@ namespace EF6TempTableKit.Test
             };
         }
 
-        [Fact]
+        [Fact, Category("LongRunning")]
         public void Load500000RecordsFromMemory()
         {
             var sampleList = new List<AllDataTypesDto>();
