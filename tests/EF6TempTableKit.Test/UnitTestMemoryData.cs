@@ -310,7 +310,7 @@ namespace EF6TempTableKit.Test
             };
         }
 
-        [Fact]
+        [Fact, Trait("Category", "LongRunning")]
         public void Load500000RecordsFromMemory()
         {
             var sampleList = new List<AllDataTypesDto>();
