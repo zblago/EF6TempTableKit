@@ -1,19 +1,16 @@
-﻿﻿using EF6TempTableKit.Attributes;
+﻿using EF6TempTableKit.Attributes;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EF6TempTableKit.Test.TempTables
 {
-    [Table("#tempAddressMultipleId")]
-    public class AddressTempTableMultipleId : ITempTable
+    [Table("#tempProducts")]
+    public class ProductTempTable : ITempTable
     {
         [ClusteredIndex]
         [NonClusteredIndex("first")]
         [NonClusteredIndex("second")]
         [TempFieldTypeAttribute("int")]
         public int Id { get; set; }
-
-        [TempFieldTypeAttribute("int")]
-        public int Id2 { get; set; }
 
         [NonClusteredIndex("third")]
         [NonClusteredIndex("second")]
@@ -22,7 +19,7 @@ namespace EF6TempTableKit.Test.TempTables
     }
 
     [NotMapped]
-    public class AddressTempTableMultipleIdDto : AddressTempTableMultipleId
+    public class ProductTempTableDto : ProductTempTable
     {
     }
 }

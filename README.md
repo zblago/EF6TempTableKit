@@ -1,30 +1,44 @@
-# EF6TempTableKit - version 2.0.0
-EF6TempTableKit is a library that helps you utilize temp tables in your Entity Framework 6 context mapped to Microsoft SQL Server database.
+# EF6TempTableKit - version 3.0.0
+EF6TempTableKit is a library that enriches Entity Framework 6 by introducing new type of entities which are not natively supported - temporary entities.
 
 [![Build status](https://ci.appveyor.com/api/projects/status/tsdv1s7v897f2mwv?svg=true)](https://ci.appveyor.com/project/zblago/ef6temptablekit)
 [![AppVeyor tests](https://img.shields.io/appveyor/tests/zblago/EF6TempTableKit)](https://ci.appveyor.com/project/zblago/ef6temptablekit/build/tests)
 [![Nuget](https://img.shields.io/nuget/v/EF6temptablekit)](https://www.nuget.org/packages/EF6TempTableKit/)
 
 ## Versions
-1.0.0 - check for details [here](https://github.com/zblago/EF6TempTableKit/tree/EF6TempTableKit_version_1_0_0)
+1.0.0 - check the details [here](https://github.com/zblago/EF6TempTableKit/tree/EF6TempTableKit_version_1_0_0)  
+2.0.0 - check the details [here](https://github.com/zblago/EF6TempTableKit/tree/EF6TempTableKit_version_2_0_0)
 
 ## Overview
 
-In some cases, when you write LINQ-to-Entities(L2E) queries, you would like to have a benefit like temp tables (e.g. create and insert records in temporary tables and later on reusing them as much as you want in a query). By default, EF doesn't support temporary tables and there is a reason why is like that. To overcome this "weakness", introducing EF6TempTableKit in your project, you can add a "temporary" entity as we are used to do it with "permanent" entitiy. In generated T-SQL query, "temporary" entity will be mapped to a temporary table which resides in `tempDb` database and used normally like any other table.<br/>
-Keep in mind: You are still writing LINQ-to-Entities to insert records in a "temporary" entity.
+We all know how to write LINQ-to-Entities(L2E) queries to fetch data from the database. No T-SQL, only C#.<br/>But, in some cases, writing and optimizing LINQ-to-Entities(L2E) queries may be easier and pleasnt if we can use MS SQL Server temporary tables.<br/><br/>What does that mean?<br/>Imagine yourself declaring and loading data into temp tables just as you are used to do with regular EF context entities. By default, EF doesn't support temporary tables and there is a reason why is like that. To overcome this "weakness", by plugging EF6TempTableKit into your project, you can introduce a "temporary" entity as we are used to do it with "permanent" entity. In generated T-SQL query, "temporary" entity will be mapped to the temporary table which resides in `tempDb` database and then used normally like any other table.<br/>
+Keep in mind: You are still writing LINQ-to-Entities to insert records into a "temporary" entity.
 
-## What is changed in version 2.0.0
+## What is changed in version 3.0.0
 
-Version 2.0.0 has some improvements such as
-- support for multiple mutually interconnected temporary tables
-- columns order in a nonclustered index
-- injecting into final query only needed DDL and DML queries and their related dependencies
-- more tests in solution
+Version 3.0.0 has some bug fixes
+
+| Bug description | Resolution |
+| --------------- |------------|
+| LINQ query empowered by LinqKit and EF6TempTableKit throws exception|LinqKit driven LINQ query has stored raw sql at some deeper level. Inspecting where is needed property now we have corresponding object being used later to get raw sql |
+|LINQ query that has more than 10 parameters in where clause behaves unexpectedly because they are iterated in ascending order|By changing sort order, same parameter will not be replace twice or more |
+
+... changes
+
+| Change | Description |
+| --------------- |------------|
+| `reuseExisting` is becoming obsolete| Internally each executed query is followed by `exec sp_reset_connection` making all the queries scoped within the same [SPID](https://docs.microsoft.com/en-us/sql/t-sql/functions/spid-transact-sql?view=sql-server-ver15) separated by individual batch which doesn't give you any chance to reuse existing temp table that you already have created within the same database connection. So, this parameter literally does nothing. |
+
+.... and improvements
+
+| Improvement | Description |
+| --------------- |------------|
+| Load the data from memory | Now we know how to prepare our context and LINQ to make our plugin work, but you've noticed that query can be optimized by sending data from the memory since they are already cached but needed for the query. Writing query to get same data again makes your final query complex and potentionally increases total execution time. This improvement helps you generate T-SQL along with the data from the memory so your query can be simplified by keeping focus on the main part. This improvement is covered with the unit tests with almost all possible .NET data types. |
 
 ## Getting Started
 
 Follow these steps:
-1. Install Nuget package (`Install-Package EF6TempTableKit -Version 2.0.0`)
+1. Install Nuget package (`Install-Package EF6TempTableKit -Version 3.0.0`)
 2. Implement `IDbContextWithTempTable` within your context. What does that mean? Add a public property and initialize it via constructor or auto-property initializer
 ```csharp
   public TempTableContainer TempTableContainer { get; set; } = new TempTableContainer();
@@ -98,14 +112,16 @@ EF6TempTableKit supports some features like reusing existing table within the sa
 
 | Extension       | Description |
 | --------------- |-------------|
-| `WithTempTableExpression` | Extension that accepts an expression being translated into T-SQL query that has a logic for inserting records in temp table. `WithTempTableExpression<T>(this System.Data.Entity.DbContext dbContexWithTempTable, IQueryable<ITempTable> expression, bool reuseExisting = false)` supports reusing existing temp table within the same [SPID](https://docs.microsoft.com/en-us/sql/t-sql/functions/spid-transact-sql?view=sql-server-ver15). If you set `reuseExisting` flag on `true`, generated T-SQL will check whether temp table already exists or not. That means, if you run mutliple queries within the same connection, you can reuse created temp table as temp table is scoped in SPID in which is created. <br/>**Important - You can attach an expression that requires for its creation some other expression(s). In that case, you have to take care of an order in which expressions are being attached in a way that first are coming expressions that have a little or no dependencies to those that have dependencies on previously attached expressions. Regularly, in T-SQL you will do the same. At the top of T-SQL query, we are declaring and inserting data into tables that are used later in a code for inserting data into some other temporary tables. The same logic is applied here, but it is on a developer to keep an eye on expression order.**|
-| `ReinitializeTempTableContainer` | Clears out the attached expressions. When you run a query in a loop, second iteration will throw an exception `Can't override query for temp table {tempTableName} as it is already attached to the context."`. In that case and for every subsequent call ensure that temp tables will be generated again with a new data specific for that iteration. |
+| `WithTempTableExpression` | Extension that accepts an expression being translated into T-SQL query that has a logic for inserting records into a temp table. `WithTempTableExpression<T>(this System.Data.Entity.DbContext dbContexWithTempTable, IQueryable<ITempTable> expression)`<br/>**Important - You can attach an expression that requires for its creation some other expression(s). In that case, you have to take care of an order in which expressions are being attached in a way that first are coming expressions that have a little or no dependencies to those that have dependencies on previously attached expressions. Regularly, in T-SQL you will do the same. At the top of T-SQL query, we are declaring and inserting data into tables that are used later in a code for inserting data into some other temporary tables. The same logic is applied here, but it is on a developer to keep an eye on expression order.**|
+| `ReinitializeTempTableContainer` | Clears out the attached expressions. |
 
 | Attribute       | Description |
 | --------------- |-------------|
 | `ClusteredIndex` | Associate this attribute with a field(s) you want in clustered index. |
 | `NonClusteredIndex("indexName, [orderNo = 0]")` | Associate this attribute with a field(s) you want in non-clustered index. Number of non-clustered index is limited by SQL Server. If you want more columns within the same non-clustered index, just add a same name. You can set order of the columns by using `orderNo` parameter. |
 | `TempFieldTypeAttribute` | Use this attribute to define field data type in a SQL Server manner. E.g. `([TempFieldTypeAttribute("varchar(200)")])`. |
+|`CustomConverterAttribute`| Use this attribute to define custom `ICustomConverter` converter for in-memory data. You are defining own converter if EF6TempTableKit is not smart enough to convert the data for you. When do I need this? E.g. for some reason _date_ is not properly _translated_ from memory to T-SQL query. This way you are free to define own converter based on your local settings and convert such a data as per your needs. Note: take a reference to the UnitTest project, there is covered almost every scenario you need |
+|`StringConverterAttribute`| A lots of data types can be send as a string and properly stored into any data type (date, int...), hence this one is coming along with extension. Same as `CustomConverterAttribute` but dedicated to the string data type.|
 
 ## How it works
 

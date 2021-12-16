@@ -20,9 +20,13 @@ namespace EF6TempTableKit.Test.CodeFirst
 
         public virtual DbSet<AddressTempTable> TempAddresses { get; set; }
         public virtual DbSet<AddressTempTableMultipleId> TempAddressesMultipleId { get; set; }
+        public virtual DbSet<AddressTempTableTwoDataSourcesTempTable> TempAddressesTwoDataSources { get; set; }
+        public virtual DbSet<AllDataTypesTempTable> AllDataTypesTempTable { get; set; }
         public virtual DbSet<ProductCategoryCountTempTable> TempProductCategoryCounts { get; set; }
         public virtual DbSet<ProductCategoryTempTable> TempProductCategories { get; set; }
         public virtual DbSet<ProductSubCategoryTempTable> TempProductSubCategories { get; set; }
+        public virtual DbSet<CustomerTempTable> TempCustomers { get; set; }
+        public virtual DbSet<ProductTempTable> TempProducts { get; set; }
 
         public virtual DbSet<ChairTempTable> TempChairs { get; set; }
         public virtual DbSet<DepartmentTempTable> TempDepartments { get; set; }

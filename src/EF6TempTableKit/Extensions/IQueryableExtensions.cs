@@ -20,7 +20,9 @@ namespace EF6TempTableKit.Extensions
             objectQuery = (dynamic)genMethod.Invoke(null, new object[] { query });
 
             var result = objectQuery.ToTraceString();
-            foreach (var parameter in objectQuery.Parameters)
+
+            var paramsReversed = objectQuery.Parameters.Reverse();//reverse params order to avoid replacement of @p__linq__1 with, let's say value 'Joe' in @p__linq__11 as 'Joe'1 in result variable
+            foreach (var parameter in paramsReversed)
             {
                 if (parameter.Value == null)
                     continue;
@@ -42,7 +44,25 @@ namespace EF6TempTableKit.Extensions
         public static ObjectQuery<T> GetQueryFromQueryable<T>(IQueryable<T> query)
         {
             var internalQueryField = query.GetType().GetFields(System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).Where(f => f.Name.Equals("_internalQuery")).FirstOrDefault();
-            var internalQuery = internalQueryField.GetValue(query);
+            var internalQuery = new object();
+
+            //If query is wrapped with LinqKit extensions we have to get InnerQuery and InternalQuery from it afterwards.
+            if (internalQueryField == null)
+            {
+                var innerQuery = query.GetType()
+                    .GetProperties(System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
+                    .FirstOrDefault(f => f.Name.Equals("InnerQuery"))
+                    .GetValue(query);
+                internalQuery = innerQuery.GetType()
+                    .GetProperties(System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
+                    .FirstOrDefault(f => f.Name.Equals("InternalQuery"))
+                    .GetValue(innerQuery);
+            }
+            else
+            {
+                internalQuery = internalQueryField.GetValue(query);
+            }
+
             var objectQueryField = internalQuery.GetType().GetFields(System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).Where(f => f.Name.Equals("_objectQuery")).FirstOrDefault();
             var objectQueryValue = objectQueryField.GetValue(internalQuery);
 

@@ -37,7 +37,8 @@ namespace EF6TempTableKit.Utilities
             {
                 var tempTableName = tempSqlQuery.Key;
                 var tempTableNameWithBrackets = $"[{tempTableName}]";
-                if (!_alreadyAttachedTempTableQuery.Any(t => t == tempTableName) && interceptedComandText.Contains(tempTableNameWithBrackets))
+                var isTempTableAlreadyAttached = _alreadyAttachedTempTableQuery.Contains(tempTableName);
+                if ((!isTempTableAlreadyAttached || tempSqlQuery.Value.IsDataAppend) && interceptedComandText.Contains(tempTableNameWithBrackets))
                 {
                     var hasTempTableDependencies = _tempOnTempDependencies.ContainsKey(tempTableName);
                     if (hasTempTableDependencies)
@@ -45,22 +46,22 @@ namespace EF6TempTableKit.Utilities
                         foreach (var tempTableDependency in _tempOnTempDependencies[tempTableName])
                         {
                             var query = _tempSqlQueriesList.Single(t => t.Key == tempTableDependency).Value;
-                            AppendIfNotAlreadyAttached(sqlStringBuilder, query.QueryString, tempTableDependency);
+                            AppendIfNotAlreadyAttached(sqlStringBuilder, query.QueryString, tempTableDependency, query.IsDataAppend);
                         }
                     }
-                    AppendIfNotAlreadyAttached(sqlStringBuilder, tempSqlQuery.Value.QueryString, tempTableName);
+                    AppendIfNotAlreadyAttached(sqlStringBuilder, tempSqlQuery.Value.QueryString, tempTableName, tempSqlQuery.Value.IsDataAppend);
                 }
             }
 
             return sqlStringBuilder.ToString();
         }
 
-        private void AppendIfNotAlreadyAttached(StringBuilder sqlStringBuilder, string sqlStringToAppend, string tempTableName)
+        private void AppendIfNotAlreadyAttached(StringBuilder sqlStringBuilder, string sqlStringToAppend, string tempTableName, bool isDataAppend)
         {
-            if (!_alreadyAttachedTempTableQuery.Any(t => t == tempTableName))
+            var isTempTableAlreadyAttached = _alreadyAttachedTempTableQuery.Contains(tempTableName);
+            if (!isTempTableAlreadyAttached || isDataAppend)
             {
                 var selectCommandTextFormat = "\n{0}\n{1}\n{2}\n";
-
                 sqlStringBuilder.AppendFormat(selectCommandTextFormat, _generatedByEf6TempTableKitStartMsg, sqlStringToAppend, _generatedByEf6TempTableKitEndMsg);
                 _alreadyAttachedTempTableQuery.Add(tempTableName);
             }

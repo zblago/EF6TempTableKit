@@ -1,9 +1,7 @@
 ﻿using System.Linq;
 using Xunit;
 using EF6TempTableKit.Test.CodeFirst;
-using EF6TempTableKit.Test.TempTables.Dependencies;
 using EF6TempTableKit.Extensions;
-using EF6TempTableKit.Test.TempTables;
 using System.Collections.Generic;
 using System.Text;
 using EF6TempTableKit.Test.Extensions;

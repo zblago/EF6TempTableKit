@@ -1,6 +1,11 @@
-﻿using EF6TempTableKit.SqlCommands.Interfaces;
+﻿using EF6TempTableKit.Attributes;
+using EF6TempTableKit.Extensions;
+using EF6TempTableKit.Interfaces;
+using EF6TempTableKit.SqlCommands.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 
 namespace EF6TempTableKit.SqlCommands
@@ -21,6 +26,8 @@ namespace EF6TempTableKit.SqlCommands
         }
 
         public static IDrop Begin(string tableName) => new SqlInsertCommandBuilder(tableName);
+        
+        public static IInsertQuery Continue(string tableName) => new SqlInsertCommandBuilder(tableName);
 
         public ICreate DropIfExists()
         {
@@ -107,9 +114,16 @@ namespace EF6TempTableKit.SqlCommands
             return this;
         }
 
-        public IExecute AddInsertQuery(IReadOnlyDictionary<string, int> fieldsWithPositions, string sqlSelectQuery)
+        public IExecute AddInsertQuery(IReadOnlyDictionary<string, int> fieldsWithTypes, string sqlSelectQuery)
         {
-            BuildInsertQuery(fieldsWithPositions, sqlSelectQuery, 0);
+            BuildInsertQuery(fieldsWithTypes, sqlSelectQuery, 0);
+
+            return this;
+        }
+
+        public IExecute AddInsertQuery(IEnumerable<ITempTable> list) 
+        {
+            BuildInsertQuery(list, 0);
 
             return this;
         }
@@ -120,6 +134,18 @@ namespace EF6TempTableKit.SqlCommands
             _queryBuilder.AppendLine($"BEGIN");
 
             BuildInsertQuery(fieldsWithPositions, sqlSelectQuery, 2);
+
+            _queryBuilder.AppendLine("END");
+
+            return this;
+        }
+
+        public IExecute AddInsertQueryIfCreated(IEnumerable<ITempTable> list) 
+        {
+            _queryBuilder.AppendLine($"IF @{_tempTableExist} = 1");
+            _queryBuilder.AppendLine($"BEGIN");
+
+            BuildInsertQuery(list, 2);
 
             _queryBuilder.AppendLine("END");
 
@@ -156,11 +182,11 @@ namespace EF6TempTableKit.SqlCommands
             _queryBuilder.AppendLine($"{repeatedTabs})");
         }
 
-        private void BuildInsertQuery(IReadOnlyDictionary<string, int> fieldsWithPositions, string sqlSelectQuery, byte tabsCount)
+        private void BuildInsertQuery(IReadOnlyDictionary<string, int> fieldsWithTypes, string sqlSelectQuery, byte tabsCount)
         {
             var repeatedTabs = new string('\t', tabsCount);
 
-            var fieldsWithPositionsSorted = fieldsWithPositions.OrderBy(f => f.Value);
+            var fieldsWithPositionsSorted = fieldsWithTypes.OrderBy(f => f.Value);
             var isFirstColumnGreaterThanZero = fieldsWithPositionsSorted.First().Value > 0; 
 
             var selectedColumns = string.Join(", ", fieldsWithPositionsSorted.Select(f => f.Key).ToArray());
@@ -171,6 +197,102 @@ namespace EF6TempTableKit.SqlCommands
 
             _queryBuilder.AppendLine($"{repeatedTabs}SELECT { selectedColumnsInTopSelectClause } FROM");
             _queryBuilder.AppendLine($"{repeatedTabs}({sqlSelectQuery}) AS alias{_tempTableName.Replace("#", "")} ({ selectedColumnsInSubSelectClause })");
+        }
+
+        private void BuildInsertQuery(IEnumerable<ITempTable> list, byte tabsCount)
+        {
+            var repeatedTabs = new string('\t', tabsCount);
+
+            var columns = list.First().GetType().GetProperties().Select((x, i) => new { Key = i, Value = x.Name });
+            var customConverters = GetCustomConverters(list.First());
+
+            var count = list.Count();
+            var pageSize = 1000; //SQL Server limits INSERT to 1000 rows at once.
+            var totalPageNo = Math.Ceiling((decimal)count / pageSize);
+
+            for (var i = 0; i < totalPageNo; i++)
+            {
+                var pageItems = list.Skip(1000 * i).Take(1000);
+
+                var selectedColumns = string.Join(", ", columns.Select(x => x.Value).ToArray());
+                _queryBuilder.AppendLine($"{repeatedTabs}INSERT INTO {_tempTableName}({ selectedColumns }) ");
+
+                _queryBuilder.AppendLine($@"VALUES {Environment.NewLine}{
+                    string.Join(",", pageItems
+                        .ToList()
+                        .Select(x =>
+                        $@"({
+                            string.Join(",",
+                            x.GetType().GetProperties()
+                            .OrderBy(o => columns.Select(c => c.Value)
+                            .ToList().IndexOf(o.Name))
+                            .Select(property => property.GetSqlValue(x, customConverters)))
+                            }){Environment.NewLine}")
+                        .ToArray()) }");
+            }
+        }
+
+        private static IDictionary<string, ConverterProperties[]> GetCustomConverters(ITempTable item)
+        {
+            var firstItemProperties = item.GetType().GetProperties();
+
+            var defaultConverter = firstItemProperties
+                .Where(x => !x.GetCustomAttributes(typeof(StringConverterAttribute), true).Any()
+                    && !x.GetCustomAttributes(typeof(CustomConverterAttribute), true).Any())
+                .Select(x => new ConverterInfo
+                { 
+                    Name = x.Name
+                });
+
+            var customStringConverters = firstItemProperties
+                .Where(x => x.GetCustomAttributes(typeof(StringConverterAttribute), true).Any())
+                .Select(x => new ConverterInfo
+                {
+                    Name = x.Name,
+                    ConverterProperties = new ConverterProperties[] { 
+                        new ConverterProperties 
+                        { 
+                            StringConvertAttribute = (StringConverterAttribute)x.GetCustomAttribute(typeof(StringConverterAttribute), true) 
+                        }
+                    }
+                });
+
+            var customFuncConverters = firstItemProperties
+                .Where(x => x.GetCustomAttributes(typeof(CustomConverterAttribute), true).Any())
+                .Select(x =>
+                {
+                    Type storeType = ((CustomConverterAttribute)x.GetCustomAttribute(typeof(CustomConverterAttribute), true))?.Type;
+                    var instance = Activator.CreateInstance(storeType);
+                    PropertyInfo info = instance.GetType().GetProperty(nameof(ICustomConverter<object, object>.Converter));
+                    object field = info.GetValue(instance);
+                    MethodInfo method = field.GetType().GetMethod(nameof(MethodBase.Invoke));
+
+                    return new ConverterInfo
+                    {
+                        Name = x.Name,
+                        ConverterProperties = new ConverterProperties[]
+                        {
+                            new ConverterProperties
+                            {
+                                Field = field,
+                                MethodInfo = method
+                            }
+                        }
+                    };
+                });
+
+            return defaultConverter
+                .Union(customStringConverters)
+                .Union(customFuncConverters)
+                .GroupBy(x => x.Name)
+                .Select(x => new ConverterInfo
+                {
+                    Name = x.Key,
+                    ConverterProperties = x.Any(fp => fp.ConverterProperties != null && fp.ConverterProperties.Length > 0) 
+                        ? x.SelectMany(xx => xx.ConverterProperties).ToArray()
+                        : null
+                })
+                .ToDictionary(x => x.Name, x => x.ConverterProperties);
         }
 
         #endregion
