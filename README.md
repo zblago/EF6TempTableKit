@@ -1,4 +1,4 @@
-# EF6TempTableKit - version 3.0.0
+# EF6TempTableKit - version 3.0.1
 EF6TempTableKit is a library that enriches Entity Framework 6 by introducing new type of entities which are not natively supported - temporary entities.
 
 [![Build status](https://ci.appveyor.com/api/projects/status/tsdv1s7v897f2mwv?svg=true)](https://ci.appveyor.com/project/zblago/ef6temptablekit)
@@ -14,9 +14,9 @@ EF6TempTableKit is a library that enriches Entity Framework 6 by introducing new
 We all know how to write LINQ-to-Entities(L2E) queries to fetch data from the database. No T-SQL, only C#.<br/>But, in some cases, writing and optimizing LINQ-to-Entities(L2E) queries may be easier and pleasnt if we can use MS SQL Server temporary tables.<br/><br/>What does that mean?<br/>Imagine yourself declaring and loading data into temp tables just as you are used to do with regular EF context entities. By default, EF doesn't support temporary tables and there is a reason why is like that. To overcome this "weakness", by plugging EF6TempTableKit into your project, you can introduce a "temporary" entity as we are used to do it with "permanent" entity. In generated T-SQL query, "temporary" entity will be mapped to the temporary table which resides in `tempDb` database and then used normally like any other table.<br/>
 Keep in mind: You are still writing LINQ-to-Entities to insert records into a "temporary" entity.
 
-## What is changed in version 3.0.0
+## What is changed in version 3.0.1
 
-Version 3.0.0 has some bug fixes
+Version 3.0.1 has some bug fixes
 
 | Bug description | Resolution |
 | --------------- |------------|
@@ -38,7 +38,7 @@ Version 3.0.0 has some bug fixes
 ## Getting Started
 
 Follow these steps:
-1. Install Nuget package (`Install-Package EF6TempTableKit -Version 3.0.0`)
+1. Install Nuget package (`Install-Package EF6TempTableKit -Version 3.0.1`)
 2. Implement `IDbContextWithTempTable` within your context. What does that mean? Add a public property and initialize it via constructor or auto-property initializer
 ```csharp
   public TempTableContainer TempTableContainer { get; set; } = new TempTableContainer();
