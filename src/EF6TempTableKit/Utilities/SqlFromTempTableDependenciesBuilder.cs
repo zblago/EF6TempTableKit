@@ -45,8 +45,10 @@ namespace EF6TempTableKit.Utilities
                     {
                         foreach (var tempTableDependency in _tempOnTempDependencies[tempTableName])
                         {
-                            var query = _tempSqlQueriesList.Single(t => t.Key == tempTableDependency).Value;
-                            AppendIfNotAlreadyAttached(sqlStringBuilder, query.QueryString, tempTableDependency, query.IsDataAppend);
+                            foreach (var query in _tempSqlQueriesList.Where(x => x.Key == tempTableDependency))
+                            {
+                                AppendIfNotAlreadyAttached(sqlStringBuilder, query.Value.QueryString, tempTableDependency, query.Value.IsDataAppend);
+                            }
                         }
                     }
                     AppendIfNotAlreadyAttached(sqlStringBuilder, tempSqlQuery.Value.QueryString, tempTableName, tempSqlQuery.Value.IsDataAppend);
