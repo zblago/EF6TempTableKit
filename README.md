@@ -21,7 +21,7 @@ Version 3.0.1 has some bug fixes
 | Bug description | Resolution |
 | --------------- |------------|
 | LINQ query empowered by LinqKit and EF6TempTableKit throws exception|LinqKit driven LINQ query has stored raw sql at some deeper level. Inspecting where is needed property now we have corresponding object being used later to get raw sql |
-|LINQ query that has more than 10 parameters in where clause behaves unexpectedly because they are iterated in ascending order|By changing sort order, same parameter will not be replace twice or more |
+|LINQ query that has more than 10 parameters in where clause behaves unexpectedly because they are iterated in ascending order|By changing sort order, same parameter will not be replaced twice or more |
 
 ... changes
 
