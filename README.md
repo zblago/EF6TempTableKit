@@ -228,7 +228,7 @@ You might find this library useful for you. However, this library is not tested 
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE) file for details
+This project is not allowed to use on any commercial project.
 
 ## Acknowledgments
 
