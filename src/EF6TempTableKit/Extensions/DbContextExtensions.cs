@@ -168,7 +168,7 @@ namespace EF6TempTableKit.Extensions
         /// <param name="dbContexWithTempTable"></param>
         public static void ReinitializeTempTableContainer(this IDbContextWithTempTable dbContexWithTempTable)
         {
-            dbContexWithTempTable.TempTableContainer = new TempTableContainer();
+            dbContexWithTempTable.TempTableContainer.Reinitialize();
         }
     }
 }
