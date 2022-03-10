@@ -20,13 +20,12 @@ namespace EF6TempTableKit.Extensions
         public static T WithTempTableExpression<T>(this T dbContexWithTempTable, IQueryable<ITempTable> expression)
             where T : class, IDbContextWithTempTable
         {
-            var contextWithTempTable = (IDbContextWithTempTable)dbContexWithTempTable;
             var tableMetadataProvider = new TableMetadataProvider();
             var tempTableType = expression.ElementType.BaseType;
             var tempTableName = tableMetadataProvider.GetTableNameFromBaseType(tempTableType);
-            var hasAttachedDDLStatement = contextWithTempTable.TempTableContainer.TempSqlQueriesList.Any(x => x.Key == tempTableName);
+            var hasAttachedDDLStatement = dbContexWithTempTable.TempTableContainer.TempSqlQueriesList.Any(x => x.Key == tempTableName);
 
-            Validate(contextWithTempTable, tempTableName);
+            Validate(dbContexWithTempTable, tempTableName);
 
             var fieldsWithTypes = tableMetadataProvider.GetFieldsWithTypes(tempTableType);
             var clusteredIndexesWithFields = tableMetadataProvider.GetClusteredIndexColumns(tempTableType);
@@ -55,10 +54,10 @@ namespace EF6TempTableKit.Extensions
                     .Execute();
             }
 
-            var tempTableDependencyManager = new TempTableDependencyManager(objectQuery, contextWithTempTable.TempTableContainer);
+            var tempTableDependencyManager = new TempTableDependencyManager(objectQuery, dbContexWithTempTable.TempTableContainer);
             tempTableDependencyManager.AddDependenciesForTable(tempTableName);
 
-            contextWithTempTable.TempTableContainer
+            dbContexWithTempTable.TempTableContainer
                 .TempSqlQueriesList
                 .Enqueue(new KeyValuePair<string, Query>(tempTableName, new Query
                 {
@@ -66,7 +65,7 @@ namespace EF6TempTableKit.Extensions
                     IsDataAppend = hasAttachedDDLStatement
                 }));
 
-            return dbContexWithTempTable as T;
+            return dbContexWithTempTable;
 
         }
 
@@ -96,12 +95,11 @@ namespace EF6TempTableKit.Extensions
             where T : class, IDbContextWithTempTable
         {
             var tableMetadataProvider = new TableMetadataProvider();
-            var contextWithTempTable = (IDbContextWithTempTable)dbContexWithTempTable;
             var tempTableType = list.First().GetType();
             var tempTableName = tableMetadataProvider.GetTableNameFromBaseType(tempTableType);
-            var hasAttachedDDLStatement = contextWithTempTable.TempTableContainer.TempSqlQueriesList.Any(x => x.Key == tempTableName);
+            var hasAttachedDDLStatement = dbContexWithTempTable.TempTableContainer.TempSqlQueriesList.Any(x => x.Key == tempTableName);
 
-            Validate(contextWithTempTable, tempTableName);
+            Validate(dbContexWithTempTable, tempTableName);
 
             var fieldsWithTypes = tableMetadataProvider.GetFieldsWithTypes(tempTableType);
             var clusteredIndexesWithFields = tableMetadataProvider.GetClusteredIndexColumns(tempTableType);
@@ -126,7 +124,7 @@ namespace EF6TempTableKit.Extensions
                     .Execute();
             }
 
-            contextWithTempTable.TempTableContainer
+            dbContexWithTempTable.TempTableContainer
                 .TempSqlQueriesList
                 .Enqueue(new KeyValuePair<string, Query>(tempTableName, new Query
                 {
@@ -134,7 +132,7 @@ namespace EF6TempTableKit.Extensions
                     IsDataAppend = hasAttachedDDLStatement
                 }));
 
-            return dbContexWithTempTable as T;
+            return dbContexWithTempTable;
 
         }
 
