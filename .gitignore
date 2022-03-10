@@ -8,3 +8,4 @@ obj/
 /packages/
 nuget.exe
 nuget
+*.user
