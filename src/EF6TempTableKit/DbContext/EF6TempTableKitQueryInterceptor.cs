@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Data.Entity.Infrastructure.Interception;
+using System.Linq;
 using EF6TempTableKit.Extensions;
 
 namespace EF6TempTableKit.DbContext
@@ -16,11 +17,13 @@ namespace EF6TempTableKit.DbContext
         private void PrependTempTableSql<T>(DbCommand command, DbCommandInterceptionContext<T> interceptionContext)
         {
             var dbContextWithTempTable = FindDbContextWithTempTable(interceptionContext.DbContexts);
-            var tableContainer = ((IDbContextWithTempTable)dbContextWithTempTable)?.TempTableContainer;
+            var tableContainer = dbContextWithTempTable?.TempTableContainer;
             if (tableContainer?.TempSqlQueriesList?.Count > 0)
             {
-                var sqlFromTempTableDependenciesBuilder = new SqlFromTempTableDependenciesBuilder(((IDbContextWithTempTable)dbContextWithTempTable).TempTableContainer);
-                command.CommandText = sqlFromTempTableDependenciesBuilder.BuildSqlForTempTables(command.CommandText) + command.CommandText;
+                var sqlFromTempTableDependenciesBuilder = new SqlFromTempTableDependenciesBuilder(dbContextWithTempTable.TempTableContainer);
+                var tempTableSql = sqlFromTempTableDependenciesBuilder.BuildSqlForTempTables(command.CommandText, out var additionalParameters);
+                command.CommandText = tempTableSql + command.CommandText;
+                command.Parameters.AddRange(additionalParameters.ToArray());
 
                 if (tableContainer.ReinitializeOnExecute)
                 {

@@ -1,4 +1,5 @@
 ﻿using System.Data.Entity.Core.Objects;
+using System.Text;
 
 namespace EF6TempTableKit.SqlCommands
 {
