@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using EF6TempTableKit.SqlCommands;
 
 namespace EF6TempTableKit.Utilities
 {
@@ -47,11 +48,11 @@ namespace EF6TempTableKit.Utilities
                         {
                             foreach (var query in _tempSqlQueriesList.Where(x => x.Key == tempTableDependency))
                             {
-                                AppendIfNotAlreadyAttached(sqlStringBuilder, query.Value.QueryString, tempTableDependency, query.Value.IsDataAppend);
+                                AppendIfNotAlreadyAttached(sqlStringBuilder, query.Value.SqlQuery, tempTableDependency, query.Value.IsDataAppend);
                             }
                         }
                     }
-                    AppendIfNotAlreadyAttached(sqlStringBuilder, tempSqlQuery.Value.QueryString, tempTableName, tempSqlQuery.Value.IsDataAppend);
+                    AppendIfNotAlreadyAttached(sqlStringBuilder, tempSqlQuery.Value.SqlQuery, tempTableName, tempSqlQuery.Value.IsDataAppend);
                 }
             }
 

@@ -2,7 +2,7 @@
 
 namespace EF6TempTableKit.SqlCommands.Interfaces
 {
-    public interface IDrop
+    internal interface IDrop
     {
         ICreate DropIfExists();
         IAddClusteredIndex CreateIfNotExists(IReadOnlyDictionary<string, string> fieldsWithTypes);

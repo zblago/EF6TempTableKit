@@ -15,7 +15,8 @@ namespace EF6TempTableKit.SqlCommands
         private readonly string _tempTableName;
         private readonly string _tempTableExist;
 
-        public StringBuilder _queryBuilder;
+        /// <summary>Builder für die Query</summary>
+        private StringBuilder _queryBuilder;
 
         internal SqlInsertCommandBuilder(string tempTableName)
         {
@@ -113,7 +114,8 @@ namespace EF6TempTableKit.SqlCommands
 
             return this;
         }
-
+        
+        /// <inheritdoc />
         public IExecute AddInsertQuery(IReadOnlyDictionary<string, int> fieldsWithTypes, string sqlSelectQuery)
         {
             BuildInsertQuery(fieldsWithTypes, sqlSelectQuery, 0);

@@ -1,5 +1,6 @@
 ﻿using System.Data.Entity.Core.Objects;
 using System.Linq;
+using EF6TempTableKit.SqlCommands;
 
 namespace EF6TempTableKit.Extensions
 {
@@ -11,39 +12,25 @@ namespace EF6TempTableKit.Extensions
         /// <typeparam name="T"></typeparam>
         /// <param name="query"></param>
         /// <returns></returns>
-        public static string ToTraceQuery<T>(this IQueryable<T> query)
+        public static ParameterSqlQuery ToTraceQuery<T>(this IQueryable<T> query)
         {
-            ObjectQuery objectQuery;
-            var method = typeof(IQueryableExtensions).GetMethod("GetQueryFromQueryable");
+            var method = typeof(IQueryableExtensions).GetMethod(nameof(GetQueryFromQueryable));
             var genMethod = method.MakeGenericMethod(query.GetType().GenericTypeArguments[0]);
 
-            objectQuery = (dynamic)genMethod.Invoke(null, new object[] { query });
+            var objectQuery = (ObjectQuery)genMethod.Invoke(null, new object[] { query });
 
-            var result = objectQuery.ToTraceString();
+            var sql = objectQuery.ToTraceString();
 
-            var paramsReversed = objectQuery.Parameters.Reverse();//reverse params order to avoid replacement of @p__linq__1 with, let's say value 'Joe' in @p__linq__11 as 'Joe'1 in result variable
-            foreach (var parameter in paramsReversed)
-            {
-                if (parameter.Value == null)
-                    continue;
-                var name = "@" + parameter.Name;
-                if (parameter.ParameterType == typeof(bool))
-                {
-                    var value = parameter.Value.ToString().ToLower() == "false" ? 0 : 1;
-                    result = result.Replace(name, value.ToString());
-                }
-                else
-                {
-                    var value = "'" + parameter.Value.ToString() + "'";
-                    result = result.Replace(name, value);
-                }
-            }
-            return result;
-
+            return new ParameterSqlQuery(sql, objectQuery.Parameters);
         }
+
+
         public static ObjectQuery<T> GetQueryFromQueryable<T>(IQueryable<T> query)
         {
-            var internalQueryField = query.GetType().GetFields(System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).Where(f => f.Name.Equals("_internalQuery")).FirstOrDefault();
+            var internalQueryField = query.GetType()
+                .GetFields(System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
+                .Where(f => f.Name.Equals("_internalQuery"))
+                .FirstOrDefault();
             var internalQuery = new object();
 
             //If query is wrapped with LinqKit extensions we have to get InnerQuery and InternalQuery from it afterwards.

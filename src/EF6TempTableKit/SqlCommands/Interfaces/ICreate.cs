@@ -2,7 +2,7 @@
 
 namespace EF6TempTableKit.SqlCommands.Interfaces
 {
-    public interface ICreate
+    internal interface ICreate
     {
         IAddClusteredIndex Create(IReadOnlyDictionary<string, string> fieldsWithTypes);
     }

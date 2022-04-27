@@ -57,13 +57,14 @@
     <Compile Include="Extensions\DbContextExtensions.cs" />
     <Compile Include="Extensions\HashSetExtensions.cs" />
     <Compile Include="Extensions\IQueryableExtensions.cs" />
+    <Compile Include="SqlCommands\ParameterSqlQuery.cs" />
     <Compile Include="Extensions\PropertyExtensions.cs" />
     <Compile Include="Extensions\ObjectQueryExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="ConverterProperties.cs" />
     <Compile Include="Interfaces\ICustomConverter.cs" />
     <Compile Include="Interfaces\ITempTable.cs" />
-    <Compile Include="Query.cs" />
+    <Compile Include="SqlCommands\Query.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SqlCommands\Interfaces\IAddClusteredIndex.cs" />
     <Compile Include="SqlCommands\Interfaces\IAddNonClusteredIndexes.cs" />

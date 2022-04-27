@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using EF6TempTableKit.SqlCommands;
 
 namespace EF6TempTableKit.DbContext
 {
@@ -14,7 +15,7 @@ namespace EF6TempTableKit.DbContext
         /// <summary>
         /// List of Temp-Table-Sql Queries to append
         /// </summary>
-        public Queue<KeyValuePair<string, Query>> TempSqlQueriesList { get; }
+        internal Queue<KeyValuePair<string, Query>> TempSqlQueriesList { get; }
 
         /// <summary>
         /// Key is node. 

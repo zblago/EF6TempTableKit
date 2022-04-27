@@ -35,12 +35,12 @@ namespace EF6TempTableKit.Extensions
             var objectQuery = expression.GetObjectQuery();
             var fieldsWithPositions = objectQuery.GetQueryPropertyPositions();
 
-            var sqlAllCommandsQuery = "";
+            string sqlAllCommandsQuery;
 
             if (hasAttachedDDLStatement)
             {
                 sqlAllCommandsQuery = SqlInsertCommandBuilder.Continue(tempTableName)
-                    .AddInsertQuery(fieldsWithPositions, sqlSelectQuery)
+                    .AddInsertQuery(fieldsWithPositions, sqlSelectQuery.Sql)
                     .Execute();
             }
             else
@@ -50,7 +50,7 @@ namespace EF6TempTableKit.Extensions
                     .Create(fieldsWithTypes)
                     .AddClusteredIndex(clusteredIndexesWithFields)
                     .AddNonClusteredIndexes(nonClusteredIndexesWithFields)
-                    .AddInsertQuery(fieldsWithPositions, sqlSelectQuery)
+                    .AddInsertQuery(fieldsWithPositions, sqlSelectQuery.Sql)
                     .Execute();
             }
 
@@ -61,7 +61,8 @@ namespace EF6TempTableKit.Extensions
                 .TempSqlQueriesList
                 .Enqueue(new KeyValuePair<string, Query>(tempTableName, new Query
                 {
-                    QueryString = sqlAllCommandsQuery,
+                    SqlQuery = sqlAllCommandsQuery,
+                    Parameters = sqlSelectQuery.Parameters,
                     IsDataAppend = hasAttachedDDLStatement
                 }));
 
@@ -128,7 +129,7 @@ namespace EF6TempTableKit.Extensions
                 .TempSqlQueriesList
                 .Enqueue(new KeyValuePair<string, Query>(tempTableName, new Query
                 {
-                    QueryString = sqlAllCommandsQuery,
+                    SqlQuery = sqlAllCommandsQuery,
                     IsDataAppend = hasAttachedDDLStatement
                 }));
 
