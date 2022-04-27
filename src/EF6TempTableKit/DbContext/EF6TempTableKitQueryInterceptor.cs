@@ -1,7 +1,9 @@
-﻿using EF6TempTableKit.Utilities;
+﻿using System;
+using EF6TempTableKit.Utilities;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Data.Entity.Infrastructure.Interception;
+using System.Data.SqlClient;
 using System.Linq;
 using EF6TempTableKit.Extensions;
 
@@ -23,7 +25,11 @@ namespace EF6TempTableKit.DbContext
                 var sqlFromTempTableDependenciesBuilder = new SqlFromTempTableDependenciesBuilder(dbContextWithTempTable.TempTableContainer);
                 var tempTableSql = sqlFromTempTableDependenciesBuilder.BuildSqlForTempTables(command.CommandText, out var additionalParameters);
                 command.CommandText = tempTableSql + command.CommandText;
-                command.Parameters.AddRange(additionalParameters.ToArray());
+                foreach (var p in additionalParameters)
+                {
+                    var foo = command.CreateParameter();
+                    command.Parameters.Add(new SqlParameter(p.Name, p.Value ?? DBNull.Value));
+                }
 
                 if (tableContainer.ReinitializeOnExecute)
                 {
