@@ -68,12 +68,12 @@ namespace EF6TempTableKit.SqlCommands
             {
                 var parameter = parameters[i];
                 // Create new Parameter with adjusted name
-                var adjustedName = $"@ttk{parameterIndex}{parameter.Name}";
+                var adjustedName = $"ttk{parameterIndex}{parameter.Name}";
                 var adjusted = new ObjectParameter(adjustedName, parameter.Value);
                 adjustedParameters[i] = adjusted;
 
                 // Replace in the string
-                sb.Replace("@" + parameter.Name, adjustedName);
+                sb.Replace("@" + parameter.Name, "@" + adjustedName);
             }
 
             return new ParameterSqlQuery(sb.ToString(), adjustedParameters);
