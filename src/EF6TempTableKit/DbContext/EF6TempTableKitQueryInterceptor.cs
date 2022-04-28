@@ -29,11 +29,6 @@ namespace EF6TempTableKit.DbContext
                 {
                     command.Parameters.Add(new SqlParameter(p.Name, p.Value ?? DBNull.Value));
                 }
-
-                if (tableContainer.ReinitializeOnExecute)
-                {
-                    tableContainer.Reinitialize();
-                }
             }
         }
 

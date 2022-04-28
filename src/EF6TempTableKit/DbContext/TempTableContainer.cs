@@ -23,9 +23,9 @@ namespace EF6TempTableKit.DbContext
         /// </summary>
         internal IDictionary<string, HashSet<string>> TempOnTempDependencies { get; }
 
-        /// <summary>Should the Container be re-initialized after execution</summary>
-        public bool ReinitializeOnExecute { get; set; }
-
+        /// <summary>
+        /// Reinitializes the Container
+        /// </summary>
         public void Reinitialize()
         {
             this.TempSqlQueriesList.Clear();
