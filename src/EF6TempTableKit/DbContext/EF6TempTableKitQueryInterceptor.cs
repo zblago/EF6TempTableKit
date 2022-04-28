@@ -20,7 +20,7 @@ namespace EF6TempTableKit.DbContext
         {
             var dbContextWithTempTable = FindDbContextWithTempTable(interceptionContext.DbContexts);
             var tableContainer = dbContextWithTempTable?.TempTableContainer;
-            if (tableContainer?.TempSqlQueriesList?.Count > 0)
+            if (tableContainer?.TempSqlQueriesList.Count > 0)
             {
                 var sqlFromTempTableDependenciesBuilder = new SqlFromTempTableDependenciesBuilder(dbContextWithTempTable.TempTableContainer);
                 var tempTableSql = sqlFromTempTableDependenciesBuilder.BuildSqlForTempTables(command.CommandText, out var additionalParameters);
