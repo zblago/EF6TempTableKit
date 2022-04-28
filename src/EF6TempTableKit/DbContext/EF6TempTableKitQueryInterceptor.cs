@@ -27,7 +27,6 @@ namespace EF6TempTableKit.DbContext
                 command.CommandText = tempTableSql + command.CommandText;
                 foreach (var p in additionalParameters)
                 {
-                    var foo = command.CreateParameter();
                     command.Parameters.Add(new SqlParameter(p.Name, p.Value ?? DBNull.Value));
                 }
 
