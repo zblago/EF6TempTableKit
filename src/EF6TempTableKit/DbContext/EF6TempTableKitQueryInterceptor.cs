@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Data.Entity.Infrastructure.Interception;
+using EF6TempTableKit.Extensions;
 
 namespace EF6TempTableKit.DbContext
 {
@@ -15,20 +16,26 @@ namespace EF6TempTableKit.DbContext
         private void PrependTempTableSql<T>(DbCommand command, DbCommandInterceptionContext<T> interceptionContext)
         {
             var dbContextWithTempTable = FindDbContextWithTempTable(interceptionContext.DbContexts);
-            if (dbContextWithTempTable != null && ((IDbContextWithTempTable)dbContextWithTempTable)?.TempTableContainer?.TempSqlQueriesList?.Count > 0)
+            var tableContainer = ((IDbContextWithTempTable)dbContextWithTempTable)?.TempTableContainer;
+            if (tableContainer?.TempSqlQueriesList?.Count > 0)
             {
                 var sqlFromTempTableDependenciesBuilder = new SqlFromTempTableDependenciesBuilder(((IDbContextWithTempTable)dbContextWithTempTable).TempTableContainer);
                 command.CommandText = sqlFromTempTableDependenciesBuilder.BuildSqlForTempTables(command.CommandText) + command.CommandText;
+
+                if (tableContainer.ReinitializeOnExecute)
+                {
+                    tableContainer.Reinitialize();
+                }
             }
         }
 
-        private System.Data.Entity.DbContext FindDbContextWithTempTable(IEnumerable<System.Data.Entity.DbContext> dbContexts)
+        private IDbContextWithTempTable FindDbContextWithTempTable(IEnumerable<System.Data.Entity.DbContext> dbContexts)
         {
             foreach (var context in dbContexts)
             {
-                if (context is IDbContextWithTempTable)
+                if (context is IDbContextWithTempTable withTemp)
                 {
-                    return context;
+                    return withTemp;
                 }
             }
             return null;

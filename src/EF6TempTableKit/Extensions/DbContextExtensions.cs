@@ -17,31 +17,15 @@ namespace EF6TempTableKit.Extensions
         /// <param name="dbContexWithTempTable"></param>
         /// <param name="expression"></param>
         /// <returns></returns>
-        public static T WithTempTableExpression<T>(this System.Data.Entity.DbContext dbContexWithTempTable, IQueryable<ITempTable> expression)
-            where T : class
+        public static T WithTempTableExpression<T>(this T dbContexWithTempTable, IQueryable<ITempTable> expression)
+            where T : class, IDbContextWithTempTable
         {
-            return WithTempTableExpression<T>(dbContexWithTempTable, expression, false);
-        }
-
-        /// <summary>
-        /// Use it to attach LINQ query being used to load data into temporary table.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="dbContexWithTempTable"></param>
-        /// <param name="expression"></param>
-        /// <param name="reuseExisting">Obsolete, don't use it</param>
-        /// <returns></returns>
-        [Obsolete("Use WithTempTableExpression(dbContexWithTempTable, expression)")]
-        public static T WithTempTableExpression<T>(this System.Data.Entity.DbContext dbContexWithTempTable, IQueryable<ITempTable> expression, bool reuseExisting = false)
-            where T : class
-        {
-            var contextWithTempTable = (IDbContextWithTempTable)dbContexWithTempTable;
             var tableMetadataProvider = new TableMetadataProvider();
             var tempTableType = expression.ElementType.BaseType;
             var tempTableName = tableMetadataProvider.GetTableNameFromBaseType(tempTableType);
-            var hasAttachedDDLStatement = contextWithTempTable.TempTableContainer.TempSqlQueriesList.Any(x => x.Key == tempTableName);
+            var hasAttachedDDLStatement = dbContexWithTempTable.TempTableContainer.TempSqlQueriesList.Any(x => x.Key == tempTableName);
 
-            Validate(contextWithTempTable, tempTableName);
+            Validate(dbContexWithTempTable, tempTableName);
 
             var fieldsWithTypes = tableMetadataProvider.GetFieldsWithTypes(tempTableType);
             var clusteredIndexesWithFields = tableMetadataProvider.GetClusteredIndexColumns(tempTableType);
@@ -70,10 +54,10 @@ namespace EF6TempTableKit.Extensions
                     .Execute();
             }
 
-            var tempTableDependencyManager = new TempTableDependencyManager(objectQuery, contextWithTempTable.TempTableContainer);
+            var tempTableDependencyManager = new TempTableDependencyManager(objectQuery, dbContexWithTempTable.TempTableContainer);
             tempTableDependencyManager.AddDependenciesForTable(tempTableName);
 
-            contextWithTempTable.TempTableContainer
+            dbContexWithTempTable.TempTableContainer
                 .TempSqlQueriesList
                 .Enqueue(new KeyValuePair<string, Query>(tempTableName, new Query
                 {
@@ -81,42 +65,41 @@ namespace EF6TempTableKit.Extensions
                     IsDataAppend = hasAttachedDDLStatement
                 }));
 
-            return dbContexWithTempTable as T;
+            return dbContexWithTempTable;
+
         }
 
         /// <summary>
-        /// Use it to attach LINQ query built upon memory data.
+        /// Use it to attach LINQ query being used to load data into temporary table.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="dbContexWithTempTable"></param>
-        /// <param name="list"></param>
-        /// <returns></returns>
-        public static T WithTempTableExpression<T>(this System.Data.Entity.DbContext dbContexWithTempTable, IEnumerable<ITempTable> list)
-            where T : class
-        {
-            return WithTempTableExpression<T>(dbContexWithTempTable, list, false);
-        }
-
-
-        /// <summary>
-        /// Use it to attach LINQ query built upon memory data.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="dbContexWithTempTable"></param>
-        /// <param name="list"></param>
+        /// <param name="expression"></param>
         /// <param name="reuseExisting">Obsolete, don't use it</param>
         /// <returns></returns>
-        [Obsolete("Use WithTempTableExpression(dbContexWithTempTable, list)")]
-        public static T WithTempTableExpression<T>(this System.Data.Entity.DbContext dbContexWithTempTable, IEnumerable<ITempTable> list, bool reuseExisting = false)
-            where T : class
+        [Obsolete("Use WithTempTableExpression(dbContexWithTempTable, expression)")]
+        public static T WithTempTableExpression<T>(this T dbContexWithTempTable, IQueryable<ITempTable> expression, bool reuseExisting = false)
+            where T : class, IDbContextWithTempTable
+        {
+            return dbContexWithTempTable.WithTempTableExpression(expression);
+        }
+
+        /// <summary>
+        /// Use it to attach LINQ query built upon memory data.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="dbContexWithTempTable"></param>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        public static T WithTempTableExpression<T>(this T dbContexWithTempTable, IEnumerable<ITempTable> list)
+            where T : class, IDbContextWithTempTable
         {
             var tableMetadataProvider = new TableMetadataProvider();
-            var contextWithTempTable = (IDbContextWithTempTable)dbContexWithTempTable;
             var tempTableType = list.First().GetType();
             var tempTableName = tableMetadataProvider.GetTableNameFromBaseType(tempTableType);
-            var hasAttachedDDLStatement = contextWithTempTable.TempTableContainer.TempSqlQueriesList.Any(x => x.Key == tempTableName);
+            var hasAttachedDDLStatement = dbContexWithTempTable.TempTableContainer.TempSqlQueriesList.Any(x => x.Key == tempTableName);
 
-            Validate(contextWithTempTable, tempTableName);
+            Validate(dbContexWithTempTable, tempTableName);
 
             var fieldsWithTypes = tableMetadataProvider.GetFieldsWithTypes(tempTableType);
             var clusteredIndexesWithFields = tableMetadataProvider.GetClusteredIndexColumns(tempTableType);
@@ -141,7 +124,7 @@ namespace EF6TempTableKit.Extensions
                     .Execute();
             }
 
-            contextWithTempTable.TempTableContainer
+            dbContexWithTempTable.TempTableContainer
                 .TempSqlQueriesList
                 .Enqueue(new KeyValuePair<string, Query>(tempTableName, new Query
                 {
@@ -149,7 +132,24 @@ namespace EF6TempTableKit.Extensions
                     IsDataAppend = hasAttachedDDLStatement
                 }));
 
-            return dbContexWithTempTable as T;
+            return dbContexWithTempTable;
+
+        }
+
+
+        /// <summary>
+        /// Use it to attach LINQ query built upon memory data.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="dbContexWithTempTable"></param>
+        /// <param name="list"></param>
+        /// <param name="reuseExisting">Obsolete, don't use it</param>
+        /// <returns></returns>
+        [Obsolete("Use WithTempTableExpression(dbContexWithTempTable, list)")]
+        public static T WithTempTableExpression<T>(this T dbContexWithTempTable, IEnumerable<ITempTable> list, bool reuseExisting = false)
+            where T : class, IDbContextWithTempTable
+        {
+            return dbContexWithTempTable.WithTempTableExpression(list);
         }
 
         private static void Validate(IDbContextWithTempTable contextWithTempTable, string tempTableName)
@@ -164,10 +164,9 @@ namespace EF6TempTableKit.Extensions
         /// Reinitializes internal storage - TempTableContainer, so you can attach again LINQ query being used to load data into temporary table.
         /// </summary>
         /// <param name="dbContexWithTempTable"></param>
-        public static void ReinitializeTempTableContainer(this System.Data.Entity.DbContext dbContexWithTempTable)
+        public static void ReinitializeTempTableContainer(this IDbContextWithTempTable dbContexWithTempTable)
         {
-            ((IDbContextWithTempTable)dbContexWithTempTable).TempTableContainer = new TempTableContainer();
+            dbContexWithTempTable.TempTableContainer.Reinitialize();
         }
     }
 }
-  
