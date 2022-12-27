@@ -33,9 +33,9 @@ namespace EF6TempTableKit.SqlCommands
         {
             _queryBuilder.AppendLine($"DECLARE @{_tempTableExist} bit = 0");
             _queryBuilder.AppendLine($"IF OBJECT_ID('tempdb..{_tempTableName}') IS NOT NULL");
-            _queryBuilder.AppendLine("BEGIN");
-            _queryBuilder.AppendLine($"\tSET @{_tempTableExist} = 1");
+            _queryBuilder.AppendLine("BEGIN");            
             _queryBuilder.AppendLine($"\tDROP TABLE {_tempTableName}");
+            _queryBuilder.AppendLine($"\tSET @{_tempTableExist} = 0");
             _queryBuilder.AppendLine("END");
             _queryBuilder.AppendLine();
 
@@ -54,9 +54,8 @@ namespace EF6TempTableKit.SqlCommands
             _queryBuilder.AppendLine($"DECLARE @{_tempTableExist} bit = 0");
             _queryBuilder.AppendLine($"IF OBJECT_ID('tempdb..{_tempTableName}') IS NULL");
             _queryBuilder.AppendLine("BEGIN");
-            _queryBuilder.AppendLine($"\tSET @{_tempTableExist} = 1");
-
             CreateTable(fieldsWithTypes, 1);
+            _queryBuilder.AppendLine($"\tSET @{_tempTableExist} = 1");
 
             _queryBuilder.AppendLine("END");
 
@@ -180,6 +179,7 @@ namespace EF6TempTableKit.SqlCommands
                 _queryBuilder.AppendLine($"{repeatedTabs}\t{fieldName} {fieldValue}{(isLastItem ? "" : ",")}");
             }
             _queryBuilder.AppendLine($"{repeatedTabs})");
+            _queryBuilder.AppendLine($"\tSET @{_tempTableExist} = 1");
         }
 
         private void BuildInsertQuery(IReadOnlyDictionary<string, int> fieldsWithTypes, string sqlSelectQuery, byte tabsCount)
