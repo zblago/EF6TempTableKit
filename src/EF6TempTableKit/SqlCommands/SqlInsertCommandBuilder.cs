@@ -31,10 +31,9 @@ namespace EF6TempTableKit.SqlCommands
 
         public ICreate DropIfExists()
         {
-            _queryBuilder.AppendLine($"DECLARE @{_tempTableExist} bit = 0");
-            _queryBuilder.AppendLine($"IF OBJECT_ID('tempdb..{_tempTableName}') IS NOT NULL");
+            _queryBuilder.AppendLine($"DECLARE @{_tempTableExist} bit = IIF(OBJECT_ID('tempdb..{_tempTableName}') > 0, 1, 0)");
+            _queryBuilder.AppendLine($"IF @{_tempTableExist} = 1");
             _queryBuilder.AppendLine("BEGIN");
-            _queryBuilder.AppendLine($"\tSET @{_tempTableExist} = 1");
             _queryBuilder.AppendLine($"\tDROP TABLE {_tempTableName}");
             _queryBuilder.AppendLine("END");
             _queryBuilder.AppendLine();
@@ -180,6 +179,8 @@ namespace EF6TempTableKit.SqlCommands
                 _queryBuilder.AppendLine($"{repeatedTabs}\t{fieldName} {fieldValue}{(isLastItem ? "" : ",")}");
             }
             _queryBuilder.AppendLine($"{repeatedTabs})");
+            _queryBuilder.AppendLine($"SET @{_tempTableExist} = 1");
+            _queryBuilder.AppendLine(Environment.NewLine);
         }
 
         private void BuildInsertQuery(IReadOnlyDictionary<string, int> fieldsWithTypes, string sqlSelectQuery, byte tabsCount)

@@ -52,7 +52,7 @@ namespace EF6TempTableKit.Extensions
             var internalQueryField = query.GetType().GetFields(System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).Where(f => f.Name.Equals("_internalQuery")).FirstOrDefault();
             var internalQuery = new object();
 
-            //If query is wrapped with LinqKit extensions we have to get InnerQuery and InternalQuery from it afterwards.
+            //If query is wrapped with LinqKit extensions we need to get InnerQuery and InternalQuery from it afterwards.
             if (internalQueryField == null)
             {
                 var innerQuery = query.GetType()
