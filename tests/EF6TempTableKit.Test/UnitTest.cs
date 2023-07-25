@@ -389,5 +389,33 @@ namespace EF6TempTableKit.Test
                 Assert.True(!result.Any());
             }
         }
+
+        [Fact]
+        public void GetDataFromUDFFunction()
+        {
+            var personId = 22;
+
+            using (var context = new AdventureWorksCodeFirst())
+            {
+                var queryContact = context.GetContactInformation(personId).Select(x => x.PersonId);
+                var queryEmployee = context.Employees.Select(x => x.BusinessEntityID);
+
+                var tempQuery = queryContact.Intersect(queryEmployee).Select(x => new ContactTempTableDto { Id = x });
+
+                var results = context
+                            .WithTempTableExpression<AdventureWorksCodeFirst>(tempQuery)
+                            .Employees
+                            .Join(context.TempContacts,
+                                (em) => em.BusinessEntityID,
+                                (c) => c.Id,
+                                (em, c) => new
+                                {
+                                    EmployeeId = em.BusinessEntityID,
+                                    JobTitle = em.JobTitle
+                                });
+
+                Assert.True(results.Any());
+            }
+        }
     }
 }

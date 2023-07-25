@@ -43,6 +43,12 @@ namespace EF6TempTableKit.Extensions
         }
         public static ObjectQuery<T> GetQueryFromQueryable<T>(IQueryable<T> query)
         {
+            //recommended fix, first stage
+            if (query is ObjectQuery<T> objectQuery)
+            {
+                return objectQuery;
+            }
+
             var internalQueryField = query.GetType().GetFields(System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).Where(f => f.Name.Equals("_internalQuery")).FirstOrDefault();
             var internalQuery = new object();
 
