@@ -8,6 +8,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using Xunit;
 using System;
+using System.Data.Entity;
 
 namespace EF6TempTableKit.Test
 {
@@ -27,6 +28,9 @@ namespace EF6TempTableKit.Test
                         (aa) => aa.AddressID,
                         (at, a) => new { Id = at.Id }).ToList();
 
+                var doesIndexExist = DoesIndexExist(context.Database, "#tempAddress", "IX_#tempAddress");
+
+                Assert.True(doesIndexExist);
                 Assert.NotEmpty(addressList);
             }
         }
@@ -233,6 +237,9 @@ namespace EF6TempTableKit.Test
 
                 var productCount = productsQuery.Count();
                 Assert.True(productCount > 0);
+
+                var doesIndexExist = DoesIndexExist(context.Database, "#tempProductCategoryCount", "IX_CategoryId_CategoryName");
+                Assert.True(doesIndexExist);
             }
         }
 
@@ -417,5 +424,19 @@ namespace EF6TempTableKit.Test
                 Assert.True(results.Any());
             }
         }
+
+        #region Utilities
+        public bool DoesIndexExist(Database database, string tableName, string indexName)
+        {
+            var query =
+                $"use tempdb; \r\n" +
+                $"SELECT COUNT(*) \r\nFROM sys.indexes \r\nWHERE name='{indexName}'" +
+                $"AND OBJECT_NAME(object_id) like '{tableName}%'";
+
+            var result = database.SqlQuery<int>(query).ToList();
+
+            return result.Any(x => x > 0);
+        }
+        #endregion
     }
 }
