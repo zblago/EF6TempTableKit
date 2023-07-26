@@ -31,7 +31,7 @@ namespace EF6TempTableKit.SqlCommands
 
         public ICreate DropIfExists()
         {
-            _queryBuilder.AppendLine($"DECLARE @{_tempTableExist} bit = IIF(OBJECT_ID('tempdb..{_tempTableName}') > 0, 1, 0)");
+            _queryBuilder.AppendLine($"DECLARE @{_tempTableExist} bit = IIF(OBJECT_ID('tempdb..{_tempTableName}') <> 0, 1, 0)");
             _queryBuilder.AppendLine($"IF @{_tempTableExist} = 1");
             _queryBuilder.AppendLine("BEGIN");
             _queryBuilder.AppendLine($"\tDROP TABLE {_tempTableName}");
