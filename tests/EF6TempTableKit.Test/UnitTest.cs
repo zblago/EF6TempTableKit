@@ -235,11 +235,11 @@ namespace EF6TempTableKit.Test
                 var productList = productsQuery.ToList();
                 Assert.NotEmpty(productList);
 
-                var doesIndexExist = DoesIndexExist(context.Database, "#tempProductCategoryCount", "IX_CategoryId_CategoryName");
-                Assert.True(doesIndexExist);
-
                 var productCount = productsQuery.Count();
                 Assert.True(productCount > 0);
+
+                var doesIndexExist = DoesIndexExist(context.Database, "#tempProductCategoryCount", "IX_CategoryId_CategoryName");
+                Assert.True(doesIndexExist);
             }
         }
 
