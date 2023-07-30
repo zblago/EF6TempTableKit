@@ -32,6 +32,8 @@ namespace EF6TempTableKit.Test.CodeFirst
         public virtual DbSet<ProductTempTable> TempProducts { get; set; }
         public virtual DbSet<ContactTempTable> TempContacts { get; set; }
 
+        public string GeneratedTSQL { get; set; }
+
         public virtual DbSet<ChairTempTable> TempChairs { get; set; }
         public virtual DbSet<DepartmentTempTable> TempDepartments { get; set; }
         public virtual DbSet<ManufacturerTempTable> TempManufacturers { get; set; }

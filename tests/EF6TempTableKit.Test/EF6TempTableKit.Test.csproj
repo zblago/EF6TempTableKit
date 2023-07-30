@@ -63,6 +63,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
@@ -115,6 +116,7 @@
     <Compile Include="CustomConverters\IntCustomConverter.cs" />
     <Compile Include="CustomConverters\StringCustomConverter.cs" />
     <Compile Include="CustomConverters\WrongIntCustomConverter.cs" />
+    <Compile Include="DbContextConfiguration\RecordFinalQueryInterceptor.cs" />
     <Compile Include="DbContextConfiguration\AdventureWorkQueryInterceptor.cs" />
     <Compile Include="DbContextConfiguration\CustomDbContextConfiguration.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />

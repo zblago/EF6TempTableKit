@@ -9,6 +9,7 @@ using System.Linq.Expressions;
 using Xunit;
 using System;
 using System.Data.Entity;
+using System.Data.SqlClient;
 
 namespace EF6TempTableKit.Test
 {
@@ -28,9 +29,6 @@ namespace EF6TempTableKit.Test
                         (aa) => aa.AddressID,
                         (at, a) => new { Id = at.Id }).ToList();
 
-                var doesIndexExist = DoesIndexExist(context.Database, "#tempAddress", "IX_#tempAddress");
-
-                Assert.True(doesIndexExist);
                 Assert.NotEmpty(addressList);
             }
         }
@@ -237,10 +235,7 @@ namespace EF6TempTableKit.Test
 
                 var productCount = productsQuery.Count();
                 Assert.True(productCount > 0);
-
-                var doesIndexExist = DoesIndexExist(context.Database, "#tempProductCategoryCount", "IX_CategoryId_CategoryName");
-                Assert.True(doesIndexExist);
-            }
+            }         
         }
 
         /// <summary>
@@ -425,18 +420,123 @@ namespace EF6TempTableKit.Test
             }
         }
 
+        [Fact]
+        public void DoIndexesExist()
+        {
+            using (var context = new AdventureWorksCodeFirst())
+            {
+                var productsCountCategoryQuery = context.Products.Join(context.ProductSubcategories,
+                        (p) => p.ProductSubcategoryID,
+                        (pcs) => pcs.ProductSubcategoryID,
+                        (p, pcs) => new
+                        {
+                            CategoryId = pcs.ProductCategoryID,
+                            ProductId = p.ProductID
+                        })
+                        .GroupBy((cp) => cp.CategoryId, (x) => new
+                        {
+                            x.CategoryId,
+                            x.ProductId
+                        })
+                        .Select(x => new
+                        {
+                            CategoryId = x.Key,
+                            ProductCount = x.Count()
+                        })
+                        .Join(context.ProductCategories,
+                            (tr) => tr.CategoryId,
+                            (p) => p.ProductCategoryID,
+                            (tr, p) => new ProductCategoryCountTempTableDto
+                            {
+                                CategoryId = tr.CategoryId,
+                                CategoryName = p.Name,
+                                ProductCount = tr.ProductCount
+                            }
+                        );
+
+                var productsQuery = context
+                        .WithTempTableExpression<AdventureWorksCodeFirst>(productsCountCategoryQuery)
+                        .WorkOrders
+                        .Join(context.Products,
+                            (wo) => wo.ProductID,
+                            (p) => p.ProductID,
+                            (wo, p) => new
+                            {
+                                WorkOrderId = wo.WorkOrderID,
+                                ScrappedQty = wo.ScrappedQty,
+                                ProductId = p.ProductID,
+                                ProductSubcategoryId = p.ProductSubcategoryID,
+                                ProductNumber = p.ProductNumber,
+                            })
+                        .Join(context.ProductSubcategories,
+                            (wo) => wo.ProductSubcategoryId,
+                            (ps) => ps.ProductSubcategoryID,
+                            (wo, ps) => new
+                            {
+                                WorkOrderId = wo.WorkOrderId,
+                                ScrappedQty = wo.ScrappedQty,
+                                ProductId = wo.ProductId,
+                                ProductSubcategoryId = wo.ProductSubcategoryId,
+                                ProductNumber = wo.ProductNumber,
+                                CategoryId = ps.ProductCategoryID
+                            })
+                        .Join(context.TempProductCategoryCounts,
+                            (wo) => wo.CategoryId,
+                            (temp) => temp.CategoryId,
+                            (wo, temp) => new
+                            {
+                                WorkOrderId = wo.WorkOrderId,
+                                ScrappedQty = wo.ScrappedQty,
+                                ProductId = wo.ProductId,
+                                ProductSubcategoryId = wo.ProductSubcategoryId,
+                                ProductName = wo.ProductNumber,
+                                CategoryName = temp.CategoryName,
+                                ProductCountPerCategory = temp.ProductCount
+                            });
+
+                var productResults = productsQuery.ToList();
+
+                var checkNonClustered = AppendDoesIndexExist(context.GeneratedTSQL, "#tempProductCategoryCount", "IX_CategoryId_CategoryName");
+                Assert.True(RunQuery(checkNonClustered));
+
+                var checkClustered = AppendDoesIndexExist(context.GeneratedTSQL, "#tempProductCategoryCount", "IX_#tempProductCategoryCount");
+                Assert.True(RunQuery(checkClustered));
+
+                var checkDoesntExist = AppendDoesIndexExist(context.GeneratedTSQL, "#tempProductCategoryCount", "IX_#tempProductCategoryCount_Doesnt_Exist");
+                Assert.False(RunQuery(checkDoesntExist));
+            }
+        }
+
         #region Utilities
-        public bool DoesIndexExist(Database database, string tableName, string indexName)
+        public string AppendDoesIndexExist(string sql, string tableName, string indexName)
         {
             var query =
                 $"use tempdb; \r\n" +
-                $"SELECT COUNT(*) \r\nFROM sys.indexes \r\nWHERE name='{indexName}'" +
+                $"SELECT CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END\r\nFROM sys.indexes \r\nWHERE name='{indexName}'" +
                 $"AND OBJECT_NAME(object_id) like '{tableName}%'";
 
-            var result = database.SqlQuery<int>(query).ToList();
-
-            return result.Any(x => x > 0);
+            return sql + Environment.NewLine + query;
         }
+
+        public bool RunQuery(string query)
+        {
+            object result = false;
+            var connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["AdventureWorksCodeFirst"].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    var reader = command.ExecuteReader(); //First result set are actual data
+                    reader.NextResult();
+                    reader.Read(); //Next result set, the one that has actual index exist query
+
+                    var intResult = reader.GetInt32(0);
+                    return intResult > 0;                    
+                }
+            }
+        }
+
         #endregion
     }
 }
