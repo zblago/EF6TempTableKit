@@ -24,12 +24,6 @@ Version 3.0.1 has some bug fixes
 | Exception thrown when IQueryable has a reference to Table-valued functions|Additonal if statement that covers scenario when IQueryable is powered by TVF |
 | Clustered and Non-clustered indexes aren't being created|EF6TempTableKit provides an option to create clustered and nonclustered indexes. Since condition is not properly set, the final T-SQL Query didn't cover it correctly. Fixing code to create the index and providing unit test to make sure any further changes won't break it  |
 
-... changes
-
-| Change | Description |
-| --------------- |------------|
-| Update EntityFramework to the latest version - 6.4.4| |
-
 ## Getting Started
 
 Follow these steps:
