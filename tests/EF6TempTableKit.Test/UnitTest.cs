@@ -421,6 +421,41 @@ namespace EF6TempTableKit.Test
         }
 
         [Fact]
+        public void GetDataFromUDFAndIQueryableFunction()
+        {
+            var personId = 22;
+
+            using (var context = new AdventureWorksCodeFirst())
+            {
+                var queryContact = context.GetContactInformation(personId).Join(context.Employees,
+                                (em) => em.PersonId,
+                                (c) => c.BusinessEntityID,
+                                (em, c) => new
+                                {
+                                    EmployeeId = em.PersonId,
+                                    JobTitle = em.JobTitle
+                                }).Select(x => x.EmployeeId);
+                var queryEmployee = context.Employees.Select(x => x.BusinessEntityID);
+
+                var tempQuery = queryContact.Intersect(queryEmployee).Select(x => new ContactTempTableDto { Id = x });
+
+                var results = context
+                            .WithTempTableExpression<AdventureWorksCodeFirst>(tempQuery)
+                            .Employees
+                            .Join(context.TempContacts,
+                                (em) => em.BusinessEntityID,
+                                (c) => c.Id,
+                                (em, c) => new
+                                {
+                                    EmployeeId = em.BusinessEntityID,
+                                    JobTitle = em.JobTitle
+                                });
+
+                Assert.True(results.Any());
+            }
+        }
+
+        [Fact]
         public void DoIndexesExist()
         {
             using (var context = new AdventureWorksCodeFirst())
