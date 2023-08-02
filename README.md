@@ -6,9 +6,9 @@ EF6TempTableKit is a library that enriches Entity Framework 6 by introducing new
 [![Nuget](https://img.shields.io/nuget/v/EF6temptablekit)](https://www.nuget.org/packages/EF6TempTableKit/)
 
 ## Versions
-1.0.0 - check the details [here](https://github.com/zblago/EF6TempTableKit/tree/EF6TempTableKit_version_1_0_0)  
-2.0.0 - check the details [here](https://github.com/zblago/EF6TempTableKit/tree/EF6TempTableKit_version_2_0_0)  
-3.0.1 - check the details [here](https://github.com/zblago/EF6TempTableKit/tree/EF6TempTableKit_version_3_0_0)
+1.0.0 - [here](https://github.com/zblago/EF6TempTableKit/tree/EF6TempTableKit_version_1_0_0)  
+2.0.0 - [here](https://github.com/zblago/EF6TempTableKit/tree/EF6TempTableKit_version_2_0_0)
+3.0.1 - [here](https://github.com/zblago/EF6TempTableKit/tree/EF6TempTableKit_version_3_0_0)
 
 ## Overview
 
@@ -17,7 +17,7 @@ Keep in mind: You are still writing LINQ-to-Entities to insert records into a "t
 
 ## What is changed in version 3.1.0
 
-Version 3.0.1 has some bug fixes
+Version 3.1.0 has some bug fixes
 
 | Bug description | Resolution |
 | --------------- |------------|
@@ -27,7 +27,7 @@ Version 3.0.1 has some bug fixes
 ## Getting Started
 
 Follow these steps:
-1. Install Nuget package (`Install-Package EF6TempTableKit -Version 3.0.1`)
+1. Install Nuget package (`Install-Package EF6TempTableKit -Version 3.1.0`)
 2. Implement `IDbContextWithTempTable` within your context. What does that mean? Add a public property and initialize it via constructor or auto-property initializer
 ```csharp
   public TempTableContainer TempTableContainer { get; set; } = new TempTableContainer();
