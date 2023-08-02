@@ -1,4 +1,4 @@
-# EF6TempTableKit - version 3.0.1
+# EF6TempTableKit - version 3.1.0
 EF6TempTableKit is a library that enriches Entity Framework 6 by introducing new type of entities which are not natively supported - temporary entities.
 
 [![Build status](https://ci.appveyor.com/api/projects/status/tsdv1s7v897f2mwv?svg=true)](https://ci.appveyor.com/project/zblago/ef6temptablekit)
@@ -7,33 +7,22 @@ EF6TempTableKit is a library that enriches Entity Framework 6 by introducing new
 
 ## Versions
 1.0.0 - check the details [here](https://github.com/zblago/EF6TempTableKit/tree/EF6TempTableKit_version_1_0_0)  
-2.0.0 - check the details [here](https://github.com/zblago/EF6TempTableKit/tree/EF6TempTableKit_version_2_0_0)
+2.0.0 - check the details [here](https://github.com/zblago/EF6TempTableKit/tree/EF6TempTableKit_version_2_0_0)  
+3.0.1 - check the details [here](https://github.com/zblago/EF6TempTableKit/tree/EF6TempTableKit_version_3_0_0)
 
 ## Overview
 
-We all know how to write LINQ-to-Entities(L2E) queries to fetch data from the database. No T-SQL, only C#.<br/>But, in some cases, writing and optimizing LINQ-to-Entities(L2E) queries may be easier and pleasnt if we can use MS SQL Server temporary tables.<br/><br/>What does that mean?<br/>Imagine yourself declaring and loading data into temp tables just as you are used to do with regular EF context entities. By default, EF doesn't support temporary tables and there is a reason why is like that. To overcome this "weakness", by plugging EF6TempTableKit into your project, you can introduce a "temporary" entity as we are used to do it with "permanent" entity. In generated T-SQL query, "temporary" entity will be mapped to the temporary table which resides in `tempDb` database and then used normally like any other table.<br/>
+We all know how to write LINQ-to-Entities(L2E) queries to fetch the data from the database. No T-SQL, only C#.<br/>But, in some cases, writing and optimizing LINQ-to-Entities(L2E) queries may be easier and pleasnt if we can use MS SQL Server temporary tables.<br/><br/>What does that mean?<br/>Imagine yourself declaring and loading data into temp tables just as you are used to do with regular EF context entities. By default, EF doesn't support temporary tables and there is a reason why is like that. To overcome this "weakness", by plugging EF6TempTableKit into your project, you can introduce a "temporary" entity as we are used to do it with "permanent" entity. In generated T-SQL query, "temporary" entity will be mapped to the temporary table which resides in `tempDb` database and then used normally like any other table.<br/>
 Keep in mind: You are still writing LINQ-to-Entities to insert records into a "temporary" entity.
 
-## What is changed in version 3.0.1
+## What is changed in version 3.1.0
 
 Version 3.0.1 has some bug fixes
 
 | Bug description | Resolution |
 | --------------- |------------|
-| LINQ query empowered by LinqKit and EF6TempTableKit throws exception|LinqKit driven LINQ query has stored raw sql at some deeper level. Inspecting where is needed property now we have corresponding object being used later to get raw sql |
-|LINQ query that has more than 10 parameters in where clause behaves unexpectedly because they are iterated in ascending order|By changing sort order, same parameter will not be replaced twice or more |
-
-... changes
-
-| Change | Description |
-| --------------- |------------|
-| `reuseExisting` is becoming obsolete| Internally each executed query is followed by `exec sp_reset_connection` making all the queries scoped within the same [SPID](https://docs.microsoft.com/en-us/sql/t-sql/functions/spid-transact-sql?view=sql-server-ver15) separated by individual batch which doesn't give you any chance to reuse existing temp table that you already have created within the same database connection. So, this parameter literally does nothing. |
-
-.... and improvements
-
-| Improvement | Description |
-| --------------- |------------|
-| Load the data from memory | Now we know how to prepare our context and LINQ to make our plugin work, but you've noticed that query can be optimized by sending data from the memory since they are already cached but needed for the query. Writing query to get same data again makes your final query complex and potentionally increases total execution time. This improvement helps you generate T-SQL along with the data from the memory so your query can be simplified by keeping focus on the main part. This improvement is covered with the unit tests with almost all possible .NET data types. |
+| Exception thrown when IQueryable has a reference to Table-valued functions|Additonal if statement that covers scenario when IQueryable is powered by TVF |
+| Clustered and Non-clustered indexes aren't being created|EF6TempTableKit provides an option to create clustered and nonclustered indexes. Since condition is not properly set, the final T-SQL Query didn't cover it correctly. Fixing code to create the index and providing unit test to make sure any further changes won't break it  |
 
 ## Getting Started
 
