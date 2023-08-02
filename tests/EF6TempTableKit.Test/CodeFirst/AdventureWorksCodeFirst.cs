@@ -8,6 +8,9 @@ namespace EF6TempTableKit.Test.CodeFirst
     using EF6TempTableKit.Test.TempTables;
     using EF6TempTableKit.Test.DbContextConfiguration;
     using EF6TempTableKit.Test.TempTables.Dependencies;
+    using System.Data.Entity.Core.Objects;
+    using System.Data.Entity.Infrastructure;
+    using CodeFirstStoreFunctions;
 
     //[DbConfigurationType(typeof(EF6TempTableKitDbConfiguration))]
     [DbConfigurationType(typeof(CustomDbContextConfiguration))]
@@ -27,6 +30,9 @@ namespace EF6TempTableKit.Test.CodeFirst
         public virtual DbSet<ProductSubCategoryTempTable> TempProductSubCategories { get; set; }
         public virtual DbSet<CustomerTempTable> TempCustomers { get; set; }
         public virtual DbSet<ProductTempTable> TempProducts { get; set; }
+        public virtual DbSet<ContactTempTable> TempContacts { get; set; }
+
+        public string GeneratedTSQL { get; set; }
 
         public virtual DbSet<ChairTempTable> TempChairs { get; set; }
         public virtual DbSet<DepartmentTempTable> TempDepartments { get; set; }
@@ -129,7 +135,39 @@ namespace EF6TempTableKit.Test.CodeFirst
         public virtual DbSet<vSalesPersonSalesByFiscalYear> vSalesPersonSalesByFiscalYears { get; set; }
         public virtual DbSet<vStoreWithAddress> vStoreWithAddresses { get; set; }
         public virtual DbSet<vStoreWithContact> vStoreWithContacts { get; set; }
-        public virtual DbSet<vStoreWithDemographic> vStoreWithDemographics { get; set; }        
+        public virtual DbSet<vStoreWithDemographic> vStoreWithDemographics { get; set; }
+
+        [DbFunction("AdventureWorksCodeFirst", "ufnGetContactInformation")]
+        [DbFunctionDetails(DatabaseSchema = "dbo")]
+        public IQueryable<ContactInformation> GetContactInformation(int personId)
+        {
+            var idParam = new ObjectParameter("PersonID", typeof(int))
+            {
+                Value = personId
+            };
+
+            //return (this as IObjectContextAdapter).ObjectContext.CreateQuery<ContactInformation>(
+            // "AdventureWorksCodeFirst.ufnGetContactInformation(@PersonId)", idParam);
+
+            return CallFunction<ContactInformation>("ufnGetContactInformation", idParam);
+        }
+
+        private string GetSqlFunctionInvocation(string functionName, params ObjectParameter[] parameters)
+        {
+            var query = $"[{this.GetType().Name}].[{functionName}]";
+            query = query + "(" + string.Join(", ", parameters.Select(p => "@" + p.Name));
+            query = query + ")";
+
+            return query;
+        }
+
+        protected IQueryable<TReturnModel> CallFunction<TReturnModel>(string functionName, params ObjectParameter[] parameters)
+        {
+            var query = this.GetSqlFunctionInvocation(functionName, parameters);
+
+            return ((IObjectContextAdapter)this).ObjectContext
+                .CreateQuery<TReturnModel>(query, parameters);
+        }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -816,6 +854,10 @@ namespace EF6TempTableKit.Test.CodeFirst
             modelBuilder.Entity<vStoreWithDemographic>()
                 .Property(e => e.AnnualRevenue)
                 .HasPrecision(19, 4);
+
+            modelBuilder.Conventions.Add(new FunctionsConvention<AdventureWorksCodeFirst>("dbo"));
+
+            modelBuilder.ComplexType<ContactInformation>();
         }
     }
 }

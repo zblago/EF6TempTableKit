@@ -1,4 +1,6 @@
-﻿using System.Data.Entity.Core.Objects;
+﻿using EF6TempTableKit.Exceptions;
+using System.CodeDom;
+using System.Data.Entity.Core.Objects;
 using System.Linq;
 
 namespace EF6TempTableKit.Extensions
@@ -41,13 +43,18 @@ namespace EF6TempTableKit.Extensions
             return result;
 
         }
+
         public static ObjectQuery<T> GetQueryFromQueryable<T>(IQueryable<T> query)
         {
             var internalQueryField = query.GetType().GetFields(System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).Where(f => f.Name.Equals("_internalQuery")).FirstOrDefault();
             var internalQuery = new object();
 
-            //If query is wrapped with LinqKit extensions we have to get InnerQuery and InternalQuery from it afterwards.
-            if (internalQueryField == null)
+            //If query is wrapped with LinqKit extensions we need to get InnerQuery and InternalQuery from it afterwards.
+            if (query is ObjectQuery<T> objectQuery)
+            {
+                return objectQuery;
+            }
+            else if (internalQueryField == null)
             {
                 var innerQuery = query.GetType()
                     .GetProperties(System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
@@ -58,9 +65,13 @@ namespace EF6TempTableKit.Extensions
                     .FirstOrDefault(f => f.Name.Equals("InternalQuery"))
                     .GetValue(innerQuery);
             }
-            else
+            else if (internalQueryField.GetValue(query) != null)
             {
                 internalQuery = internalQueryField.GetValue(query);
+            }
+            else
+            {
+                throw new EF6TempTableKitGenericException("EF6TempTableKit can't find ObjectQuery");
             }
 
             var objectQueryField = internalQuery.GetType().GetFields(System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).Where(f => f.Name.Equals("_objectQuery")).FirstOrDefault();

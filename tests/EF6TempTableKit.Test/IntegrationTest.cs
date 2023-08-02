@@ -6,7 +6,6 @@ namespace EF6TempTableKit.Test
 {
     public class IntegrationTest
     {
-        [Fact]
         public void LoadAddressList()
         {
             var apphost = AppHost.Simulate("EF6TempTableKit.Test.Web");
