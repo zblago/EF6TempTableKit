@@ -8,6 +8,7 @@ namespace EF6TempTableKit.Test.DbContextConfiguration
         public CustomDbContextConfiguration()
         {
             AddInterceptor(new AdventureWorkQueryInterceptor());
+            AddInterceptor(new RecordFinalQueryInterceptor());
             AddInterceptor(new EF6TempTableKitQueryInterceptor());
         }
     }
