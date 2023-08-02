@@ -7,7 +7,7 @@ EF6TempTableKit is a library that enriches Entity Framework 6 by introducing new
 
 ## Versions
 1.0.0 - [here](https://github.com/zblago/EF6TempTableKit/tree/EF6TempTableKit_version_1_0_0)  
-2.0.0 - [here](https://github.com/zblago/EF6TempTableKit/tree/EF6TempTableKit_version_2_0_0)
+2.0.0 - [here](https://github.com/zblago/EF6TempTableKit/tree/EF6TempTableKit_version_2_0_0)  
 3.0.1 - [here](https://github.com/zblago/EF6TempTableKit/tree/EF6TempTableKit_version_3_0_0)
 
 ## Overview
