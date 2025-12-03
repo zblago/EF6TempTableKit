@@ -7,10 +7,13 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>    
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 	<Deterministic>false</Deterministic>
+	<Version>3.2.0</Version>
+	<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="EntityFramework" Version="6.2.0" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
+	<None Include="LICENSE.txt" Pack="true" PackagePath="" />
   </ItemGroup>
 </Project>
