@@ -1,5 +1,4 @@
 ﻿using EF6TempTableKit.Exceptions;
-using System.CodeDom;
 using System.Data.Entity.Core.Objects;
 using System.Linq;
 

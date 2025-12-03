@@ -36,4 +36,5 @@ using System.Runtime.InteropServices;
 
 #if DEBUG
 [assembly: InternalsVisibleTo("EF6TempTableKit.Test")]
+[assembly: InternalsVisibleTo("EF6TempTableKitNET8.Test")]
 #endif
