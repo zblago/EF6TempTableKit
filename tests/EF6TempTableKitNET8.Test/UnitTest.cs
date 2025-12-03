@@ -7,6 +7,7 @@ using System.Linq.Expressions;
 using Xunit;
 using System.Data.Entity;
 using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
 
 namespace EF6TempTableKitNET8.Test
 {
@@ -553,7 +554,7 @@ namespace EF6TempTableKitNET8.Test
         public bool RunQuery(string query)
         {
             object result = false;
-            var connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["AdventureWorksCodeFirst"].ConnectionString;
+            var connectionString = GetConnectionString();
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
@@ -569,6 +570,14 @@ namespace EF6TempTableKitNET8.Test
             }
         }
 
+        private static string GetConnectionString()
+        {
+            return new ConfigurationBuilder()
+                .SetBasePath(AppContext.BaseDirectory)   // Works now
+                .AddJsonFile("appsettings.json", optional: false)
+                .Build()
+                .GetConnectionString("AdventureWorksCodeFirst");
+        }
         #endregion
     }
 }
