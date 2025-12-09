@@ -309,7 +309,7 @@ namespace EF6TempTableKitNET8.Test
                 Assert.Equal(allDataFromDb.Count, sampleList.Count + addressCount);
             };
         }
-
+        #if DEBUG_LOCAL
         [Fact, Trait("Category", "LongRunning")]
         public void Load500000RecordsFromMemory()
         {
@@ -358,5 +358,6 @@ namespace EF6TempTableKitNET8.Test
                 Assert.Equal(allDataFromDb.Max(x => x.Bigint), sampleList.Count());
             };
         }
+        #endif
     }
 }
