@@ -34,7 +34,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyVersion("3.0.*")] //File version
 [assembly: AssemblyInformationalVersion("3.1.0.0")] //Product version
 
-#if DEBUG
+#if DEBUG || DEBUG_LOCAL
 [assembly: InternalsVisibleTo("EF6TempTableKit.Test")]
 [assembly: InternalsVisibleTo("EF6TempTableKitNET8.Test")]
 #endif
