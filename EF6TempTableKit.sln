@@ -17,22 +17,31 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EF6TempTableKitNET8.Test", 
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug_Local|Any CPU = Debug_Local|Any CPU
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4ECEE5EF-A20D-4D0E-9ABD-40E9EAA27459}.Debug_Local|Any CPU.ActiveCfg = Debug_Local|Any CPU
+		{4ECEE5EF-A20D-4D0E-9ABD-40E9EAA27459}.Debug_Local|Any CPU.Build.0 = Debug_Local|Any CPU
 		{4ECEE5EF-A20D-4D0E-9ABD-40E9EAA27459}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4ECEE5EF-A20D-4D0E-9ABD-40E9EAA27459}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4ECEE5EF-A20D-4D0E-9ABD-40E9EAA27459}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4ECEE5EF-A20D-4D0E-9ABD-40E9EAA27459}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9711E082-F88B-40E8-B739-217CDF81890F}.Debug_Local|Any CPU.ActiveCfg = Debug|Any CPU
+		{9711E082-F88B-40E8-B739-217CDF81890F}.Debug_Local|Any CPU.Build.0 = Debug|Any CPU
 		{9711E082-F88B-40E8-B739-217CDF81890F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9711E082-F88B-40E8-B739-217CDF81890F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9711E082-F88B-40E8-B739-217CDF81890F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9711E082-F88B-40E8-B739-217CDF81890F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8058CCF2-B71C-4F27-B3A4-DD816F0E352D}.Debug_Local|Any CPU.ActiveCfg = Debug|Any CPU
+		{8058CCF2-B71C-4F27-B3A4-DD816F0E352D}.Debug_Local|Any CPU.Build.0 = Debug|Any CPU
 		{8058CCF2-B71C-4F27-B3A4-DD816F0E352D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8058CCF2-B71C-4F27-B3A4-DD816F0E352D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8058CCF2-B71C-4F27-B3A4-DD816F0E352D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8058CCF2-B71C-4F27-B3A4-DD816F0E352D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3FCF3FE2-CED0-882F-8503-DE4A9D79542C}.Debug_Local|Any CPU.ActiveCfg = Debug|Any CPU
+		{3FCF3FE2-CED0-882F-8503-DE4A9D79542C}.Debug_Local|Any CPU.Build.0 = Debug|Any CPU
 		{3FCF3FE2-CED0-882F-8503-DE4A9D79542C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3FCF3FE2-CED0-882F-8503-DE4A9D79542C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3FCF3FE2-CED0-882F-8503-DE4A9D79542C}.Release|Any CPU.ActiveCfg = Release|Any CPU
